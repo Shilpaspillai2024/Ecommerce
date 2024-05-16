@@ -1,0 +1,78 @@
+<style>
+    body{
+        background-color: #000000;
+    }
+  .admin-register-container {
+      min-height: 120vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('../../image/userRegister.png');
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+  }
+
+  .register-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3rem;
+      border: 1px solid #c8c8c8;
+      border-radius: 10px;
+      padding: 3rem 2rem;
+      background-color: rgba(255, 255, 255, 0.4);
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+      width: 35vw;
+  }
+
+  .register-form form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      width: 90%;
+  }
+
+  .register-form input {
+      width: 90%;
+      height: 2.5rem;
+      border-radius: 10px;
+      outline: none;
+      border: none;
+      background-color: #e7e7e7;
+      color: #000000;
+      padding: 10px;
+  }
+
+  .register-form button {
+      width: 10rem;
+  }
+</style>
+
+
+
+<%- include('navbar') %>
+
+
+  <div class="admin-register-container">
+      <div class="register-form">
+          <form action="/user/signup" method="post" id="registration-form">
+              <h2>User Registration</h2>
+              <input type="text" name="name" placeholder="Full name">
+              <input type="email" name="email" placeholder="Email address">
+              <input type="tel" name="phone" placeholder="Phone number">
+              <input type="password" name="password" placeholder="password" id="user-password">
+              <input type="password" name="confirmPassword" placeholder="Confirm password" id="user-confirm-password">
+
+              <button class="btn btn-primary" type="submit" id="register-button">Register</button>
+              <p>Already have an account? <a href="/user/login">Login</a></p>
+          </form>
+
+      </div>
+
+  </div>
+
+
+  <%- include('footer') %>

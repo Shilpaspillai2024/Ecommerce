@@ -1,0 +1,158 @@
+<style>
+    .admin-navbar-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1.5rem 3rem;
+        align-items: center;
+        /* border-bottom: 1px solid #b7b7b7; */
+        /* box-shadow: 1px 1px 5px #d7d7d7; */
+        z-index: 99;
+        position: relative;
+        background-color: black;
+    }
+
+    .logo {
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        color: white;
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+    }
+
+    .admin-navlinks {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        cursor: pointer;
+    }
+
+    .admin-navlinks a {
+        text-decoration: none;
+        font-size: 1rem;
+        color: #e0d6d6;
+    }
+
+    .navbar-search-box {
+        border: 1px solid #bbb5b5;
+        border-radius: 20px;
+        width: 24rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 0.5rem;
+        margin-left: 86px;
+    }
+
+    .navbar-search-box input {
+        border: none;
+        outline: none;
+        width: 80%;
+        background-color: #000000;
+    }
+
+    .navbar-search-box button i {
+        color: #e7d6d6;
+    }
+
+    .nav-link-items {
+        scale: 1.3;
+
+    }
+
+    /* side bar  */
+    .sidebar {
+        height: 100%;
+        width: 250px;
+        position: fixed;
+        top: 0;
+        right: -250px;
+        background-color: #f3e9e9;
+        transition: right 0.3s ease;
+        box-shadow: 0 0 20px #000000;
+        z-index: 10;
+    }
+
+    .sidebar ul {
+        color: rgb(248, 242, 242);
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2rem;
+
+    }
+
+    .sidebar ul li {
+        width: 90%;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 10px;
+        font-weight: 700;
+        transition: .3s ease-in-out;
+    }
+
+    .sidebar ul li:hover {
+        border: 1px solid white;
+    }
+
+    .sidebar ul li a {
+        display: block;
+        width: 100%;
+        text-decoration: none;
+        color: white;
+    }
+
+    .toggle-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+    }
+
+    #go-back-home {
+        background-color: #707070;
+        color: #ffffff;
+    }
+</style>
+
+
+<header class="admin-navbar-container">
+    <a href="/user" class="logo">WordPlay<br>Books</a>
+    <form action="" method="get" class="navbar-search-box">
+        <input type="text" name="userSearch" id="user-search" placeholder="What are you looking for?" required>
+        <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </form>
+    <nav class="admin-navlinks">
+        <a href="/user/wishlist" class="nav-link-items"><i class="fa-solid fa-heart"
+                style="color:  rgb(162, 218, 33);"></i></a>
+        <a href="/user/cart" class="nav-link-items"><i class="fa-solid fa-cart-shopping"
+                style="color:  rgb(162, 218, 33);"></i></a>
+
+        <!-- if user is logged in -->
+        <% if (user) { %>
+            <span class="nav-link-items" onclick="toggleSidebar()"><i class="fa-solid fa-user"
+                    style="color:  rgb(162, 218, 33);"></i></span>
+            <div class="sidebar" id="sidebar">
+                <ul>
+                    <li id="go-back-home" onclick="toggleSidebar()"><span><i class="fa-solid fa-angles-left"></i> Go
+                            back</span></li>
+                    <li><a href="/user/profile"><i class="fa-solid fa-user"></i> Profile</a></li>
+                    <li><a href="/user/orders"><i class="fa-solid fa-box-open"></i> Orders</a></li>
+                    <li><a href="/user/cancelled-orders"><i class="fa-solid fa-trash-can"></i> Canceled Orders</a></li>
+                    <li><a href="/user/forget-password"><i class="fa-solid fa-lock"></i> Reset Password</a></li>
+                    <li><a href="/user/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                </ul>
+            </div>
+            <% } else { %>
+                <a href="/user/login" class="btn btn-outline-secondary">Login</a>
+                <% } %>
+
+
+
+
+    </nav>
+</header>
