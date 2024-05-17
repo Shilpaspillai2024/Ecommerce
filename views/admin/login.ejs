@@ -4,10 +4,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('../../image/icon.png');
+    /* background: url('../../image/icon.png');
     background-position: center;
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
+    background-color: #1a1a1a;
 }
 .login-form{
     display: flex;
@@ -16,8 +17,12 @@
     gap: 2rem;
     width: 40vw;
     border: 1px solid #000000;
-    border-radius: 10px;
+    border-radius: 25px;
     padding: 3rem 2rem;
+    color: #fefeeb;
+    /* border: 3px solid #fefeeb; */
+    /* box-shadow: 1px 1px 20px #fefeeb; */
+    background-color: #232323;
 }
 .login-form input{
     width: 80%;
@@ -41,13 +46,12 @@
 
 
 <div class="admin-login-container">
-<form action="/admin/login" method="post" class="login-form">
-    <h2>Admin Login</h2>
-    <input type="email" name="username"  placeholder="username" required>
-    <input type="password" name="password"  placeholder="password" required>
-    <button class="btn btn-primary" type="submit">Login</button>
-</form>
+    <form action="/admin/login" method="post" class="login-form">
+        <h2>Admin Login</h2>
+        <input type="email" name="email" placeholder="username" required>
+        <input type="password" name="password" placeholder="password" required>
+        <button class="btn btn-primary" type="submit">Login</button>
+    </form>
 </div>
-
 
 <%- include('footer') %>

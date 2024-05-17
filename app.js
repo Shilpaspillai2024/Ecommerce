@@ -14,6 +14,7 @@ const flash=require('connect-flash')
 const port=process.env.PORT || 3000
 
 const userRoutes=require('./routes/userRouter')
+const adminRouter=require('./routes/adminRouter')
 
 mongodbConnection();
 
@@ -52,6 +53,7 @@ app.use(session({
 }))
 
 app.use('/user',userRoutes)
+app.use('/admin',adminRouter);
 
 app.get('/',(req,res)=>{
     res.redirect('/user/home')

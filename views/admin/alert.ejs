@@ -1,0 +1,25 @@
+
+
+
+<!-- if alertMessage from backend is generated then only this section is rendered for 6 milliseconds -->
+
+<% if(alertMessage!=''){ %>
+    <div class="alert-container">
+        <div class="alert alert-info" role="alert">
+            <%= alertMessage %>
+          </div>
+    </div>
+    <% }%>
+    
+    
+    <script>
+    
+        const alertDuration=6000;
+    
+        // after time specified in alertDuration the session will not be displayed.
+        setTimeout(() => {
+            document.getElementsByClassName('alert-container')[0].style.display='none'        
+        }, alertDuration);
+    
+    
+    </script>

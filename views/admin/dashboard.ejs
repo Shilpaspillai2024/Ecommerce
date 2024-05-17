@@ -1,0 +1,78 @@
+<style>
+
+  
+  
+    .admin-dashboard {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4rem;
+        /* margin-top: 4rem; */
+        padding: 20px;
+      background-color: #232323;
+      /* border-radius: 10px; */
+    }
+
+    
+    .admin-dashboard h2 {
+      margin-bottom: 20px;
+    }
+
+    
+    .table {
+      
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+    }
+  </style>
+
+   
+</style>
+
+
+<%- include('navbar') %>
+
+
+
+    <div class="admin-dashboard">
+        <h2 class="text-white">WordPlayBooks </h2>
+        <table class="table table-primary">
+            <thead>
+              <tr>
+                <th scope="col">Si No</th>
+                <th scope="col">Customers</th>
+                <th scope="col">categories</th>
+                <th scope="col">products</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>fiction</td>
+                <td>BOOk</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>NonFiction</td>
+                <td>Atomic habitts</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>Spice it up</td>
+                <td>Cook world</td>
+              </tr>
+            </tbody>
+          </table>
+        
+    </div>
+
+
+
+    <%- include('footer') %>

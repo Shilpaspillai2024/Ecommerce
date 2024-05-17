@@ -1,6 +1,10 @@
 <style>
     body {
         background-color: #000000;
+        /* background: url('../../image/library.jpg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat; */
     }
 
     .login-container {
@@ -9,7 +13,8 @@
         align-items: center;
         justify-content: center;
         margin: 2rem;
-}
+        
+    }
 
     .login-form {
         display: flex;
@@ -21,10 +26,15 @@
         /* padding: 3rem 2rem; */
         padding: 2rem 0rem;
         /* background-color: rgba(255, 255, 255, 0.4); */
-        -webkit-backdrop-filter: blur(5px);
+        /* -webkit-backdrop-filter: blur(5px); */
         /* backdrop-filter: blur(5px); */
-        background-color: #232323;
-        width: 30%
+        /* box-shadow: 1px 1px 20px #fefeeb; */
+        /* background-color: #232323; */
+        width: 70%;
+        background: url('../../image/Untitled.jpg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat; 
     }
 
     .login-form form {
@@ -41,7 +51,7 @@
     }
 
     .login-form input {
-        width: 100%;
+        width: 50%;
         height: 2.5rem;
         border-radius: 10px;
         outline: none;
@@ -51,7 +61,8 @@
         color: #fefeeb;
         padding: 10px;
     }
-    .login-form ::placeholder{
+
+    .login-form ::placeholder {
         color: #fefeeb;
     }
 
@@ -107,13 +118,12 @@
 
 <%- include('navbar') %>
 
-
     <div class="login-container">
         <div class="login-form">
             <form action="/user/login" method="post">
                 <h4>User Login</h4>
-                <input type="email" name="username" placeholder="username"  required>
-                <input type="password" name="password" placeholder="password"  required>
+                <input type="email" name="username" placeholder="username" required>
+                <input type="password" name="password" placeholder="password" required>
                 <a href="/user/forget-password" class="login-password-forget">forget password?</a>
 
 
@@ -122,7 +132,7 @@
             </form>
 
             <div class="signup-page-render text-white">
-                <p >If you are a new user? <a href="/user/signup">Signup</a></p>
+                <p>If you are a new user? <a href="/user/signup">Signup</a></p>
             </div>
         </div>
 
