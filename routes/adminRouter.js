@@ -26,6 +26,19 @@ const express=require('express')
  admin.get('/category',adminSession,dashboardController.category)
  admin.post('/category',dashboardController.addCategoryPost)
 
+ //edit category
+
+ admin.post('/editcategory',dashboardController.editCategoryPost)
+
+ // delete category
+ admin.get('/delete-category/:id',adminSession,dashboardController.deleteCategory)
+
+ // deactivate category
+  admin.get('/hide-category/:id',adminSession,dashboardController.deactivateCategory)
+
+  //activate category
+  admin.get('/unhide-category/:id',adminSession,dashboardController.activateCategory)
+
  admin.get('/logout',adminController.logout)
 
 

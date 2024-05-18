@@ -21,7 +21,7 @@ const login = (req, res) => {
         if (req.session.admin) {
             res.redirect('/admin/dashboard')
         } else {
-            res.render('admin/login',{admin:req.session.admin})
+            res.render('admin/login',{admin:req.session.admin, title: "Admin Login", alertMessage: "" })
         }
     } catch (err) {
         console.log(`Error during admin login ${err}`);

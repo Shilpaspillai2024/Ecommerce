@@ -69,5 +69,89 @@ const addCategoryPost = async (req,res)=> {
 }
 
 
+// edit cateory from model 
 
-module.exports={dashboard,category,addCategoryPost}
+const editCategoryPost= async (req,res)=>{
+    try {
+
+        const id = req.body.catid
+        const name = req.body.catname
+
+        const checkCat = await categorySchema.findOne({categoryName:name})
+
+        if(checkCat==null){
+            await categorySchema.findByIdAndUpdate(id,{categoryName:name})
+            req.flash('errorMessage','Success: Category update successfully')
+            res.redirect('/admin/category')
+        }else{
+            req.flash('errorMessage','Warning: Category already exists. Please ensure no duplicates are being added.')
+            res.redirect("/admin/category")
+        }
+        
+    } catch (err) {
+        console.log(`error in editing category ${err}`)
+    }
+}
+
+//delete category
+
+const deleteCategory = async (req,res)=>{
+    try {
+        const CatId=req.params.id
+         
+        const deleteCat=await categorySchema.findByIdAndDelete(CatId)
+        if(deleteCat!=null){
+            req.flash('errorMessage','Category Deleted successfully')
+            res.redirect('/admin/category')
+        }
+        else{
+            req.flash('errorMessage','unable to delete the category')
+            res.redirect('/admin/category')
+        }
+        
+    } catch (err) {
+        console.log(`error in deleting category ${err}`)
+        
+    }
+}
+
+// deactivatecategory
+
+ const deactivateCategory=async (req,res)=>{
+      try {
+        
+        const deactId=req.params.id
+
+        const deactCat=await categorySchema.findByIdAndUpdate(deactId,{isActive:false})
+         
+        res.redirect('/admin/category')
+      } catch (err) {
+
+        console.log(`error during deactivating the category ${err}`)
+        
+      }
+ }
+
+ // activateCategory
+  const activateCategory= async (req,res)=>{
+      try { 
+        const actid=req.params.id
+        const actCat=await categorySchema.findByIdAndUpdate(actid,{isActive:true})
+        res.redirect('/admin/category')
+
+        
+      } catch (err) {
+        console.log(`error during activating the category ${err}`)
+        
+      }
+  }
+
+module.exports={
+    dashboard,
+    category,
+    addCategoryPost,
+    editCategoryPost,
+    deleteCategory,
+    deactivateCategory,
+    activateCategory
+}
