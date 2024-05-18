@@ -3,8 +3,10 @@ const express=require('express')
  const admin=express.Router()
  const adminController=require('../controller/adminController/adminController')
  const dashboardController=require('../controller/adminController/dashboardController')
+ const productController=require('../controller/adminController/productController')
 
  const adminSession=require('../middleware/adminSession')
+const checkAdminSection = require('../middleware/adminSession')
 
  admin.get('/',adminController.admin);
  admin.get('/login',adminController.login);
@@ -38,6 +40,16 @@ const express=require('express')
 
   //activate category
   admin.get('/unhide-category/:id',adminSession,dashboardController.activateCategory)
+
+
+
+
+   // product routers
+
+
+admin.get('/product',adminSession,productController.product)
+
+
 
  admin.get('/logout',adminController.logout)
 
