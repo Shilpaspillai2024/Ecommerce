@@ -15,9 +15,12 @@ const dashboard=(req,res)=>{
     }
 }
 
-const category = (req,res)=>{
+
+const category = async(req,res)=>{
     try {
-        res.render('admin/category',{admin: req.session.admin,title:"category",alertMessage: req.flash('errorMessage'),})
+        const categorySearch = req.query.categorySearch || '';
+        const category = await categorySchema.find({ categoryName: { $regex: categorySearch, $options: 'i' } })
+        res.render('admin/category',{admin: req.session.admin,title:"Category List",category,alertMessage: req.flash('errorMessage'),})
 
         
     } catch (error) {
@@ -31,19 +34,19 @@ const category = (req,res)=>{
 const addCategoryPost = async (req,res)=> {
 
     try{
-        let category=req.body.Newcategory;
+        let categoryName=req.body.Newcategory;
 
-        const data ={
-            categoryName:category,
+        const category ={
+            categoryName:categoryName,
             categoryAddedOn:new Date(),
             isActive:true
         }
 
-        const checkCategory = await categorySchema.findOne({categoryName:category})
+        const checkCategory = await categorySchema.findOne({categoryName:categoryName})
 
         if (checkCategory===null)
        {
-        await categorySchema.insertMany(data).then(()=>{
+        await categorySchema.insertMany(category).then(()=>{
             req.flash('error message','new category added')
             console.log(`new category added`)
             res.redirect('/admin/category')
