@@ -8,6 +8,7 @@ const user=require('./routes/userRouter')
 const mongodbConnection=require('./config/mongodb')
 const nocache=require('nocache')
 const flash=require('connect-flash')
+const { v4: uuidv4 } = require('uuid');
 
 
 // env port
@@ -24,6 +25,11 @@ app.use(flash())
  
 //nocache
 app.use(nocache())
+
+
+
+// made the uploads file static
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // path setting
 
@@ -47,7 +53,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 app.use(session({
-    secret:"your secret key",
+    secret:uuidv4(),
     resave:false,
     saveUninitialized:true,
 }))

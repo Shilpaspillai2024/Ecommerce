@@ -1,0 +1,203 @@
+<style>
+    .add-product-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        min-height: 100vh;
+        color: rgb(182, 177, 177);
+    }
+
+    .add-product-container form {
+        margin-bottom: 5rem;
+    }
+
+    .product-form-top {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+
+    }
+
+    .product-form-bottom {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 3rem;
+
+    }
+
+    .product-form-left {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        margin-top: 3rem;
+        align-items: center;
+    }
+
+    .product-form-right {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        margin-top: 3rem;
+        align-items: center;
+    }
+
+    .product-form-left input,
+    .product-form-right input {
+        border: 1px solid #c5c5c5;
+        outline: none;
+        padding: 10px;
+        border-radius: 10px;
+        width: 90%;
+        margin-bottom: 1rem;
+    }
+    .product-form-left label,
+    .product-form-right label {
+        width: 90%;
+    }
+
+    /* remove the increment and decrement arrows in input type number */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    #product-description {
+        border: 1px solid #c5c5c5;
+        outline: none;
+        padding: 10px;
+        width: 90%;
+        border-radius: 10px;
+        resize: vertical;
+        min-height: 200px;
+    }
+
+
+
+    #product-category {
+        border: 1px solid #c5c5c5;
+        outline: none;
+        padding: 10px;
+        border-radius: 10px;
+        width: 90%;
+    }
+
+    #product-image-preview {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        width: 90%;
+    }
+
+    .product-image-box {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #c5c5c5;
+        border-radius: 10px;
+        overflow: hidden;
+
+    }
+
+    .preview-img {
+        width: 200px;
+        height: 200px;
+        object-fit: scale-down;
+    }
+
+    .delete-button {
+        background-color: #c30606;
+        padding: 10px;
+        color: #ffffff;
+        font-weight: 600;
+        border: none;
+        outline: none;
+    }
+
+    .btn {
+        min-width: 150px;
+    }
+</style>
+
+
+
+<%- include('navbar') %>
+
+    <div class="add-product-container container">
+        <div class="product-header mt-5">
+            <h2 class="text-center">Add Product</h2>
+        </div>
+        <form action="/admin/add-product" method="post" enctype="multipart/form-data" id="add-product-form">
+
+            <div class="product-form-top">
+
+                <div class="product-form-left">
+
+                    <!-- input for product name -->
+                    <label for="productName">Product Name</label>
+                    <input type="text" name="productName" placeholder="Excepted min 3 characters" minlength="3" maxlength="100" required>
+
+                    <!-- input for product price -->
+                    <label for="productPrice">Product Price</label>
+                    <input type="number" name="productPrice" placeholder="Price is expected between 1 to 100000" min="1" max="100000" required>
+
+                    <!-- input for product quantity -->
+                    <label for="productQuantity">Product Quantity</label>
+                    <input type="number" name="productQuantity" placeholder="Quantity is expected between 1 to 100000" min="1" max="100000" required>
+                   
+                    <!-- input for product discount -->
+                    <label for="productDiscount">Product Discount in percentage</label>
+                    <input type="number" name="productDiscount" placeholder="0 if discount is not available" min="0" max="100" required>
+
+                    <!-- input for select category this category is from backend -->
+                    <label for="productCategory">Product Category </label>
+                    <select name="productCategory" id="product-category" required>
+                        <option value="" selected disabled>Select a category</option>
+                        <% productCategory.forEach((category)=> { %>
+                            <option value="<%= category.categoryName %>">
+                                <%= category.categoryName %>
+                            </option>
+                            <% }) %>
+                    </select>
+
+                </div>
+                <div class="product-form-right">
+
+                   
+                    <!-- input for product description -->
+                    <label for="productDescription">Product Description</label>
+                    <textarea name="productDescription" placeholder="Excepted min 10 characters" id="product-description" minlength="10" maxlength="500"
+                        required></textarea>
+
+                </div>
+            </div>
+            <div class="product-form-bottom">
+
+                <!-- input file for image upload but the button is display is set as none -->
+                <input type="file" id="product-image-upload" name="productImage" accept="image/png, image/jpeg" multiple 
+                    class="d-none">
+
+                <!-- using the label the image is uploaded -->
+                <label for="product-image-upload" class="btn btn-warning">
+                    <i class="fas fa-upload"></i> &nbsp; Choose Images
+                </label>
+
+                <!-- the product preview will generate based on what we select -->
+                <div id="product-image-preview"></div>
+
+
+                <!-- the form submission and cancel buttons -->
+                <div>
+                    <a href="/admin/products" class="btn btn-secondary">Cancel</a>
+                    <button class="btn btn-success" type="submit">Add Product</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <%- include('footer') %>

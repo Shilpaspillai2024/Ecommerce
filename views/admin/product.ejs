@@ -65,10 +65,10 @@
 
         
         
-          <div class="d-flex align-center">
-            <input type="button" class="btn btn-success" value="Add Product" data-bs-toggle="modal" data-bs-target="#addproduct">
-          </div>
-
+          
+          <div class="add-new-product  d-flex align-center">
+            <a href="/admin/add-product" class="btn btn-success">Add Product <i class="fa-solid fa-plus"></i></a>
+        </div>
         
 
          
@@ -84,11 +84,54 @@
                     <th scope="col">Actions</th>
                   </tr>
                 </thead>
+                <tbody>
+
+                  <% products.forEach((product,index)=>{ %>
+
+                      <tr>
+                          <th scope="row">
+                              <%= index+1 %>
+                          </th>
+                          <td class="product-name-td">
+                              <%= product.productName %>
+                          </td>
+                          <td><i class="fa-solid fa-indian-rupee-sign"></i>
+                              <%= product.productPrice %>
+                          </td>
+                          <td>
+                              <%= product.productQuantity %>
+                          </td>
+                          <td>
+                              <%= product.productCategory %>
+                          </td>
+                          <td>
+                              <a class="btn btn-warning edit-product-btn"
+                                  href="/admin/edit-product/<%= product.id %>">Edit</a>
+                              <!-- <a class="btn btn-outline-danger" id="inactive-product-btn" href="">Inactive</a> -->
+                              <% if(product.isActive){ %>
+                                  <a class="btn btn-outline-danger inactive-product-btn"
+                                      href="/admin/product-inactive/<%= product.id %>">Inactive</a>
+                                  <% }else{ %>
+                                      <a class="btn btn-outline-success active-product-btn"
+                                          href="/admin/product-active/<%= product.id %>">Active</a>
+                                      <% } %>
+                                          <button class="btn btn-danger remove-product-btn"
+                                              value="<%= product.id %>">Remove</button>
+                          </td>
+                      </tr>
+
+                      <% }) %>
+
+
+              </tbody>
+          </table>
+      </div>
+  </div>
+
+
+  <%- include('footer') %>
+
+  
         
               
-               
-              </table>
-           </div>
-    </div>
-
-    <%- include('footer') %>  
+  

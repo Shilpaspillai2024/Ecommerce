@@ -5,8 +5,8 @@ const express=require('express')
  const dashboardController=require('../controller/adminController/dashboardController')
  const productController=require('../controller/adminController/productController')
 
- const adminSession=require('../middleware/adminSession')
-const checkAdminSection = require('../middleware/adminSession')
+//  const adminSession=require('../middleware/adminSession')
+const checkAdminSession = require('../middleware/adminSession')
 
  admin.get('/',adminController.admin);
  admin.get('/login',adminController.login);
@@ -18,14 +18,14 @@ const checkAdminSection = require('../middleware/adminSession')
 
  
  //admin dashbord
- admin.get('/dashboard',adminSession,dashboardController.dashboard)
+ admin.get('/dashboard',checkAdminSession,dashboardController.dashboard)
 
 
 
 
  // category
 
- admin.get('/category',adminSession,dashboardController.category)
+ admin.get('/category',checkAdminSession,dashboardController.category)
  admin.post('/category',dashboardController.addCategoryPost)
 
  //edit category
@@ -33,13 +33,13 @@ const checkAdminSection = require('../middleware/adminSession')
  admin.post('/editcategory',dashboardController.editCategoryPost)
 
  // delete category
- admin.get('/delete-category/:id',adminSession,dashboardController.deleteCategory)
+ admin.get('/delete-category/:id',checkAdminSession,dashboardController.deleteCategory)
 
  // deactivate category
-  admin.get('/hide-category/:id',adminSession,dashboardController.deactivateCategory)
+  admin.get('/hide-category/:id',checkAdminSession,dashboardController.deactivateCategory)
 
   //activate category
-  admin.get('/unhide-category/:id',adminSession,dashboardController.activateCategory)
+  admin.get('/unhide-category/:id',checkAdminSession,dashboardController.activateCategory)
 
 
 
@@ -47,7 +47,9 @@ const checkAdminSection = require('../middleware/adminSession')
    // product routers
 
 
-admin.get('/product',adminSession,productController.product)
+admin.get('/product',checkAdminSession,productController.product)
+
+admin.get('/add-product',checkAdminSession,productController.addProduct)
 
 
 
