@@ -1,3 +1,4 @@
+
 <style>
     .add-product-container {
         display: flex;
@@ -58,6 +59,9 @@
     .product-form-right label {
         width: 90%;
     }
+    .product-form-left input[name="productName"],[name="productCategory"] {
+        background-color: #b6aeae;
+    }
 
     /* remove the increment and decrement arrows in input type number */
     input[type="number"]::-webkit-inner-spin-button,
@@ -100,6 +104,7 @@
         border: 1px solid #c5c5c5;
         border-radius: 10px;
         overflow: hidden;
+        background-color: white;
 
     }
 
@@ -129,9 +134,11 @@
 
     <div class="add-product-container container">
         <div class="product-header mt-5">
-            <h2 class="text-center">Add Product</h2>
+            <h2 class="text-center">Edit Product</h2>
         </div>
-        <form action="/admin/add-product" method="post" enctype="multipart/form-data" id="add-product-form">
+
+        <!-- form action is set with product id to update the product details based on the id -->
+        <form action="/admin/edit-product/<%= product.id %>" method="post" enctype="multipart/form-data" id="add-product-form">
 
             <div class="product-form-top">
 
@@ -139,29 +146,24 @@
 
                     <!-- input for product name -->
                     <label for="productName">Product Name</label>
-                    <input type="text" name="productName" placeholder="Excepted min 3 characters" minlength="3" maxlength="100" required>
+                    <input type="text" name="productName" minlength="3" maxlength="100" value="<%= product.productName %>" disabled>
 
                     <!-- input for product price -->
                     <label for="productPrice">Product Price</label>
-                    <input type="number" name="productPrice" placeholder="Price is expected between 1 to 100000" min="1" max="100000" required>
+                    <input type="number" name="productPrice"  min="1" max="100000" value="<%= product.productPrice %>" required>
 
                     <!-- input for product quantity -->
                     <label for="productQuantity">Product Quantity</label>
-                    <input type="number" name="productQuantity" placeholder="Quantity is expected between 1 to 100000" min="1" max="100000" required>
+                    <input type="number" name="productQuantity" min="0" max="100000" value="<%= product.productQuantity %>" required>
                    
                     <!-- input for product discount -->
                     <label for="productDiscount">Product Discount in percentage</label>
-                    <input type="number" name="productDiscount" placeholder="0 if discount is not available" min="0" max="100" required>
+                    <input type="number" name="productDiscount"  min="0" max="100" value="<%= product.productDiscount %>" required>
 
                     <!-- input for select category this category is from backend -->
                     <label for="productCategory">Product Category </label>
-                    <select name="productCategory" id="product-category" required>
-                        <option value="" selected disabled>Select a category</option>
-                        <% productCategory.forEach((category)=> { %>
-                            <option value="<%= category.categoryName %>">
-                                <%= category.categoryName %>
-                            </option>
-                            <% }) %>
+                    <select name="productCategory" id="product-category" disabled  required>
+                        <option value="" selected disabled><%= product.productCategory %></option>
                     </select>
 
                 </div>
@@ -170,8 +172,7 @@
                    
                     <!-- input for product description -->
                     <label for="productDescription">Product Description</label>
-                    <textarea name="productDescription" placeholder="Excepted min 10 characters" id="product-description" minlength="10" maxlength="500"
-                        required></textarea>
+                    <textarea name="productDescription" id="product-description" minlength="10" maxlength="500" required><%= product.productDescription %></textarea>
 
                 </div>
             </div>
@@ -181,19 +182,26 @@
                 <input type="file" id="product-image-upload" name="productImage" accept="image/png, image/jpeg" multiple 
                     class="d-none">
 
-                <!-- using the label the image is uploaded -->
-                <label for="product-image-upload" class="btn btn-warning">
-                    <i class="fas fa-upload"></i> &nbsp; Choose Images
-                </label>
-
                 <!-- the product preview will generate based on what we select -->
-                <div id="product-image-preview"></div>
+                <div id="product-image-preview">
+
+                    <% product.productImage.forEach((img)=>{ %>
+                        <div class="product-image-box">
+                            <img src="../../<%= img %>" alt="" class="preview-img ">
+                            
+                        </div>
+                   <% }) %>
+                        
+                
+                   
+                       
+                </div>
 
 
                 <!-- the form submission and cancel buttons -->
                 <div>
                     <a href="/admin/product" class="btn btn-secondary">Cancel</a>
-                    <button class="btn btn-success" type="submit">Add Product</button>
+                    <button class="btn btn-success" type="submit">Update Product</button>
                 </div>
             </div>
 
@@ -201,60 +209,4 @@
     </div>
 
 
-
-
-    <script>
-
-        const productImageUpload=document.getElementById('product-image-upload');
-        const productImagePreview=document.getElementById('product-image-preview');
-
-
-        productImageUpload.addEventListener('change',()=>{
-            productImagePreview.innerHTML='';
-            if(productImageUpload.files.length > 4){
-                Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Maximum file count is 4",
-                    });
-                    productImageUpload.value='';
-            }
-            else if(productImageUpload.files.length == 0){
-                Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Minimum file count is 1",
-                    });
-                    productImageUpload.value = '';
-            }
-            else{
-                for(let i=0;i<productImageUpload.files.length;i++){
-                    let reader= new FileReader()
-                    let figure=document.createElement('div');
-                    figure.classList.add('product-image-box');
-                    reader.onload = () => {
-                            let img = document.createElement("img");
-                            img.classList.add("preview-img");
-                            img.setAttribute("src", reader.result);
-                            figure.appendChild(img);
-
-                            // Create delete button with class delete-button
-                            let deleteButton = document.createElement("button");
-                            deleteButton.textContent = "Delete";
-                            deleteButton.classList.add("delete-button");
-                            deleteButton.addEventListener("click", () => {
-                                // Remove the parent div (figure) when the delete button is clicked
-                                figure.remove();
-                            });
-                            figure.appendChild(deleteButton);
-                        };
-
-                        productImagePreview.appendChild(figure);
-                        reader.readAsDataURL(productImageUpload.files[i]);
-                    }
-                }
-            });
-
-    </script>
-
-    <%- include('footer') %>
+<%- include('footer') %>

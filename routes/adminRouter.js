@@ -51,7 +51,11 @@ admin.get('/product',checkAdminSession,productController.product)
 
 admin.get('/add-product',checkAdminSession,productController.addProduct)
 admin.post('/add-product',productController.multermiddle,productController.addProductPost)
-
+admin.get('/edit-product/:id',checkAdminSession,productController.editProduct)
+admin.post('/edit-product/:id',productController.multermiddle,productController.editProductPost)
+admin.get('/product-inactive/:id',checkAdminSession,productController.productInactive)
+admin.get('/product-active/:id',checkAdminSession,productController.productActive)
+admin.get('/delete-product/:id',checkAdminSession,productController.productDelete)
 
 
  admin.get('/logout',adminController.logout)

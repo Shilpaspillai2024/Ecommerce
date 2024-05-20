@@ -70,10 +70,10 @@ const addProductPost= async (req,res)=>{
     if(!checkProduct)
       {
     await productSchema.insertMany(productDetails)
-    req.flash('error message','product added successfully')
+    req.flash('errorMessage','product added successfully')
       }
       else{
-        req.flash('error message','product already exsist')
+        req.flash('errorMessage','product already exsist')
       }
       res.redirect('/admin/product')
   } catch (err) {
@@ -85,6 +85,120 @@ const addProductPost= async (req,res)=>{
   }
 }
 
+const editProduct= async (req,res)=>{
+  try {
+    const productId = req.params.id;
+    const product = await productSchema.findById(productId)
+    const productCategory= await categorySchema.find()
+    if(product){
+      res.render('admin/editproduct',{ admin:req.session.admin, title:"Add-product",alertMessage:req.flash('errorMessage'),product,productCategory})
+   
+    }
+    else{
+      req.flash('errorMessage', 'Unable to edit the product. Please try again')
+      res.redirect('/admin/product')
+    }
+
+
+    
+  } catch (err) {
+    console.log(`eeror in edit page load ${err}`)
+    
+  }
+}
+ 
+
+const editProductPost = async (req,res)=>{
+  try {
+  const  productId=req.params.id
+    productSchema.findByIdAndUpdate(productId,{productPrice:req.body.productPrice,productDescription: req.body.productDescription, productQuantity: req.body.productQuantity, productDiscount: req.body.productDiscount })
+    .then((elem) => {
+      req.flash('errorMessage',"product updated successfully")
+      res.redirect('/admin/product')
+    }).catch((err) =>{
+      console.log(`Error while updating the product ${err}`);
+      req.flash('errorMessage','product is not updated')
+      res.redirect('/admin/product')
+    })
+
+    
+  } catch (err) {
+    console.log(`Error during updating the product on database ${err}`);
+        req.flash('errorMessage', 'Oops the action is not completed')
+        res.redirect('/admin/product')
+    
+  }
+}
+
+// product deactivating
+const productInactive = async (req,res)=>{
+   try {
+      const  productId=req.params.id;
+      const productInactive=await productSchema.findByIdAndUpdate(productId,{isActive:false})
+      if(productInactive){
+        req.flash('errorMesage','the product is blocked and currently not available for users')
+
+      }else{
+        req.flash('errorMessage','product not found')
+      }
+      res.redirect('/admin/product')
+    
+   } catch (err) {
+    console.log(`error in deactivating product ${err}`)
+    
+   }
+}
+
+//product activating
+
+const productActive =async (req,res)=>{
+  try {
+    const productId=req.params.id;
+    const productActive= await productSchema.findByIdAndUpdate(productId,{isActive:true})
+    if(productActive){
+      req.flash('errorMessage','the product is unblocked')
+    }
+    else{
+      req.flash('errorMessage,"product is not found')
+    }
+    res.redirect('/admin/product')
+    
+  } catch (err){
+    console.log(`error in activating product ${err}`)
+    
+  }
+}
+
+
+// Delete the product 
+  const productDelete=async (req,res)=>{
+    try {
+      const productId=req.params.id;
+      const deleteProduct=await productSchema.findByIdAndDelete(productId)
+
+      if(deleteProduct){
+        req.flash('errorMessage','Product Deleted successfully')
+        res.redirect('/admin/product')
+    }
+    else{
+        req.flash('errorMessage','unable to delete the the product')
+        res.redirect('/admin/product')
+    }
+      
+    } catch (err) {
+      console.log(`error in deletion of products ${err}`)
+      
+    }
+  } 
+
   module.exports={
-    product,addProduct,multermiddle,addProductPost
+    product,
+    addProduct,
+    multermiddle,
+    addProductPost,
+    editProduct,
+    editProductPost,
+    productInactive,
+    productActive,
+    productDelete
   }

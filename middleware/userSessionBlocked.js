@@ -1,6 +1,6 @@
 const userSchema=require("../model/userSchema")
 
-async function checkUserSection(req,res,next){
+async function checkUserBlocked(req,res,next){
    try {
     if(req.session.user){
         const userDetails= await userSchema.findOne({email:req.session.user})
@@ -15,17 +15,15 @@ async function checkUserSection(req,res,next){
     }
 }
     else{
-        re.redirect('/user/login')
+       next();
     }
 }
    catch (err) {
-    console.log(`error in checkuser middleware ${err}`)
+    console.log(`error in checkuserblocked middleware ${err}`)
     
    }
 }
 
 
-module.exports=checkUserSection
-
-
+module.exports=checkUserBlocked
 

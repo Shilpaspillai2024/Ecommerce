@@ -131,6 +131,88 @@
 
   <%- include('footer') %>
 
+  <script>
+
+
+// deactivatind the product
+ 
+const deactivateProduct = document.querySelectorAll(".inactive-product-btn")
+// because of many buttons for each is used to traverse and add eventListener for each of them
+  deactivateProduct.forEach((button)=>{
+    button.addEventListener("click",function(event){
+        event.preventDefault();
+
+        Swal.fire({
+                            title: 'Deactivate the Product',
+                            text: "Are you sure do you want to deactivate this Product?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d11a2a',
+                            cancelButtonColor: '#808080',
+                            confirmButtonText: 'Yes, Deactivate it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = event.target.href;
+                            }
+                        });
+
+    })
+  })
+
+
+  //activate the product
+   const activateProduct = document.querySelectorAll(".active-product-btn")
+   // because of many buttons for each is used to traverse and add eventListener for each of them
+    activateProduct.forEach((button)=>{
+        button.addEventListener("click",function(event){
+            event.preventDefault();
+            Swal.fire({
+                            title: 'Activate the Product',
+                            text: "Are you sure do you want to activate this Product?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d11a2a',
+                            cancelButtonColor: '#808080',
+                            confirmButtonText: 'Yes, activate it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = event.target.href;
+                            }
+                        });
+
+        })
+    })
+
+
+    // delete the product
+    const deleteProduct=document.querySelectorAll(".remove-product-btn")
+
+         deleteProduct.forEach((button)=>{
+            button.addEventListener("click",function(event){
+                event.preventDefault();
+                Swal.fire({
+                                             title: "Delete Category !",
+                                             text: "Are you sure do you want to permanently delete this category?",
+                                             icon: "warning",
+                                             showCancelButton: true,
+                                             confirmButtonColor: "#3085d6",
+                                             cancelButtonColor: "#d33",
+                                             confirmButtonText: "Yes, delete it!"
+                                               }).then((result)=>{
+                                                if(result.isConfirmed){
+                                                    // window.location.href = event.target.href;
+                                                    const productId = event.target.value;
+                                                    window.location.href = `/admin/delete-product/${productId}`
+
+                                                }
+
+                                               })
+
+            })
+         })
+
+  </script>
+
   
         
               

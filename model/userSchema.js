@@ -15,6 +15,10 @@ const wordplaySchema = new mongoose.Schema({
     number: {
         type: Number,
         required: true,
+    },
+    isBlocked:{
+        type:Boolean,
+        default:false
     }
    
 })

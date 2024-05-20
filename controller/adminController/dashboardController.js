@@ -47,7 +47,7 @@ const addCategoryPost = async (req,res)=> {
         if (checkCategory===null)
        {
         await categorySchema.insertMany(category).then(()=>{
-            req.flash('error message','new category added')
+            req.flash('errorMessage','new category added')
             console.log(`new category added`)
             res.redirect('/admin/category')
         }).catch((err)=>{
@@ -56,7 +56,7 @@ const addCategoryPost = async (req,res)=> {
            
        }
        else{
-        req.flash('error message', "category already present")
+        req.flash('errorMessage', "category already present")
         res.redirect('/admin/category')
        }
 
