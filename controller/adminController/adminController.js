@@ -3,6 +3,7 @@ const userSchema=require('../../model/userSchema')
 
 
 
+
 const admin = (req, res) => {
     try {
         if (req.session.admin) {

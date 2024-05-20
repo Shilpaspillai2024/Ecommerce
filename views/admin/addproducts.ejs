@@ -200,4 +200,61 @@
         </form>
     </div>
 
+
+
+
+    <script>
+
+        const productImageUpload=document.getElementById('product-image-upload');
+        const productImagePreview=document.getElementById('product-image-preview');
+
+
+        productImageUpload.addEventListener('change',()=>{
+            productImagePreview.innerHTML='';
+            if(productImageUpload.files.length > 4){
+                Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Maximum file count is 4",
+                    });
+                    productImageUpload.value='';
+            }
+            else if(productImageUpload.files.length == 0){
+                Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Minimum file count is 1",
+                    });
+                    productImageUpload.value = '';
+            }
+            else{
+                for(let i=0;i<productImageUpload.files.length;i++){
+                    let reader= new FileReader()
+                    let figure=document.createElement('div');
+                    figure.classList.add('product-image-box');
+                    reader.onload = () => {
+                            let img = document.createElement("img");
+                            img.classList.add("preview-img");
+                            img.setAttribute("src", reader.result);
+                            figure.appendChild(img);
+
+                            // Create delete button with class delete-button
+                            let deleteButton = document.createElement("button");
+                            deleteButton.textContent = "Delete";
+                            deleteButton.classList.add("delete-button");
+                            deleteButton.addEventListener("click", () => {
+                                // Remove the parent div (figure) when the delete button is clicked
+                                figure.remove();
+                            });
+                            figure.appendChild(deleteButton);
+                        };
+
+                        productImagePreview.appendChild(figure);
+                        reader.readAsDataURL(productImageUpload.files[i]);
+                    }
+                }
+            });
+
+    </script>
+
     <%- include('footer') %>

@@ -50,6 +50,7 @@ const checkAdminSession = require('../middleware/adminSession')
 admin.get('/product',checkAdminSession,productController.product)
 
 admin.get('/add-product',checkAdminSession,productController.addProduct)
+admin.post('/add-product',productController.multermiddle,productController.addProductPost)
 
 
 
