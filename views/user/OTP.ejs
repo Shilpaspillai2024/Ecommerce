@@ -1,0 +1,32 @@
+<%- include('navbar') %>
+<div class="otp-container">
+    <div class="otp-box">
+        <h2> Enter the Otp Code</h2>
+        <small> OTP has been sended to your email addres !</small>
+
+          <!-- email address from backend -->
+        <b id="otp-email">
+
+            <%= emailAddress %>
+
+        </b>
+        <small>Enter  the otp below to verify</small>
+        <form action="/user/otp" method="post">
+            <input type="text" name="otp" minlength="6" maxlength="6" required>
+
+                <small id="otp-timer-box">OTP is valid for <input type="text" id="otp-timer"></input></small>
+
+
+                <input type="text" value="<%= otpExpireTime %>" id="otp-sended-time" hidden>
+
+                <button class="btn btn-primary" type="submit" id="otp-btn">Verify OTP</button>
+           
+        </form>
+    </div>
+</div>
+
+
+
+
+
+<%- include('footer') %>

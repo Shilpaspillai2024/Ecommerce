@@ -5,7 +5,7 @@ const bcrypt=require('bcrypt')
 
 const user=(req,res)=>{
     try{
-        res.redirect('/user/login')
+        res.redirect('/user/home')
     }catch(err){
         console.log('Error During user route');
     }
@@ -19,7 +19,7 @@ const login= (req,res)=>{
     }else{
         // Assuming you have stored user information in the request object
         // const user = req.user;
-        res.render('user/login',{ user: req.session.user })
+        res.render('user/login',{ user: req.session.user,title:"Login",alertMessage:req.flash('errorMessage')})
     }
 }
  const loginPost= async (req,res)=>{
@@ -57,7 +57,7 @@ const login= (req,res)=>{
         if(req.session.user){
             res.redirect('/user/home')
          }else{
-            res.render('user/signup',{user:false})
+            res.render('user/signup',{user:req.session.user,title:"Signup",alertMessage:req.flash('errorMessage')})
          }
         
     } catch (err) {
@@ -69,6 +69,7 @@ const login= (req,res)=>{
 
  const signpost= async (req,res)=>{
     try {
+        // getting data from input box of the register form
         const userData={
             name:req.body.name,
             email:req.body.email,
@@ -76,24 +77,56 @@ const login= (req,res)=>{
             number: req.body.phone
         }
 
-        const checkUserExist= await userSchema.find({email:req.body.email})
+    //     const checkUserExist= await userSchema.find({email:req.body.email})
 
-        if(checkUserExist.length === 0 ){
+    //     if(checkUserExist.length === 0 ){
 
-            userSchema.insertMany(userData).then((result)=>{
-                req.flash('errorMessage',"User Registration is successful")
-                return res.redirect('/user/login')
+    //         userSchema.insertMany(userData).then((result)=>{
+    //             req.flash('errorMessage',"User Registration is successful")
+    //             return res.redirect('/user/login')
 
-            }).catch((err) => {
-                console.log(`Error while inserting new user ${err}`);
-        })
+    //         }).catch((err) => {
+    //             console.log(`Error while inserting new user ${err}`);
+    //     })
         
-    } 
-    else {
-        req.flash('errorMessage','User already exist')
-        return res.redirect('/user/login')
-     }
+    // } 
+    // else {
+    //     req.flash('errorMessage','User already exist')
+    //     return res.redirect('/user/login')
+    //  }
+    // }
+
+      // check the user with same email exist in mongodb
+       const userExist= await userSchema.findOne({email:userData.email})
+
+         // if user with same email id exist then render the register page with error message
+       if(userExist){
+        req.flash('errorMessage','An account with this email address already exsist,pls try with another email ! ')
+        res.redirect('/user/signup')
+       }
+       else{
+
+         // generate otp from services/generateOTP.js file
+        const otp =generateOtp();
+
+           // send the mail to the registered user with the OTP
+        sendOtpMail(req.body.email,otp);
+        req.flash('errorMesage',`Otp was sended to the ${req.body.email}`);
+
+          // storing otp in the session
+        req.session.otp = otp;
+        req.session.otpExpireTime= Date.now();
+
+    // storing user data in session
+        req.session.email=userData.email;
+        req.session.password=userData.password;
+        req.session.name=userData.name;
+        req.session.phone=userData.number;
+// redirect to the otp page for validation
+        res.redirect('/user/otp')
+       }
     }
+
     catch (error) {
         console.log(`Error during signup post ${err}`);
     }

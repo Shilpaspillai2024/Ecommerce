@@ -15,7 +15,7 @@ async function checkUserSection(req,res,next){
     }
 }
     else{
-        re.redirect('/user/login')
+        res.redirect('/user/login')
     }
 }
    catch (err) {

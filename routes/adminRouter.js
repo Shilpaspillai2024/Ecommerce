@@ -4,6 +4,7 @@ const express=require('express')
  const adminController=require('../controller/adminController/adminController')
  const dashboardController=require('../controller/adminController/dashboardController')
  const productController=require('../controller/adminController/productController')
+ const userController=require('../controller/adminController/userController')
 
 //  const adminSession=require('../middleware/adminSession')
 const checkAdminSession = require('../middleware/adminSession')
@@ -58,6 +59,16 @@ admin.get('/product-active/:id',checkAdminSession,productController.productActiv
 admin.get('/delete-product/:id',checkAdminSession,productController.productDelete)
 
 
+
+//customer routers in user management
+
+admin.get('/user',checkAdminSession,userController.user)
+admin.get('/block-user/:id',checkAdminSession,userController.blockUser)
+admin.get('/unblock-user/:id',checkAdminSession,userController.unBlockUser)
+
+
+
+// logout of admin
  admin.get('/logout',adminController.logout)
 
 
