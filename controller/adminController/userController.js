@@ -4,7 +4,7 @@ const userSchema=require('../../model/userSchema')
  const user=async (req,res)=>{
     try {
         const userSearch=req.query.userSearch || ''
-        const users=await userSchema.find({name: { $regex:userSearch,$options:'i'}})
+        const users = await userSchema.find({name: { $regex: userSearch ,$options:'i'}})
         res.render('admin/user', {admin:req.session.admin, title: "users list", users, alertMessage: req.flash('errorMessage') })
         
     } catch (err) {
