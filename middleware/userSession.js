@@ -1,6 +1,6 @@
 const userSchema=require("../model/userSchema")
 
-async function checkUserSection(req,res,next){
+async function checkUserSession(req,res,next){
    try {
     if(req.session.user){
         const userDetails= await userSchema.findOne({email:req.session.user})
@@ -25,7 +25,7 @@ async function checkUserSection(req,res,next){
 }
 
 
-module.exports=checkUserSection
+module.exports=checkUserSession
 
 
 

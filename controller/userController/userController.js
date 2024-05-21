@@ -2,6 +2,9 @@ const userSchema = require('../../model/userSchema')
 
 const bcrypt=require('bcrypt')
 
+const generateOtp=require('../../services/generateOTP')
+const sendOtpMail=require('../../services/emailSender')
+
 
 const user=(req,res)=>{
     try{
@@ -77,26 +80,7 @@ const login= (req,res)=>{
             number: req.body.phone
         }
 
-    //     const checkUserExist= await userSchema.find({email:req.body.email})
-
-    //     if(checkUserExist.length === 0 ){
-
-    //         userSchema.insertMany(userData).then((result)=>{
-    //             req.flash('errorMessage',"User Registration is successful")
-    //             return res.redirect('/user/login')
-
-    //         }).catch((err) => {
-    //             console.log(`Error while inserting new user ${err}`);
-    //     })
-        
-    // } 
-    // else {
-    //     req.flash('errorMessage','User already exist')
-    //     return res.redirect('/user/login')
-    //  }
-    // }
-
-      // check the user with same email exist in mongodb
+        // check the user with same email exist in mongodb
        const userExist= await userSchema.findOne({email:userData.email})
 
          // if user with same email id exist then render the register page with error message
@@ -127,11 +111,85 @@ const login= (req,res)=>{
        }
     }
 
-    catch (error) {
+    catch (err) {
         console.log(`Error during signup post ${err}`);
     }
 }
 
+
+const otp= (req,res)=>{
+    try {
+        res.render('user/OTP',{title:"OTP verification",emailAddress:req.session.email,alertMessage:req.flash('errorMessage'),otpExpireTime:req.session.otpExpireTime,user:req.session.user})
+        
+    } catch (err) {
+        console.log(`error in otp page render ${err}`)
+        
+    }
+}
+
+
+
+const otpPost = async (req,res)=>{
+    try {
+        if(req.session.otp !==undefined){
+            const userdata={
+               name:req.session.name,
+               email:req.session.email,
+               number:req.session.phone,
+               password:req.session.password
+            }
+            if(req.session.otp===req.body.otp){
+                await userSchema.insertMany(userdata).then(()=>{
+                    console.log(` new user registration successful`)
+                    req.flash('errorMessage','user registeration successful !')
+                    res.redirect('/user/login')
+                }).catch((err)=>{
+                    console.log(`error during registration ${err}`)
+                })
+            }else{
+                req.flash('errorMessage','Otp invalid pls try again...')
+                res.redirect('/user/OTP')
+            }
+        }
+        else{
+        req.flash('errorMessage','An error OCCured during otp genetation try again !')
+        res.redirect('/user/signup')
+        }
+
+    } catch (err) {
+        console.log(`error occured in otp verification ${err}`)
+        
+    }
+}
+
+const otpResend = (req,res)=>{
+    try {
+        const emailAddress= req.params.email
+        const otp=generateOtp()
+        sendOtpMail(emailAddress,otp)
+        req.session.otp=otp
+        req.session.otpExpireTime=Date.now()
+        res.status(200)
+        req.flash('errorMessage','Otp resend successfully')
+        res.redirect('/user/otp')
+        
+    } catch (err) {
+        console.log(`error during otp sended ${err}`)
+        
+    }
+}
+
+
+const logout = (req,res)=>{
+    req.session.destroy((err)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.redirect('/user/login')
+        }
+    })
+}
+
 module.exports= {
-    user,login,loginPost,signup,signpost
+    user,login,loginPost,signup,signpost,otp,otpPost,otpResend,logout
 }

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const {defalutMaxListeners}=require('nodemailer/lib/xoauth2')
 
 const wordplaySchema = new mongoose.Schema({
     username : {
