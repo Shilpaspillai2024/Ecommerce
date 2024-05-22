@@ -69,7 +69,67 @@ const forgetPasswordOtp= (req,res)=>{
 
 }
 
+const forgetPasswordOtpPost = async(req,res)=>{
+    try{
+        if(req.session.user){
+            res.redirect('/user/home')
+        } 
+        else{
+            if(req.session.otp !==undefined){
+               if( req.body.otp= req.session.otp){
+                res.render('user/newpassword',{title:"NEW Password",alertMessage:req.flash('errorMessage'),user:req.session.user})
+               }
+               else{
+                req.flash('errorMessage',"invalid Otp")
+                res.redirect('/user/login')
+               }
+            }else{
+                req.flash('errorMessage', 'An error occurred during OTP validation, please kindly retry.')
+                res.redirect('/user/forget-password')
+            }
+        }
+
+    }
+    catch(err){
+        console.log(`error during forget page ${err}`)
+
+    }
+}
+
+
+const upadtePassword= async (req,res)=>{
+    try {
+        if(req.session.email !==undefined){
+            if(req.body.newPassword===req.body.confirmPassword){
+                const newpassword=await bcrypt.hash(req.body.newPassword, 10)
+
+                 const confirmUpdate=await userSchema.updateOne({email:req.session.email},{password:newpassword})
+
+              if(confirmUpdate!=''){
+                req.flash("errorMessage"," password Updated successfully !")
+                res.redirect('/user/login')
+              }else {
+                req.flash('errorMessage', 'An error occurred during updating password, please kindly retry.')
+                res.redirect('/user/login')
+            }
+            }else {
+                req.flash('errorMessage', 'Password do not match')
+                res.redirect('/user/login')
+
+            }
+        }else {
+            req.flash('errorMessage', 'An error occurred during updating password, please kindly retry.')
+            res.redirect('/user/forget-password')
+        }
+
+        
+    } catch (err) {
+        console.log(`error in update password rendering ${err}`)
+        
+    }
+}
+
 
 module.exports={
-    forgetPassword,forgetPasswordPost,forgetPasswordOtp
+    forgetPassword,forgetPasswordPost,forgetPasswordOtp,forgetPasswordOtpPost,upadtePassword
 }

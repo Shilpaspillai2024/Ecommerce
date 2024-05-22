@@ -68,7 +68,7 @@
         position: fixed;
         top: 0;
         right: -250px;
-        background-color: #f3e9e9;
+        background-color: black;
         transition: right 0.3s ease;
         box-shadow: 0 0 20px #000000;
         z-index: 10;
@@ -157,3 +157,17 @@
     </nav>
 </header>
 <%-include ('alert') %>
+
+
+<script>
+    // toggle side bar
+    function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        if (sidebar.style.right === "-250px") {
+            sidebar.style.right = "0";
+        } else {
+            sidebar.style.right = "-250px";
+        }
+    }
+
+</script>

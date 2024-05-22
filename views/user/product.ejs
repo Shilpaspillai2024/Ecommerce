@@ -1,0 +1,143 @@
+<style>
+    body{
+        background-color:black;
+    }
+    .prdocut-container{
+        padding: 2rem,0;
+        margin-bottom: 5rem;
+    }
+    .product-category-container{
+        display: flex;
+       justify-content: space-around;
+       flex-wrap: wrap;
+       gap: 2rem;
+    }
+    .product-category-container a{
+        cursor: pointer;
+        transition: .3s ease-in-out;
+        text-decoration: none;
+        color: #e2dada;
+    }
+
+    .product-category-container a :hover{
+        scale: 1.1;
+    }
+    .product-list-box{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    .product-box{
+        text-decoration: none;
+        border: 1px solid #b2b2b2;
+        border-radius: 10px;
+        width: 300px;
+        margin-top: 2rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+
+    }
+    .product-image-box {
+        height: 290px;
+        width: 290px;
+    }
+
+    .product-image-box img {
+        margin: auto;
+        width: 250px;
+        height: 290px;
+        object-fit: scale-down;
+    }
+
+    .product-text-row {
+        max-width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .product-discount-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0 2rem;
+        color: #0f0f0f;
+        background-color: rgb(36, 189, 36);
+        border-radius: 5px 0;
+    }
+
+    .product-newArrival-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0 2rem;
+        color: #ffffff;
+        background-color: rgb(50, 195, 50);
+        border-radius: 5px 0;
+    }
+    .product-price{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .5rem;
+    }
+</style>
+
+<div class="product-container">
+    <div class="prduct-category-container container">
+
+    <% category.forEach((item)=>{ %>
+      <%  if(item.isActive) {%>
+        <a href="/user/home/?category=<%= item.categoryName %>" class="category-name">
+            <%- item.categoryName %>
+        </a>
+
+     <% }%>
+   <% }) %>
+    </div>
+
+    <div class="product-list-box container">
+        <% product.forEach((product)=>{ %>
+
+           <a href="/user/product-view/<%=product.id %>" class="product-box">
+
+             <% if(product.productDiscount!=0) {%>
+                <div class="product-discount-box">
+                    <h6>
+                        <%= product.productDiscount %> &percnt; OFF
+                    </h6>
+                </div>
+               <% } else if(new Date(product.addedOn).getTime()>(Date.now() - (1 * 24 * 60 * 60 * 1000))) {%>
+
+                <div class="product-newarrival-box">
+                    <h6>New Arrival</h6>
+                </div>
+                <% } %>
+
+
+                <div class="product-image-box">
+                    <img src="/<%=product.productImage[0] %>" alt="">
+                </div>
+
+                <div class="product-name-box">
+                    <h6 class="product-text-row">
+                        <%=product.prodcutName %>
+                    </h6>
+                    <p class="product-description product-text-row">
+                        <%=product.productDescription %>
+
+                    </p>
+                    <h5 class="product-price"><i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+                        <%=product.productPrice.toLocaleString() %>
+                    </h5>
+                </div>
+           </a>
+            
+            
+
+       <% }) %>
+    </div>
+
+</div>

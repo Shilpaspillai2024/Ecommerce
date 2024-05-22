@@ -4,6 +4,8 @@ const bcrypt=require('bcrypt')
 
 const generateOtp=require('../../services/generateOTP')
 const sendOtpMail=require('../../services/emailSender')
+const productSchema=require('../../model/productSchema')
+const categorySchema=require('../../model/categorySchema')
 
 
 const user=(req,res)=>{
@@ -178,6 +180,28 @@ const otpResend = (req,res)=>{
         
     }
 }
+    
+const home= async (req,res)=>{
+    try {
+        const selectCategory=req.query.category || ''
+        let product;
+        if(selectCategory ===''){
+            product= await productSchema.find({isActive:true})
+        }else{
+            product= await productSchema.find({productCategory:selectCategory,isActive:true})
+        }
+        const category=await categorySchema.find({isactive:true})
+
+        res.render('user/home',{title:"user Home",product,category,alertMessage:req.flash('errorMessage'),user:req.session.user})
+    } catch (err) {
+
+        console.log(`error in home page rendering ${err}`)
+        
+    }
+}
+
+
+
 
 
 const logout = (req,res)=>{
@@ -190,6 +214,10 @@ const logout = (req,res)=>{
     })
 }
 
+
+
+
+
 module.exports= {
-    user,login,loginPost,signup,signpost,otp,otpPost,otpResend,logout
+    user,home,login,loginPost,signup,signpost,otp,otpPost,otpResend,logout
 }

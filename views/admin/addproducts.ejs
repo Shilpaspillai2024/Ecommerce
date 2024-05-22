@@ -178,8 +178,7 @@
             <div class="product-form-bottom">
 
                 <!-- input file for image upload but the button is display is set as none -->
-                <input type="file" id="product-image-upload" name="productImage" accept="image/png, image/jpeg" multiple 
-                    class="d-none">
+                <input type="file" id="product-image-upload" name="productImage" accept="image/png, image/jpeg" multiple class="d-none">
 
                 <!-- using the label the image is uploaded -->
                 <label for="product-image-upload" class="btn btn-warning">
@@ -230,7 +229,7 @@
             else{
                 for(let i=0;i<productImageUpload.files.length;i++){
                     let reader= new FileReader()
-                    let figure=document.createElement('div');
+                    let figure=document.createElement("div");
                     figure.classList.add('product-image-box');
                     reader.onload = () => {
                             let img = document.createElement("img");
@@ -255,6 +254,8 @@
                 }
             });
 
-    </script>
+</script>
+
+    
 
     <%- include('footer') %>
