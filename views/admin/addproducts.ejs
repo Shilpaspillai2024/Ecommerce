@@ -181,7 +181,7 @@
 
                     <!-- input for product quantity -->
                     <label for="productQuantity">Product Quantity</label>
-                    <input type="number" name="productQuantity" placeholder="Quantity is expected between 1 to 100000" min="1" max="100000" required>
+                    <input type="number" name="productQuantity" placeholder="Quantity is expected between 1 to 100000" min="0" max="100000" required>
                    
                     <!-- input for product discount -->
                     <label for="productDiscount">Product Discount in percentage</label>
@@ -234,22 +234,84 @@
         </form>
 
 
+     </div>
+      
 
-        <div id="cropper-modal">
-            <div id="cropper-container">
-                <img id="cropper-image" src="" alt="Crop Image">
-                <div id="cropper-buttons">
-                    <button id="crop-btn" class="btn btn-primary">Crop</button>
-                    <button id="cancel-crop-btn" class="btn btn-secondary">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <%- include('footer') %>
 
 
 
     <script>
+
+            const addProductForm = document.getElementById('add-product-form')
+            const productName = document.getElementsByName('productName')[0];
+            const productPrice = document.getElementsByName('productPrice')[0];
+            const productQuantity = document.getElementsByName('productQuantity')[0];
+            const productAuthor = document.getElementsByName('productAuthor')[0];
+            const productDiscount = document.getElementsByName('productDiscount')[0];
+            const productDescription = document.getElementsByName('productDescription')[0];
+            const productCategory = document.getElementsByName('productCategory')[0];
+
+
+
+            addProductForm.addEventListener('submit', (e) => {
+                e.preventDefault()
+
+
+
+                let isValid = true
+                let errorMessage = ""
+
+                if (document.getElementById('product-image-upload').value==='') {
+                    errorMessage="Product image should not be empty";
+                    isValid = false;
+                }
+                if (productName.value.trim() === "" || productName.value.length<=0 || !isNaN(productName.value)) {
+                    errorMessage="Product Name should not be empty";
+                    isValid = false;
+                }
+
+                if (isNaN(productPrice.value) || parseFloat(productPrice.value) <= 0) {
+                    errorMessage='Product Price must be greater than zero and it should not contain any alphabets'
+                    isValid = false;
+                }
+
+                if (isNaN(productQuantity.value) || parseInt(productQuantity.value) <= 0) {
+                    errorMessage='Product quality should be a number and it must be greater than zero'
+                    isValid = false;
+                }
+                
+                if (productCategory.value === null) {
+                    errorMessage='Product category is cannot be empty'
+                    isValid = false
+                }
+
+                if (isNaN(productDiscount.value) || parseInt(productDiscount.value) < 0 || parseInt(productDiscount.value)>100) {
+                    errorMessage='Product quality should be a number and it must be greater than zero'
+                    isValid = false;
+                }
+
+                if (productAuthor.value.trim() === '' || productAuthor.value.length<=0 || !isNaN(productAuthor.value)) {
+                    errorMessage='Product Author cannot be empty'
+                    isValid = false
+                }
+
+                if (productDescription.value.length <= 10 || productDescription.value.length > 500 || productDescription.value.trim === "") {
+                    errorMessage='Product description must be between 10 to 80 word '
+                    isValid = false
+                }
+
+               if(isValid===false){
+                Swal.fire({
+                    title:"Invalid Inputs",
+                    text:errorMessage,
+                    icon:"error"
+                })
+               }else{
+                addProductForm.submit()
+               }
+            })
+
 
         const productImageUpload=document.getElementById('product-image-upload');
         const productImagePreview=document.getElementById('product-image-preview');
@@ -257,7 +319,8 @@
        
         productImageUpload.addEventListener('change',()=>{
             productImagePreview.innerHTML='';
-            if(productImageUpload.files.length > 4){
+            files = Array.from(productImageUpload.files);
+            if(files.length > 4){
                 Swal.fire({
                         icon: "error",
                         title: "Oops...",
@@ -265,16 +328,18 @@
                     });
                     productImageUpload.value='';
             }
-            else if(productImageUpload.files.length == 0){
+            else if(files.length == 0){
                 Swal.fire({
                         icon: "error",
                         title: "Oops...",
                         text: "Minimum file count is 1",
                     });
                     productImageUpload.value = '';
+                    files = [];
             }
             else{
-                for(let i=0;i<productImageUpload.files.length;i++){
+                // for(let i=0;i<productImageUpload.files.length;i++){
+                    files.forEach((file, index) => {
                     let reader= new FileReader()
                     let figure=document.createElement("div");
                     figure.classList.add('product-image-box');
@@ -290,16 +355,26 @@
                             deleteButton.classList.add("delete-button");
                             deleteButton.addEventListener("click", () => {
                                 // Remove the parent div (figure) when the delete button is clicked
+                                files.splice(index, 1);
+                                productImageUpload.files = createFileList(files);
+                       
                                 figure.remove();
                             });
                             figure.appendChild(deleteButton);
                         };
 
                         productImagePreview.appendChild(figure);
-                        reader.readAsDataURL(productImageUpload.files[i]);
-                    }
+                        reader.readAsDataURL(file);
+                    })
                 }
             });
+            function createFileList(files) {
+        const dataTransfer = new DataTransfer();
+        files.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        return dataTransfer.files;
+    }
 
      
     
@@ -308,4 +383,4 @@
 
     
 
-    <%- include('footer') %>
+  

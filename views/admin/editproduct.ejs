@@ -60,7 +60,10 @@
         width: 90%;
     }
     .product-form-left input[name="productName"],[name="productCategory"] {
-        background-color: #b6aeae;
+        background-color: #e7e1e1;
+    }
+    .product-form-right input[name="productAuthor"]{
+        background-color: #e7e1e1 ;
     }
 
     /* remove the increment and decrement arrows in input type number */
@@ -146,7 +149,7 @@
 
                     <!-- input for product name -->
                     <label for="productName">Product Name</label>
-                    <input type="text" name="productName" minlength="3" maxlength="100" value="<%= product.productName %>" disabled>
+                    <input type="text" name="productName" minlength="3" maxlength="100" value="<%= product.productName %>" readonly>
 
                     <!-- input for product price -->
                     <label for="productPrice">Product Price</label>
@@ -170,7 +173,7 @@
                 <div class="product-form-right">
 
                     <label for="productAuthor">Product Author</label>
-                    <input type="text" name="productAuthor" minlength="3" maxlength="30" value="<%=product.productAuthor %>" disabled>
+                    <input type="text" name="productAuthor" minlength="3" maxlength="30" value="<%=product.productAuthor %>" readonly>
                     <!-- input for product description -->
                     <label for="productDescription">Product Description</label>
                     <textarea name="productDescription" id="product-description" minlength="10" maxlength="500" required><%= product.productDescription %></textarea>
@@ -211,3 +214,77 @@
 
 
 <%- include('footer') %>
+
+<script>
+             const addProductForm = document.getElementById('add-product-form')
+            const productName = document.getElementsByName('productName')[0];
+            const productPrice = document.getElementsByName('productPrice')[0];
+            const productQuantity = document.getElementsByName('productQuantity')[0];
+            const productAuthor = document.getElementsByName('productAuthor')[0];
+            const productDiscount = document.getElementsByName('productDiscount')[0];
+            const productDescription = document.getElementsByName('productDescription')[0];
+            const productCategory = document.getElementsByName('productCategory')[0];
+
+
+
+            addProductForm.addEventListener('submit', (e) => {
+                e.preventDefault()
+
+
+
+                let isValid = true
+                let errorMessage = ""
+
+                // if (document.getElementById('product-image-upload').value==='') {
+                //     errorMessage="Product image should not be empty";
+                //     isValid = false;
+                // }
+                // if (productName.value.trim() === "" || productName.value.length<=0 || !isNaN(productName.value)) {
+                //     errorMessage="Product Name should not be empty";
+                //     isValid = false;
+                // }
+
+                if (isNaN(productPrice.value) || parseFloat(productPrice.value) <= 0) {
+                    errorMessage='Product Price must be greater than zero and it should not contain any alphabets'
+                    isValid = false;
+                }
+
+                if (isNaN(productQuantity.value) || parseInt(productQuantity.value) <= 0) {
+                    errorMessage='Product quality should be a number and it must be greater than zero'
+                    isValid = false;
+                }
+                
+                // if (productCategory.value === null) {
+                //     errorMessage='Product category is cannot be empty'
+                //     isValid = false
+                // }
+
+                if (isNaN(productDiscount.value) || parseInt(productDiscount.value) < 0 || parseInt(productDiscount.value)>100) {
+                    errorMessage='Product quality should be a number and it must be greater than zero'
+                    isValid = false;
+                }
+
+                // if (productAuthor.value.trim() === '' || productAuthor.value.length<=0 || !isNaN(productAuthor.value)) {
+                //     errorMessage='Product Author cannot be empty'
+                //     isValid = false
+                // }
+
+                if (productDescription.value.length <= 10 || productDescription.value.length > 500 || productDescription.value.trim === "") {
+                    errorMessage='Product description must be between 10 to 80 word '
+                    isValid = false
+                }
+
+               if(isValid===false){
+                Swal.fire({
+                    title:"Invalid Inputs",
+                    text:errorMessage,
+                    icon:"error"
+                })
+               }else{
+                addProductForm.submit()
+               }
+            })
+
+
+
+</script>

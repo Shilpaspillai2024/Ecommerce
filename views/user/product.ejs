@@ -19,15 +19,18 @@
     .product-category-container{
         display: flex;
        justify-content: space-around;
+       font-family: "Roboto", sans-serif;
        flex-wrap: wrap;
        gap: 2rem;
-       background-color: white;
+
+    
     }
     .product-category-container a{
         cursor: pointer;
         transition: .3s ease-in-out;
         text-decoration: none;
-        color: #e2dada;
+        color: aqua;
+   
     }
 
     .product-category-container a :hover{
@@ -38,7 +41,9 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: space-around;
+        
     }
+   
     .product-box{
         text-decoration: none;
         border: 1px solid #b2b2b2;
@@ -48,8 +53,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
+      
 
     }
+    /* .product-box:hover{
+        transform: scale(1.5); 
+    } */
     .product-image-box {
         height: 290px;
         width: 290px;
@@ -60,7 +69,13 @@
         width: 250px;
         height: 290px;
         object-fit: scale-down;
+        /* cursor: pointer;
+        transition: transform 0.3s; */
+     
+        /* transform: scale(1);  */
+       
     }
+   
 
     .product-text-row {
         max-width: 250px;
@@ -105,10 +120,12 @@
 <div class="product-container">
 
     <h2 class="product-book">BOOKS</h2>
-    <div class="prduct-category-container container">
+    
+    <div class="product-category-container container">
 
     <% category.forEach((item)=>{ %>
       <%  if(item.isActive) {%>
+        <input type="text" name="" id="">
         <a href="/user/home/?category=<%= item.categoryName %>" class="category-name">
             <%- item.categoryName %>
         </a>
@@ -142,7 +159,7 @@
 
                 <div class="product-name-box">
                     <h6 class="product-text-row">
-                        <%=product.prodcutName %>
+                        <%=product.productName%>
                     </h6>
                     <p class="product-description product-text-row">
                         <%=product.productAuthor %>

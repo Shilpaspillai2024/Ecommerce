@@ -18,7 +18,8 @@ const user=(req,res)=>{
 
 const login= (req,res)=>{
     if(req.session.user){
-        // res.render('user/userlogin')
+       
+        res.redirect('/user/home')
         
        
     }else{
@@ -30,20 +31,21 @@ const login= (req,res)=>{
  const loginPost= async (req,res)=>{
     try {
         const checkUser=await userSchema.findOne({email:req.body.username})
-        if(checkUser===null){
-            req.flash('errormessage','invalid username')
+        if(checkUser!==null){
+            if(checkUser.isBlocked)
+            req.flash('errorMessage','Access to this account has been restricted.')
             res.redirect('/user/login')
         }
         else{
             const passwordCheck=await bcrypt.compare(req.body.password,checkUser.password)
 
-            if(passwordCheck){
+            if(checkUser && passwordCheck){
                 req.session.user=req.body.username;
                 return res.redirect('/user/home')
              }
             else{
-                console.log("else")
-                req.flash('error message','invalid username or password')
+               
+                req.flash('errorMessage','invalid username or password')
                 res.redirect('/user/login')
             }
         }

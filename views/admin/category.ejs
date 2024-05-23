@@ -81,8 +81,8 @@
                     <div class="modal-body">
                         <form action="/admin/category" method="post">
                             <label class="form-label">Category</label>
-                            <input type="text" class="form-control" name="Newcategory" minlength="3" maxlength="30" required>
-                            <input type="submit" class="btn btn-primary mt-2" value="Add Category">
+                            <input type="text" class="form-control" name="Newcategory" id="categoryInput" minlength="3" maxlength="30" required>
+                            <input type="submit" class="btn btn-primary mt-2" value="Add Category" id="categorySubmit">
                         </form>
                     </div>
                 </div>
@@ -164,6 +164,8 @@
             </div>
         </div>
     </div>
+
+    <%- include('footer') %>
 
 <script>
     document.querySelectorAll('#editCategory-btn').forEach((x)=>{
@@ -260,8 +262,84 @@
             })
 
            
+   //validation
+    // const category=document.getElementById('categoryInput')
+    // const categoryBtn=document.getElementById('categorySubmit')
+    //      categoryBtn.disabled=true;
+    //      category.addEventListener('input',()=>{
+
+        
+    //             if (isNaN(category.value) ) {
+                    
+    //                 categoryBtn.disabled=true;
+    //             }
+
+            
+    //         if(category.value.trim()==''){
+    //             categoryBtn.disabled = true;
+    //         }
+    //         else{
+    //             categoryBtn.disabled=false;
+
+    //             function trimExtraSpaces(str) {
+    //                   // this function remove all unnecessary spaces ie which have more than one consecutive white spaces and replace special characters
+    //                     return str.replace(/\s+/g, ' ').replace(/[^\w\s]/gi, '');
+    //                 }
+
+    //                 // prevent typing the special characters
+    //                 let actualCategory = trimExtraSpaces(category.value)
+    //                 category.value = actualCategory
+
+                
+    //         }
+    //      })
+
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+    const categoryInput = document.getElementById('categoryInput');
+    const categorySubmitBtn = document.getElementById('categorySubmit');
+    const categoryError = document.getElementById('category-error');
+
+    categorySubmitBtn.disabled = true; // Initially disable the submit button
+
+    // Function to trim extra spaces and remove special characters
+    function trimExtraSpaces(str) {
+        // return str.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-9\s]/gi, '');
+        return str.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-9\s\-&]/gi, '');
+        // Excludes special characters '&' and '-' from being replaced
+    }
+
+    // Event listener for input in the add category modal
+    categoryInput.addEventListener('input', () => {
+        const trimmedValue = categoryInput.value.trim();
+
+        // If the input is only whitespace or empty, disable the submit button and show error
+        if (trimmedValue === '') {
+            categorySubmitBtn.disabled = true;
+            categoryError.textContent = "Category name cannot be empty or only whitespace.";
+        } else {
+            const sanitizedValue = trimExtraSpaces(trimmedValue);
+            categoryInput.value = sanitizedValue;
+
+            // Additional validation: length and content checks
+            if (sanitizedValue.length < 3 || sanitizedValue.length > 30) {
+                categorySubmitBtn.disabled = true;
+                categoryError.textContent = "Category name must be between 3 and 30 characters long.";
+            } else if (/^\d+$/.test(sanitizedValue)) {
+                categorySubmitBtn.disabled = true;
+                categoryError.textContent = "Category name cannot be only numbers.";
+            } else {
+                categorySubmitBtn.disabled = false;
+                categoryError.textContent = ""; // Clear any existing error message
+            }
+        }
+    });
+});
+
+
 
 </script>
   
 
-    <%- include('footer') %>
+ 

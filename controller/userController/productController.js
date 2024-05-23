@@ -1,5 +1,7 @@
 const productSchema=require('../../model/productSchema')
 
+
+
 const productView=async (req,res)=>{
     try {
         const productId=req.params.id

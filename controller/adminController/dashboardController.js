@@ -31,42 +31,47 @@ const category = async(req,res)=>{
 
 // adding new category from model to datamodel
 
-const addCategoryPost = async (req,res)=> {
 
-    try{
-        let categoryName=req.body.Newcategory;
 
-        const category ={
-            categoryName:categoryName,
-            categoryAddedOn:new Date(),
-            isActive:true
+const addCategoryPost = async (req, res) => {
+    try {
+        let categoryName = req.body.Newcategory;
+
+        // Convert the category name to lowercase for case-insensitive comparison
+        const lowerCaseCategoryName = categoryName.toLowerCase();
+
+        const category = {
+            categoryName: categoryName,
+            categoryAddedOn: new Date(),
+            isActive: true
         }
 
-        const checkCategory = await categorySchema.findOne({categoryName:categoryName})
+        // Check if a category with the same name exists (case-insensitive)
+        const checkCategory = await categorySchema.findOne({ categoryName: { $regex: new RegExp('^' + lowerCaseCategoryName + '$', 'i') } });
 
-        if (checkCategory===null)
-       {
-        await categorySchema.insertMany(category).then(()=>{
-            req.flash('errorMessage','new category added')
-            console.log(`new category added`)
-            res.redirect('/admin/category')
-        }).catch((err)=>{
-            console.log(`error occured during adding new category ${err}`)
-        })
-           
-       }
-       else{
-        req.flash('errorMessage', "category already present")
-        res.redirect('/admin/category')
-       }
-
-
-    }
-    catch(err){
-        console.log(`error in adding category ${err}`)
-
+        if (!checkCategory) {
+            // Category doesn't exist, insert the new category
+            await categorySchema.insertMany(category).then(() => {
+                req.flash('errorMessage', 'New category added');
+                console.log(`New category added`);
+                res.redirect('/admin/category');
+            }).catch((err) => {
+                console.log(`Error occurred during adding new category ${err}`);
+                req.flash('errorMessage', 'Error occurred during adding new category');
+                res.redirect('/admin/category');
+            });
+        } else {
+            // Category already exists
+            req.flash('errorMessage', 'Category already present');
+            res.redirect('/admin/category');
+        }
+    } catch (err) {
+        console.log(`Error in adding category ${err}`);
+        req.flash('errorMessage', 'Error in adding category');
+        res.redirect('/admin/category');
     }
 }
+
 
 
 // edit cateory from model 

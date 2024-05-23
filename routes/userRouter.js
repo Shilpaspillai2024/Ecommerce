@@ -48,6 +48,7 @@ user.post('/forget-password',forgetController.forgetPasswordPost)
 // if the user is blocked then the user is redirect to login page
 user.get('/product-view/:id',checkUserBlocked,productController.productView)
 
+
 user.get('/logout',userController.logout)
 
 module.exports = user;

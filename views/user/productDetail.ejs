@@ -157,11 +157,60 @@
     .similar-product-container{
         color: white;
     }
-</style>
+/* Breadcrumb navigation styles */
+.breadcrumbs {
+    margin: 20px 0; /* Adjust margin as needed */
+    font-size: 16px; /* Adjust font size as needed */
+}
+
+.breadcrumbs ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.breadcrumbs li {
+    display: inline;
+    margin-right: 10px; /* Adjust spacing between breadcrumb items */
+}
+
+.breadcrumbs li:last-child {
+    font-weight: bold; /* Make the last breadcrumb item bold */
+}
+
+.breadcrumbs a {
+    text-decoration: none;
+    color:white; /* Link color */
+}
+.breadcrumbs span{
+    color: white;
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+    color: rgb(75, 75, 172); /* Underline on hover */
+}
+
+/* Style for the current page (last breadcrumb item) */
+.breadcrumbs span {
+    font-weight: bold;
+}
+
 
 </style>
 
 <%-include('navbar') %>
+
+<nav class="breadcrumbs">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <span>/</span>
+        <li><a href="/product">product</a></li>
+        
+    </ul>
+</nav>
+
   <div class="product-view-container container">
     <div class="product-view-details">
         <div class="product-image-container">
@@ -270,8 +319,10 @@
     // image Zoom efffect
     const imageContainer=document.getElementsByClassName("product-full-image-view")[0]
     const productImg= document.getElementById('product-image-img')
+    const productImageEach = document.querySelectorAll(".product-image-each img");
 
-    imageContainer.addEventListener("mousemove",(e)=>{
+
+      imageContainer.addEventListener("mousemove",(e)=>{
         const rect = e.target.getBoundingClientRect();
                         const x = (e.clientX - rect.left) / rect.width;
                         const y = (e.clientY - rect.top) / rect.height;
@@ -321,8 +372,7 @@
                         }
 
                     })
-
-
+    
 
             
     
