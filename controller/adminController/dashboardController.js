@@ -82,7 +82,10 @@ const editCategoryPost= async (req,res)=>{
         const id = req.body.catid
         const name = req.body.catname
 
-        const checkCat = await categorySchema.findOne({categoryName:name})
+        const lowerCaseCategoryName = name.toLowerCase();
+
+
+        const checkCat = await categorySchema.findOne({categoryName: { $regex: new RegExp('^' + lowerCaseCategoryName + '$', 'i') }})
 
         if(checkCat==null){
             await categorySchema.findByIdAndUpdate(id,{categoryName:name})

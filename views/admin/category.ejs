@@ -261,42 +261,8 @@
                 })
             })
 
-           
-   //validation
-    // const category=document.getElementById('categoryInput')
-    // const categoryBtn=document.getElementById('categorySubmit')
-    //      categoryBtn.disabled=true;
-    //      category.addEventListener('input',()=>{
-
-        
-    //             if (isNaN(category.value) ) {
-                    
-    //                 categoryBtn.disabled=true;
-    //             }
-
-            
-    //         if(category.value.trim()==''){
-    //             categoryBtn.disabled = true;
-    //         }
-    //         else{
-    //             categoryBtn.disabled=false;
-
-    //             function trimExtraSpaces(str) {
-    //                   // this function remove all unnecessary spaces ie which have more than one consecutive white spaces and replace special characters
-    //                     return str.replace(/\s+/g, ' ').replace(/[^\w\s]/gi, '');
-    //                 }
-
-    //                 // prevent typing the special characters
-    //                 let actualCategory = trimExtraSpaces(category.value)
-    //                 category.value = actualCategory
-
-                
-    //         }
-    //      })
-
-
-    
-    document.addEventListener('DOMContentLoaded', function() {
+       //validation  category add  
+  
     const categoryInput = document.getElementById('categoryInput');
     const categorySubmitBtn = document.getElementById('categorySubmit');
     const categoryError = document.getElementById('category-error');
@@ -305,8 +271,11 @@
 
     // Function to trim extra spaces and remove special characters
     function trimExtraSpaces(str) {
-        // return str.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-9\s]/gi, '');
+       
         return str.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-9\s\-&]/gi, '');
+     
+
+     
         // Excludes special characters '&' and '-' from being replaced
     }
 
@@ -335,7 +304,7 @@
             }
         }
     });
-});
+
 
 
 
