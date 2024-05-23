@@ -11,6 +11,11 @@ const schema=new mongoose.Schema({
             required:true
          },
 
+         productAuthor:{
+            type:String,
+            required:true
+         },
+
          productDescription:{
             type:String,
             required:true

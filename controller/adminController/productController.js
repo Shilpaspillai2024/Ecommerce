@@ -57,6 +57,7 @@ const addProductPost= async (req,res)=>{
 
     const productDetails= {
       productName:req.body.productName,
+      productAuthor:req.body.productAuthor,
       productPrice:req.body.productPrice,
       productDescription:req.body.productDescription,
       productQuantity:req.body.productQuantity,

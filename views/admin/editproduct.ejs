@@ -169,7 +169,8 @@
                 </div>
                 <div class="product-form-right">
 
-                   
+                    <label for="productAuthor">Product Author</label>
+                    <input type="text" name="productAuthor" minlength="3" maxlength="30" value="<%=product.productAuthor %>" disabled>
                     <!-- input for product description -->
                     <label for="productDescription">Product Description</label>
                     <textarea name="productDescription" id="product-description" minlength="10" maxlength="500" required><%= product.productDescription %></textarea>

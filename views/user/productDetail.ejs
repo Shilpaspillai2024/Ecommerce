@@ -1,8 +1,13 @@
 <style>
+
+    body{
+        background-color:black;
+    }
      .product-view-container {
         display: flex;
         min-height: 100vh;
         padding: 5rem 0;
+        color: white;
     }
 
     .product-view-deatils {
@@ -23,23 +28,33 @@
     .product-image-array {
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
-        width: 90%;
+        justify-content:center;
+        width: 100%;
+        gap: 2rem;
     }
 
     .product-image-each {
-        width: 100px;
+        width: 200px;
         height: 100px;
         border: 2px solid #8c8c8c;
-        background-color: #eaeaea;
+        background-color: #e4dcdc;
         border-radius: 10px;
         overflow: hidden;
+       
     }
 
     .product-image-each img {
         width: 100px;
         height: 100px;
         object-fit: scale-down;
+        transition: transform 0.3s;
+        cursor: pointer;
+        
+
+    }
+    .product-image-each:hover img{
+        transform: scale(1.5);
+
     }
 
     .product-full-view {
@@ -55,7 +70,7 @@
         color: green;
     }
 
-    .product-full-img-view {
+    .product-full-image-view {
         width: 470px;
         height: 470px;
         overflow: hidden;
@@ -68,6 +83,7 @@
         width: 400px;
         height: 400px;
         object-fit: scale-down;
+        transition:transform 0.3s ease-in-out;
     }
 
     .product-detail-container {
@@ -137,6 +153,10 @@
         padding: 5px;
         font-size: 1.5rem;
     }
+
+    .similar-product-container{
+        color: white;
+    }
 </style>
 
 </style>
@@ -162,11 +182,11 @@
               <%  }) %>
             </div>
         </div>
+    </div>
 
 
 
-
-          <!-- right side product name, price, description addToCart section -->
+          <!-- right side product name, price, description addToCart section-->
 
 
           <div class="product-detail-container">
@@ -229,7 +249,7 @@
                 </form>
             </div>
           </div>
-    </div>
+    
   </div>
 
  <!-- if similar products exist in the collection then only then product is shown  -->
@@ -238,9 +258,72 @@
 
     <div class="similar-product-container container">
         <h2>similar Products</h2>
-        <!-- <%-include ('similarProducts') %> -->
+        <%-include ('similarProduct') %>
     </div>
-<%} %>
+<%} %> 
 
 
 <%-include('footer') %>
+
+<script>
+
+    // image Zoom efffect
+    const imageContainer=document.getElementsByClassName("product-full-image-view")[0]
+    const productImg= document.getElementById('product-image-img')
+
+    imageContainer.addEventListener("mousemove",(e)=>{
+        const rect = e.target.getBoundingClientRect();
+                        const x = (e.clientX - rect.left) / rect.width;
+                        const y = (e.clientY - rect.top) / rect.height;
+
+                        productImg.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+                        productImg.style.transform = "scale(2)";
+                    });
+
+                    imageContainer.addEventListener("mouseleave", () => {
+                        productImg.style.transformOrigin = "center"
+                        productImg.style.transform = "scale(1)"
+                    })
+
+                    const rightArrow = document.getElementById('right-arrow-img')
+                    const leftArrow = document.getElementById('left-arrow-img')
+
+                    // current index of the image array is first set as 0
+                    let currentIndex = 0;
+
+                    // image from backend is stored in a disabled input box
+                    const imageList = document.getElementsByName('image')[0].value
+
+                    // the imageList is get as string with commas then that is separated using the comma and added to an array
+                    let ImageArray = imageList.split(",")
+
+                    // find the length of the image array because of index starts with 0 array length is reduced by 1
+                    const maxlength = ImageArray.length - 1
+
+                    // event listener for right arrow
+                    rightArrow.addEventListener('click', () => {
+                        if (currentIndex === maxlength) {
+                            rightArrow.disabled = true
+                        } else {
+                            currentIndex = currentIndex + 1;
+                            productImg.src = `../../${ImageArray[currentIndex]}`
+                        }
+
+                    })
+
+                    // event listener for left arrow
+                    leftArrow.addEventListener('click', () => {
+                        if (currentIndex === 0) {
+                            leftArrow.disabled = true
+                        } else {
+                            currentIndex = currentIndex - 1;
+                            productImg.src = `../../${ImageArray[currentIndex]}`
+                        }
+
+                    })
+
+
+
+            
+    
+</script>

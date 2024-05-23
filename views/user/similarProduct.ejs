@@ -1,0 +1,119 @@
+<style>
+
+    .similar-product-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-bottom: 5rem;
+       
+    }
+
+    .product-box {
+        text-decoration: none;
+        color: #000000;
+        border: 1px solid #b2b2b2;
+        border-radius: 10px;
+        width: 300px;
+        padding: 1rem;
+        margin-top: 2rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+    }
+
+    .product-image-box {
+        height: 250px;
+        width: 250px;
+    }
+
+    .product-image-box img {
+        margin: auto;
+        width: 250px;
+        height: 250px;
+        object-fit: scale-down;
+    }
+
+    .product-text-row {
+        max-width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .product-discount-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0 2rem;
+        color: #ffffff;
+        background-color: red;
+        border-radius: 5px 0;
+    }
+
+    .product-new-arrival-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0 2rem;
+        color: #ffffff;
+        background-color: rgb(50, 195, 50);
+        border-radius: 5px 0;
+    }
+    .product-description-box{
+        color: white;
+      text-align: center;
+
+    }
+    .product-price {
+        /* display: flex;
+        flex-direction: row; */
+        /* align-items: center;  */
+        gap: .5rem;
+    }
+</style>
+
+
+
+<div class="similar-product-container container">
+    <!-- this will render each product on the product collection which is not blocked -->
+    <% similarProducts.forEach((product)=>{ %>
+        <!-- this is the product container and when it is clicked it redirect to product detail page -->
+        <a href="/user/product-view/<%= product.id %>" class="product-box">
+
+            <!-- if product discount is available then it is shown as a banner in product top  -->
+            <% if(product.productDiscount!=0){ %>
+                <div class="product-discount-box">
+                    <h6>
+                        <%= product.productDiscount %>&percnt; OFF
+                    </h6>
+                </div>
+
+                <!-- if the product is added which one day then new arrival banner is shown on top of the product box -->
+                <% }else if (new Date(product.addedOn).getTime()> (Date.now() - (1 * 24 * 60 * 60 * 1000))){ %>
+                    <div class="product-new-arrival-box">
+                        <h6>New Arrival</h6>
+                    </div>
+                    <% } %>
+
+
+                        <!-- image of product which is stored in uploads folder -->
+                        <div class="product-image-box">
+                            <img src="/<%= product.productImage[0] %>" alt="">
+                        </div>
+                        <!-- product description with text overflow as ... -->
+                        <div class="product-description-box">
+                            <h6 class="product-text-row">
+                                <%= product.productAuthor %>
+                            </h6>
+                            <p class="product-name product-text-row">
+                                <%= product.productName %>
+                            </p>
+                            <h5 class="product-price"><i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+                                <%= product.productPrice.toLocaleString() %>
+                            </h5>
+                        </div>
+        </a>
+
+        <% }) %>
+</div>
