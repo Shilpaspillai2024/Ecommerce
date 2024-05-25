@@ -114,6 +114,8 @@ const editProduct= async (req,res)=>{
 const editProductPost = async (req,res)=>{
   try {
   const  productId=req.params.id
+
+  
     productSchema.findByIdAndUpdate(productId,{productPrice:req.body.productPrice,productDescription: req.body.productDescription, productQuantity: req.body.productQuantity, productDiscount: req.body.productDiscount })
     .then((elem) => {
       req.flash('errorMessage',"product updated successfully")

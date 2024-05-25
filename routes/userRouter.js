@@ -7,7 +7,7 @@
  const forgetController=require("../controller/userController/forgetController")
  const productController=require('../controller/userController/productController')
 
-//  const userSession=require('../middleware/userSession')
+
  const user = express.Router()
 
 // login routes
@@ -16,7 +16,9 @@
  user.post('/login',userController.loginPost)
 
 
- 
+ // google Auth (login with google)
+
+//  user.get('/google',userController.google)
 
 
 // signup routers

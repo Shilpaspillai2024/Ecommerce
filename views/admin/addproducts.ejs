@@ -231,18 +231,32 @@
                 </div>
             </div>
 
+
+
+          
+            
+
         </form>
 
 
      </div>
-      
+     <!-- cropper -->
+     <div id="cropper-modal">
+        <div id="cropper-container">
+            <img id="cropper-image">
+            <div id="cropper-buttons">
+                <button id="crop-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="crop-confirm" class="btn btn-primary">Crop</button>
+            </div>
+        </div>
+    </div>
 
     <%- include('footer') %>
 
 
 
-    <script>
 
+<script>
             const addProductForm = document.getElementById('add-product-form')
             const productName = document.getElementsByName('productName')[0];
             const productPrice = document.getElementsByName('productPrice')[0];
@@ -313,74 +327,118 @@
             })
 
 
-        const productImageUpload=document.getElementById('product-image-upload');
-        const productImagePreview=document.getElementById('product-image-preview');
+        const productImageUpload = document.getElementById('product-image-upload');
+        const productImagePreview = document.getElementById('product-image-preview');
+        const cropperModal = document.getElementById('cropper-modal');
+        const cropperImage = document.getElementById('cropper-image');
+        const cropCancel = document.getElementById('crop-cancel');
+        const cropConfirm = document.getElementById('crop-confirm');
+        let cropper;
+        let files = [];
+        let currentFileIndex;
 
-       
-        productImageUpload.addEventListener('change',()=>{
-            productImagePreview.innerHTML='';
+        productImageUpload.addEventListener('change', () => {
+            productImagePreview.innerHTML = '';
             files = Array.from(productImageUpload.files);
-            if(files.length > 4){
+            if (files.length > 4) {
                 Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Maximum file count is 4",
-                    });
-                    productImageUpload.value='';
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Maximum file count is 4",
+                });
+                productImageUpload.value = '';
+                files = [];
+                return;
             }
-            else if(files.length == 0){
+            if (files.length === 0) {
                 Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Minimum file count is 1",
-                    });
-                    productImageUpload.value = '';
-                    files = [];
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Minimum file count is 1",
+                });
+                productImageUpload.value = '';
+                files = [];
+                return;
             }
-            else{
-                // for(let i=0;i<productImageUpload.files.length;i++){
-                    files.forEach((file, index) => {
-                    let reader= new FileReader()
-                    let figure=document.createElement("div");
-                    figure.classList.add('product-image-box');
-                    reader.onload = () => {
-                            let img = document.createElement("img");
-                            img.classList.add("preview-img");
-                            img.setAttribute("src", reader.result);
-                            figure.appendChild(img);
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = e.target.result;
+                    imgElement.classList.add('preview-img');
 
-                            // Create delete button with class delete-button
-                            let deleteButton = document.createElement("button");
-                            deleteButton.textContent = "Delete";
-                            deleteButton.classList.add("delete-button");
-                            deleteButton.addEventListener("click", () => {
-                                // Remove the parent div (figure) when the delete button is clicked
-                                files.splice(index, 1);
-                                productImageUpload.files = createFileList(files);
-                       
-                                figure.remove();
-                            });
-                            figure.appendChild(deleteButton);
-                        };
+                    const imageBox = document.createElement('div');
+                    imageBox.classList.add('product-image-box');
+                    imageBox.appendChild(imgElement);
 
-                        productImagePreview.appendChild(figure);
-                        reader.readAsDataURL(file);
-                    })
-                }
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.addEventListener('click', () => {
+                        files.splice(index, 1);
+                        imageBox.remove();
+                    });
+                    imageBox.appendChild(deleteButton);
+
+                    productImagePreview.appendChild(imageBox);
+
+                    imgElement.addEventListener('click', () => {
+                        cropperImage.src = e.target.result;
+                        cropperModal.style.display = 'flex';
+                        cropper = new Cropper(cropperImage, {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                            autoCropArea: 1
+                        });
+                        currentFileIndex = index;
+                    });
+                };
+                reader.readAsDataURL(file);
             });
-            function createFileList(files) {
-        const dataTransfer = new DataTransfer();
-        files.forEach(file => {
-            dataTransfer.items.add(file);
         });
-        return dataTransfer.files;
-    }
 
-     
-    
+        cropCancel.addEventListener('click', () => {
+            cropperModal.style.display = 'none';
+            cropper.destroy();
+        });
+
+        cropConfirm.addEventListener('click', () => {
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob((blob) => {
+                const croppedFile = new File([blob], files[currentFileIndex].name, { type: 'image/jpeg' });
+                files[currentFileIndex] = croppedFile;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imgElement = productImagePreview.children[currentFileIndex].querySelector('.preview-img');
+                    imgElement.src = e.target.result;
+                };
+                reader.readAsDataURL(croppedFile);
+
+                cropperModal.style.display = 'none';
+                cropper.destroy();
+            });
+        });
+
+        addProductForm.addEventListener('submit', (e) => {
+            if (files.length === 0) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Please upload at least one image",
+                });
+                e.preventDefault();
+            } else {
+                const formData = new FormData(addProductForm);
+                files.forEach(file => {
+                    formData.append('productImages', file);
+                });
+              
+                e.preventDefault();
+            }
+        });
+
+
 
 </script>
-
     
-
-  

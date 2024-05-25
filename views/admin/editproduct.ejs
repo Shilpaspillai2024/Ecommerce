@@ -117,6 +117,20 @@
         object-fit: scale-down;
     }
 
+    /* .delete-button {
+        background-color: #c30606;
+        padding: 10px;
+        color: #ffffff;
+        font-weight: 600;
+        border: none;
+        outline: none;
+    }
+
+    .btn {
+        min-width: 150px;
+    } */
+
+
     .delete-button {
         background-color: #c30606;
         padding: 10px;
@@ -129,6 +143,7 @@
     .btn {
         min-width: 150px;
     }
+
 </style>
 
 
@@ -180,34 +195,50 @@
 
                 </div>
             </div>
-            <div class="product-form-bottom">
+          
 
-                <!-- input file for image upload but the button is display is set as none -->
-                <input type="file" id="product-image-upload" name="productImage" accept="image/png, image/jpeg" multiple 
-                    class="d-none">
 
-                <!-- the product preview will generate based on what we select -->
-                <div id="product-image-preview">
+
+                <div class="product-form-bottom">
+
+                    <!-- input file for image upload but the button is display is set as none -->
+                    <input type="file" id="product-image-upload" name="productImage" accept="image/png, image/jpeg" multiple class="d-none">
+    
+                    <!-- using the label the image is uploaded -->
+                    <label for="product-image-upload" class="btn btn-warning">
+                        <i class="fas fa-upload"></i> &nbsp; Choose Images
+                    </label>
+
+                      <!-- the product preview will generate based on what we select -->
+                <!-- <div id="product-image-preview">
 
                     <% product.productImage.forEach((img)=>{ %>
                         <div class="product-image-box">
                             <img src="../../<%= img %>" alt="" class="preview-img ">
-                            
+                       
                         </div>
                    <% }) %>
-                        
-                
-                   
-                       
-                </div>
+              </div> -->
+
+
+              <div id="product-image-preview">
+                <% product.productImage.forEach((img, index) => { %>
+                    <div class="product-image-box">
+                        <img src="../../<%= img %>" alt="" class="preview-img">
+                    </div>
+                <% }) %>
+            </div>
+
+
+
 
 
                 <!-- the form submission and cancel buttons -->
-                <div>
-                    <a href="/admin/product" class="btn btn-secondary">Cancel</a>
-                    <button class="btn btn-success" type="submit">Update Product</button>
+                 <div>
+                        <a href="/admin/product" class="btn btn-secondary">Cancel</a>
+                        <button class="btn btn-success" type="submit">Add Product</button>
+                    </div>
                 </div>
-            </div>
 
         </form>
     </div>
@@ -224,8 +255,7 @@
             const productDiscount = document.getElementsByName('productDiscount')[0];
             const productDescription = document.getElementsByName('productDescription')[0];
             const productCategory = document.getElementsByName('productCategory')[0];
-
-
+          
 
             addProductForm.addEventListener('submit', (e) => {
                 e.preventDefault()
@@ -254,20 +284,14 @@
                     isValid = false;
                 }
                 
-                // if (productCategory.value === null) {
-                //     errorMessage='Product category is cannot be empty'
-                //     isValid = false
-                // }
+               
 
                 if (isNaN(productDiscount.value) || parseInt(productDiscount.value) < 0 || parseInt(productDiscount.value)>100) {
                     errorMessage='Product quality should be a number and it must be greater than zero'
                     isValid = false;
                 }
 
-                // if (productAuthor.value.trim() === '' || productAuthor.value.length<=0 || !isNaN(productAuthor.value)) {
-                //     errorMessage='Product Author cannot be empty'
-                //     isValid = false
-                // }
+               
 
                 if (productDescription.value.length <= 10 || productDescription.value.length > 500 || productDescription.value.trim === "") {
                     errorMessage='Product description must be between 10 to 80 word '
@@ -283,8 +307,10 @@
                }else{
                 addProductForm.submit()
                }
-            })
-
-
-
-</script>
+            });
+         
+           
+          
+         
+          
+        </script> 

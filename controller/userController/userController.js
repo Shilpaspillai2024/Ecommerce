@@ -30,31 +30,35 @@ const login= (req,res)=>{
 }
  const loginPost= async (req,res)=>{
     try {
-        const checkUser=await userSchema.findOne({email:req.body.username})
-        if(checkUser!==null){
-            if(checkUser.isBlocked)
-            req.flash('errorMessage','Access to this account has been restricted.')
-            res.redirect('/user/login')
-        }
-        else{
-            const passwordCheck=await bcrypt.compare(req.body.password,checkUser.password)
-
-            if(checkUser && passwordCheck){
-                req.session.user=req.body.username;
-                return res.redirect('/user/home')
-             }
-            else{
-               
-                req.flash('errorMessage','invalid username or password')
+        const checkUser =await userSchema.findOne({email: req.body.username})
+        if(checkUser != null){
+            if(checkUser.isBlocked){
+                req.flash('errorMessage','Access to this account has been restricted.')
                 res.redirect('/user/login')
+            }else{
+                const passwordCheck=await bcrypt.compare(req.body.password,checkUser.password)
+                console.log(passwordCheck)
+                if(passwordCheck){
+                    req.session.user=req.body.username;
+                    return res.redirect('/user/home')
+                 }
+                else{
+                   
+                    req.flash('errorMessage','invalid username or password')
+                    res.redirect('/user/login')
+                }
             }
-        }
-        
+        }   
     } catch (err) {
         console.log(`error in login post ${err}`)
         
     }
 
+ }
+
+
+ const google=(req,res)=>{
+    
  }
 
 
