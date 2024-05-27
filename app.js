@@ -9,8 +9,8 @@ const mongodbConnection=require('./config/mongodb')
 const nocache=require('nocache')
 const flash=require('connect-flash')
 const { v4: uuidv4 } = require('uuid');
-// const passport=require('passport')
-// const passportAuth=require('passport-google-oauth20')
+const passport=require('passport')
+const passportAuth=require('passport-google-oauth20')
 
 
 // env port
@@ -61,10 +61,10 @@ app.use(session({
     // cookie: {secure:false}
 }))
   
-// require('./config/passport-setup')
+require('./config/passport-setup')
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/user',userRoutes)
 app.use('/admin',adminRouter);
@@ -92,6 +92,10 @@ app.use('/admin',adminRouter);
 
 app.get('/',(req,res)=>{
     res.redirect('/user/home')
+})
+
+app.get('*',(req,res)=>{
+    res.render('pageNotfound',{title:"page Not Found"})
 })
 
 

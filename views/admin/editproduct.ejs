@@ -365,7 +365,7 @@
                }
             });
         
-    <!-- // extra added for edit image   ---->    
+ // extra added for edit image     
            
    
    
@@ -394,19 +394,7 @@
 
      })
 
-   
-
-// // Function to update data-index attributes after deletion
-// function updatePreviewIndexes() {
-//     const previewImages = document.querySelectorAll('.product-image-box');
-//     previewImages.forEach((imageBox, index) => {
-//         imageBox.querySelector('.delete-button').dataset.index = index;
-//     });
-// }
-
-
-
-    productImageUpload.addEventListener('change', () => {
+       productImageUpload.addEventListener('change', () => {
         productImagePreview.innerHTML = '';  // Clear previous previews
         files = Array.from(productImageUpload.files);
         
@@ -459,8 +447,8 @@
                     cropperImage.src = e.target.result;
                     cropperModal.style.display = 'flex';
                     cropper = new Cropper(cropperImage, {
-                        aspectRatio: 1,
-                        viewMode: 1,
+                        aspectRatio: 0,
+                        viewMode: 0,
                         autoCropArea: 1
                     });
                     currentFileIndex = index;
@@ -469,13 +457,6 @@
             reader.readAsDataURL(file);
         });
     });
-
-   
-
-
-
-
-
 
     cropCancel.addEventListener('click', () => {
         cropperModal.style.display = 'none';
@@ -515,30 +496,15 @@
 
 
 
-//     // addProductForm.addEventListener('submit', (e) => {
-//     //     if (files.length === 0) {
-//     //         Swal.fire({
-//     //             icon: "error",
-//     //             title: "Oops...",
-//     //             text: "Please upload at least one image",
-//     //         });
-//     //         e.preventDefault();
-//     //     } else {
-//     //         const formData = new FormData(addProductForm);
-//     //         files.forEach(file => {
-//     //             formData.append('productImages', file);
-//     //         });
-//     //         // Submit the form data via AJAX or similar method if necessary
-//     //         e.preventDefault();  // Prevent the default form submission
-//     //         // Implement the form submission logic here, e.g., using fetch API
-//     //     }
-//     // });
 
 
 
 
-      
+
 
 </script>
 
 
+
+
+ 

@@ -386,8 +386,8 @@
                         cropperImage.src = e.target.result;
                         cropperModal.style.display = 'flex';
                         cropper = new Cropper(cropperImage, {
-                            aspectRatio: 1,
-                            viewMode: 1,
+                            aspectRatio: 0,
+                            viewMode: 0,
                             autoCropArea: 1
                         });
                         currentFileIndex = index;
