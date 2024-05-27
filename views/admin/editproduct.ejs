@@ -144,6 +144,39 @@
         min-width: 150px;
     }
 
+    #cropper-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    #cropper-container {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #cropper-image {
+        max-width: 100%;
+        max-height: 70vh;
+    }
+
+    #cropper-buttons {
+        margin-top: 1rem;
+        display: flex;
+        gap: 1rem;
+    }
+
 </style>
 
 
@@ -155,7 +188,7 @@
             <h2 class="text-center">Edit Product</h2>
         </div>
 
-        <!-- form action is set with product id to update the product details based on the id -->
+        <!--  form action is set with product id to update the product details based on the id -->
         <form action="/admin/edit-product/<%= product.id %>" method="post" enctype="multipart/form-data" id="add-product-form">
 
             <div class="product-form-top">
@@ -225,6 +258,10 @@
                 <% product.productImage.forEach((img, index) => { %>
                     <div class="product-image-box">
                         <img src="../../<%= img %>" alt="" class="preview-img">
+
+                       
+                        <!-- <button class="delete-button" data-index="<%= index %>">Change</button> -->
+                        <button type="button" class="delete-button" data-index="<%= index %>">Delete</button>
                     </div>
                 <% }) %>
             </div>
@@ -238,15 +275,34 @@
                         <a href="/admin/product" class="btn btn-secondary">Cancel</a>
                         <button class="btn btn-success" type="submit">Add Product</button>
                     </div>
+            
+            
+            
                 </div>
+
+
+
+
+                 <!-- cropeer -->
+    <div id="cropper-modal">
+        <div id="cropper-container">
+          <img id="cropper-image">
+          <div id="cropper-buttons">
+            <button id="crop-cancel" class="btn btn-secondary">Cancel</button>
+            <button id="crop-confirm" class="btn btn-primary">Crop</button>
+          </div>
+        </div>
+      </div>
 
         </form>
     </div>
 
+   
+
 
 <%- include('footer') %>
 
-<script>
+  <script>
              const addProductForm = document.getElementById('add-product-form')
             const productName = document.getElementsByName('productName')[0];
             const productPrice = document.getElementsByName('productPrice')[0];
@@ -308,9 +364,181 @@
                 addProductForm.submit()
                }
             });
-         
+        
+    <!-- // extra added for edit image   ---->    
            
-          
+   
+   
+    const productImageUpload = document.getElementById('product-image-upload');
+    const productImagePreview = document.getElementById('product-image-preview');
+    const cropperModal = document.getElementById('cropper-modal');
+    const cropperImage = document.getElementById('cropper-image');
+    const cropCancel = document.getElementById('crop-cancel');
+    const cropConfirm = document.getElementById('crop-confirm');
+    const deleteButtons = document.querySelectorAll(".delete-button");
+    const imagePreviewContainer = document.getElementById("product-image-preview");
+    let cropper;
+    let files = [];
+    let currentFileIndex;
+
+
+     deleteButtons.forEach((button)=>{
+
+      button.addEventListener('click',function(){
+            const index= this.dataset.index
+            imagePreviewContainer.removeChild(this.parentElement);
+
          
-          
-        </script> 
+
+      })
+
+     })
+
+   
+
+// // Function to update data-index attributes after deletion
+// function updatePreviewIndexes() {
+//     const previewImages = document.querySelectorAll('.product-image-box');
+//     previewImages.forEach((imageBox, index) => {
+//         imageBox.querySelector('.delete-button').dataset.index = index;
+//     });
+// }
+
+
+
+    productImageUpload.addEventListener('change', () => {
+        productImagePreview.innerHTML = '';  // Clear previous previews
+        files = Array.from(productImageUpload.files);
+        
+        // Validate the number of files
+        if (files.length > 4) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Maximum file count is 4",
+            });
+            productImageUpload.value = '';
+            files = [];
+            return;
+        }
+        if (files.length === 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Minimum file count is 1",
+            });
+            productImageUpload.value = '';
+            files = [];
+            return;
+        }
+
+        files.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.classList.add('preview-img');
+
+                const imageBox = document.createElement('div');
+                imageBox.classList.add('product-image-box');
+                imageBox.appendChild(imgElement);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.classList.add('delete-button');
+                deleteButton.addEventListener('click', () => {
+                    files.splice(index, 1);
+                    imageBox.remove();
+                    console.log('File deleted:', index, files);
+                });
+                imageBox.appendChild(deleteButton);
+
+                productImagePreview.appendChild(imageBox);
+
+                imgElement.addEventListener('click', () => {
+                    cropperImage.src = e.target.result;
+                    cropperModal.style.display = 'flex';
+                    cropper = new Cropper(cropperImage, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 1
+                    });
+                    currentFileIndex = index;
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+   
+
+
+
+
+
+
+    cropCancel.addEventListener('click', () => {
+        cropperModal.style.display = 'none';
+        cropper.destroy();
+    });
+
+
+    cropConfirm.addEventListener('click', (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    const canvas = cropper.getCroppedCanvas();
+    canvas.toBlob((blob) => {
+        if (blob) { // Check if blob is available
+            const croppedFile = new File([blob], files[currentFileIndex].name, { type: 'image/jpeg' });
+            files[currentFileIndex] = croppedFile;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imgElement = productImagePreview.children[currentFileIndex].querySelector('.preview-img');
+                imgElement.src = e.target.result;
+            };
+            reader.readAsDataURL(croppedFile);
+
+            cropperModal.style.display = 'none';
+            cropper.destroy();
+
+        } else {
+            // Show error message if blob is not available
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Image cropping failed. Please try again.",
+            });
+        }
+    });
+});
+
+
+
+//     // addProductForm.addEventListener('submit', (e) => {
+//     //     if (files.length === 0) {
+//     //         Swal.fire({
+//     //             icon: "error",
+//     //             title: "Oops...",
+//     //             text: "Please upload at least one image",
+//     //         });
+//     //         e.preventDefault();
+//     //     } else {
+//     //         const formData = new FormData(addProductForm);
+//     //         files.forEach(file => {
+//     //             formData.append('productImages', file);
+//     //         });
+//     //         // Submit the form data via AJAX or similar method if necessary
+//     //         e.preventDefault();  // Prevent the default form submission
+//     //         // Implement the form submission logic here, e.g., using fetch API
+//     //     }
+//     // });
+
+
+
+
+      
+
+</script>
+
+

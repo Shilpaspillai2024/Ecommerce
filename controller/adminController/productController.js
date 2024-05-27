@@ -111,29 +111,70 @@ const editProduct= async (req,res)=>{
 }
  
 
-const editProductPost = async (req,res)=>{
-  try {
-  const  productId=req.params.id
+// const editProductPost = async (req,res)=>{
+//   try {
+//   const  productId=req.params.id
 
   
-    productSchema.findByIdAndUpdate(productId,{productPrice:req.body.productPrice,productDescription: req.body.productDescription, productQuantity: req.body.productQuantity, productDiscount: req.body.productDiscount })
-    .then((elem) => {
-      req.flash('errorMessage',"product updated successfully")
-      res.redirect('/admin/product')
-    }).catch((err) =>{
-      console.log(`Error while updating the product ${err}`);
-      req.flash('errorMessage','product is not updated')
-      res.redirect('/admin/product')
-    })
+//     productSchema.findByIdAndUpdate(productId,{productPrice:req.body.productPrice,productDescription: req.body.productDescription, productQuantity: req.body.productQuantity, productDiscount: req.body.productDiscount })
+//     .then((elem) => {
+//       req.flash('errorMessage',"product updated successfully")
+//       res.redirect('/admin/product')
+//     }).catch((err) =>{
+//       console.log(`Error while updating the product ${err}`);
+//       req.flash('errorMessage','product is not updated')
+//       res.redirect('/admin/product')
+//     })
 
     
-  } catch (err) {
-    console.log(`Error during updating the product on database ${err}`);
-        req.flash('errorMessage', 'Oops the action is not completed')
-        res.redirect('/admin/product')
+//   } catch (err) {
+//     console.log(`Error during updating the product on database ${err}`);
+//         req.flash('errorMessage', 'Oops the action is not completed')
+//         res.redirect('/admin/product')
     
+//   }
+// }
+
+
+const editProductPost = async (req, res) => {
+  try {
+      const imageArray = req.files.map(file => file.path);
+
+      const productDetails = {
+          productName: req.body.productName,
+          productAuthor: req.body.productAuthor,
+          productPrice: req.body.productPrice,
+          productDescription: req.body.productDescription,
+          productQuantity: req.body.productQuantity,
+          productCategory: req.body.productCategory,
+          productDiscount: req.body.productDiscount,
+          ...(imageArray.length > 0 && { productImage: imageArray }), // Only update images if new ones are uploaded
+      };
+
+      await productSchema.findByIdAndUpdate(req.params.id, productDetails);
+      req.flash('errorMessage', 'Product updated successfully');
+      res.redirect('/admin/product');
+  } catch (err) {
+      console.error(`Error updating product: ${err}`);
+      req.flash('errorMessage', err.message || 'Failed to update product. Please try again later.');
+      res.redirect(`/admin/edit-product/${req.params.id}`);
   }
-}
+};
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
 
 // product deactivating
 const productInactive = async (req,res)=>{

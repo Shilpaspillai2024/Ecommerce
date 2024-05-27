@@ -9,6 +9,8 @@ const mongodbConnection=require('./config/mongodb')
 const nocache=require('nocache')
 const flash=require('connect-flash')
 const { v4: uuidv4 } = require('uuid');
+// const passport=require('passport')
+// const passportAuth=require('passport-google-oauth20')
 
 
 // env port
@@ -56,10 +58,37 @@ app.use(session({
     secret:uuidv4(),
     resave:false,
     saveUninitialized:true,
+    // cookie: {secure:false}
 }))
+  
+// require('./config/passport-setup')
+
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use('/user',userRoutes)
 app.use('/admin',adminRouter);
+
+
+// app.get('/auth/google',
+//   passport.authenticate('google', { scope: ['email','profile'] }
+
+//   ));
+
+// app.get('/auth/google/callback', 
+//   passport.authenticate('google', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect home.
+ 
+
+//     res.redirect('/');
+//     console.log("logged in")
+   
+//   });
+// app.use('/auth/logout',(req,res)=>{
+//     req.session.destroy()
+// })
+ 
 
 app.get('/',(req,res)=>{
     res.redirect('/user/home')

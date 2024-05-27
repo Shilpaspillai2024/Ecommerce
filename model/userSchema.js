@@ -2,13 +2,18 @@ const mongoose = require("mongoose")
 const {defalutMaxListeners}=require('nodemailer/lib/xoauth2')
 
 const wordplaySchema = new mongoose.Schema({
+    // googleId:{
+    //     type:String,
+    //     required:true,
+    // },
     name : {
         type : String,
         required:true,
     },
     password :{
         type : String,
-        required : true,
+        // required : true,
+        require:false,
     },
     email :{
         type : String,
@@ -16,7 +21,8 @@ const wordplaySchema = new mongoose.Schema({
     },
     number: {
         type: Number,
-        required: true,
+        // required: true,
+        required:false,
     },
     isBlocked:{
         type:Boolean,

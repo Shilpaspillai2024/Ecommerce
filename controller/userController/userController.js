@@ -6,6 +6,9 @@ const generateOtp=require('../../services/generateOTP')
 const sendOtpMail=require('../../services/emailSender')
 const productSchema=require('../../model/productSchema')
 const categorySchema=require('../../model/categorySchema')
+// const passport=require('passport')
+// const passportAuth=require('passport-google-oauth20')
+// const auth=require('./config/passport-setup')
 
 
 const user=(req,res)=>{
@@ -15,6 +18,16 @@ const user=(req,res)=>{
         console.log('Error During user route');
     }
 }
+
+// const googleCallback = (req, res) => {
+//     try {
+//       req.session.user = req.user; // Store the authenticated user in the session
+//       res.redirect('/user/home');
+//     } catch (err) {
+//       console.log('Error during Google callback', err);
+//       res.redirect('/user/login');
+//     }
+//   };
 
 const login= (req,res)=>{
     if(req.session.user){
@@ -57,9 +70,8 @@ const login= (req,res)=>{
  }
 
 
- const google=(req,res)=>{
-    
- }
+
+ 
 
 
 
