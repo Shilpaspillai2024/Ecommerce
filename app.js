@@ -10,7 +10,9 @@ const nocache=require('nocache')
 const flash=require('connect-flash')
 const { v4: uuidv4 } = require('uuid');
 const passport=require('passport')
-const passportAuth=require('passport-google-oauth20')
+// const passportAuth=require('passport-google-oauth20')
+require('./config/passport-setup')
+
 
 
 // env port
@@ -58,10 +60,9 @@ app.use(session({
     secret:uuidv4(),
     resave:false,
     saveUninitialized:true,
-    // cookie: {secure:false}
+    cookie: {secure:false}
 }))
   
-require('./config/passport-setup')
 
 app.use(passport.initialize());
 app.use(passport.session());

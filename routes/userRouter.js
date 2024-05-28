@@ -6,7 +6,7 @@
  const userController = require("../controller/userController/userController")
  const forgetController=require("../controller/userController/forgetController")
  const productController=require('../controller/userController/productController')
-//  const passport=require('passport')
+  //  const passport=require('passport')
 //  const passportAuth=require('passport-google-oauth20')
 //  const auth=require('./config/passport-setup')
  
@@ -20,14 +20,10 @@
 
 
 //  //google login
-//  user.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
-// user.get('/auth/google/callback',
-//   passport.authenticate('google', { failureRedirect: '/login' }),
-//   userController.googleCallback // Controller function to handle the response
-// );
  
-
+// user.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
+// user.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), userController.googleCallback);
 
 // signup routers
 
