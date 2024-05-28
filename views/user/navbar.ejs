@@ -10,6 +10,7 @@
         z-index: 99;
         position: relative;
         background-color: black;
+        border-bottom: 1px solid #b2b2b2;
     }
 
     .logo {
@@ -135,8 +136,7 @@
 
         <!-- if user is logged in -->
         <% if (user) { %>
-            <span class="nav-link-items" onclick="toggleSidebar()"><i class="fa-solid fa-user"
-                    style="color:  rgb(162, 218, 33);"></i></span>
+            <span class="nav-link-items" onclick="toggleSidebar()"><i class="fa-solid fa-user" style="color:  rgb(162, 218, 33);"></i></span>
             <div class="sidebar" id="sidebar">
                 <ul>
                     <li id="go-back-home" onclick="toggleSidebar()"><span><i class="fa-solid fa-angles-left"></i> Go
@@ -156,6 +156,7 @@
 
 
     </nav>
+   
 </header>
 <%-include ('alert') %>
 
@@ -164,7 +165,7 @@
     // toggle side bar
     function toggleSidebar() {
         var sidebar = document.getElementById("sidebar");
-        if (sidebar.style.right === "-250px") {
+        if (sidebar.style.right === ''||sidebar.style.right === '-250px') {
             sidebar.style.right = "0";
         } else {
             sidebar.style.right = "-250px";

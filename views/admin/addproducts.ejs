@@ -192,9 +192,13 @@
                     <select name="productCategory" id="product-category" required>
                         <option value="" selected disabled>Select a category</option>
                         <% productCategory.forEach((category)=> { %>
+
+                        <!----for category is blocked then not diplay,use the if ondition,in backened it cleared by find category isActive:true -->
+                        <!-- <% if (category.isActive) { %> -->
                             <option value="<%= category.categoryName %>">
                                 <%= category.categoryName %>
                             </option>
+                            <!-- <% } %> -->
                             <% }) %>
                     </select>
 

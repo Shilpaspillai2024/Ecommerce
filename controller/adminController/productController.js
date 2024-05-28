@@ -25,8 +25,8 @@ const fs=require('fs')
   const addProduct = async (req,res)=>{
     try {
 
-       // get all category details from the category collection
-          const productCategory=await categorySchema.find()
+       // get all category details from the category collection ,the categories are Active
+          const productCategory=await categorySchema.find({isActive: true})
           
           // before render the page check whether the category is empty if its empty then send a flash message
           if(productCategory.length===0){
