@@ -11,7 +11,7 @@ const flash=require('connect-flash')
 const { v4: uuidv4 } = require('uuid');
 const passport=require('passport')
 // const passportAuth=require('passport-google-oauth20')
-require('./config/passport-setup')
+const passportSetup = require('./config/passport-setup')
 
 
 

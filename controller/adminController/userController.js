@@ -46,4 +46,7 @@ const userSchema=require('../../model/userSchema')
  }
 
 
+ 
+  
+
  module.exports={user,blockUser,unBlockUser}

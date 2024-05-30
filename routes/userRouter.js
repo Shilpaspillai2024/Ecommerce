@@ -25,6 +25,11 @@
 // user.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 // user.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), userController.googleCallback);
 
+user.get('/auth/google', checkUserBlocked, userController.loginAuth);
+user.get('/auth/google/redirect', checkUserBlocked, userController.loginAuthRedirect)
+
+
+
 // signup routers
 
 user.get('/signup',userController.signup)
@@ -53,6 +58,9 @@ user.post('/forget-password',forgetController.forgetPasswordPost)
 // product routers
 // if the user is blocked then the user is redirect to login page
 user.get('/product-view/:id',checkUserBlocked,productController.productView)
+
+
+user.get('/productSeemore',checkUserBlocked,productController.productSeemore)
 
 
 user.get('/logout',userController.logout)

@@ -23,16 +23,7 @@ const user=(req,res)=>{
 
 
 
-  const googleCallback = (req, res) => {
-    try {
-        req.session.user = req.user; // Store the authenticated user in the session
-        res.redirect('/user/home');
-    } catch (err) {
-        console.log('Error during Google callback', err);
-        res.redirect('/user/login');
-    }
-};
-
+  
 const login= (req,res)=>{
     if(req.session.user){
        
@@ -72,6 +63,36 @@ const login= (req,res)=>{
     }
 
  }
+
+
+ //google login auth
+ //google auth
+
+ const loginAuth = passport.authenticate("google", {
+    scope: ["profile", "email"],
+  });
+  
+  const loginAuthRedirect = (req, res, next) => {
+    passport.authenticate("google", (err, user, info) => {
+      if (err) {
+        console.log(user, "hello auth1.1");
+        return next(err);
+      }
+      if (!user) {
+        console.log(user, "hello auth1");
+        return res.redirect("/user/login");
+      } // Redirect to login if authentication fails
+      req.logIn(user, (err) => {
+        if (err) {
+          console.log(user, "hello auth2");
+          return next(err);
+        }
+        console.log(user, "hello auth");
+        req.session.user = user.email;
+        return res.redirect("/user/home"); // Redirect to profile page if authentication is successful
+      });
+    })(req, res, next);
+  };
 
 
 
@@ -241,5 +262,5 @@ const logout = (req,res)=>{
 
 
 module.exports= {
-    user,home,login,loginPost,signup,signpost,otp,otpPost,otpResend,logout,googleCallback
+    user,home,login,loginPost,signup,signpost,otp,otpPost,otpResend,logout,loginAuth,loginAuthRedirect
 }
