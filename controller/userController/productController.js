@@ -5,6 +5,8 @@ const productSchema=require('../../model/productSchema')
 const productView=async (req,res)=>{
     try {
         const productId=req.params.id
+
+      
         const product= await productSchema.findById(productId)
         const similarProducts=await productSchema.find({productCategory:product.productCategory,_id:{$ne:productId}})
         if(product.length===0){

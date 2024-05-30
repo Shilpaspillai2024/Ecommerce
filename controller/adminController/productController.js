@@ -136,48 +136,42 @@ const editProduct= async (req,res)=>{
 // }
 
 
+
+
+
 const editProductPost = async (req, res) => {
   try {
-      const imageArray = req.files.map(file => file.path);
+    const product = await productSchema.findById(req.params.id);
 
-      const productDetails = {
-          productName: req.body.productName,
-          productAuthor: req.body.productAuthor,
-          productPrice: req.body.productPrice,
-          productDescription: req.body.productDescription,
-          productQuantity: req.body.productQuantity,
-          productCategory: req.body.productCategory,
-          productDiscount: req.body.productDiscount,
-          ...(imageArray.length > 0 && { productImage: imageArray }), // Only update images if new ones are uploaded
-      };
 
-      await productSchema.findByIdAndUpdate(req.params.id, productDetails);
-      req.flash('errorMessage', 'Product updated successfully');
-      res.redirect('/admin/product');
+    let updatedImages = [...product.productImage];
+
+    for (let i = 0; i < product.productImage.length; i++) {
+      const file = req.files[`productImage_${i}`];
+      if (file && file.length > 0) { // Check if file exists
+        updatedImages[i] = file[0].path; // Update image path
+      }
+    }
+
+    const { productPrice, productQuantity, productDiscount, productDescription } = req.body;
+
+    // Update product details including images
+    await productSchema.findByIdAndUpdate(req.params.id, {
+      productPrice,
+      productQuantity,
+      productDiscount,
+      productDescription,
+      productImage: updatedImages
+    });
+
+    req.flash('errorMessage', 'Product updated successfully');
+    res.redirect('/admin/product');
   } catch (err) {
-      console.error(`Error updating product: ${err}`);
-      req.flash('errorMessage', err.message || 'Failed to update product. Please try again later.');
-      res.redirect(`/admin/edit-product/${req.params.id}`);
+    console.error(`Error updating product: ${err}`);
+    req.flash('errorMessage', err.message || 'Failed to update product. Please try again later.');
+    res.redirect(`/admin/edit-product/${req.params.id}`);
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
 
 
 

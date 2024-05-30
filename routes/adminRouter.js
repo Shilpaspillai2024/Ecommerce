@@ -5,6 +5,8 @@ const express=require('express')
  const dashboardController=require('../controller/adminController/dashboardController')
  const productController=require('../controller/adminController/productController')
  const userController=require('../controller/adminController/userController')
+ const multer=require('../middleware/multer')
+
 
 //  const adminSession=require('../middleware/adminSession')
 const checkAdminSession = require('../middleware/adminSession')
@@ -54,6 +56,9 @@ admin.get('/add-product',checkAdminSession,productController.addProduct)
 admin.post('/add-product',productController.multermiddle,productController.addProductPost)
 admin.get('/edit-product/:id',checkAdminSession,productController.editProduct)
 admin.post('/edit-product/:id',productController.multermiddle,productController.editProductPost)
+// admin.post('/edit-product/:id',multer.upload.array('productImage', 4),productController.editProductPost)
+
+
 admin.get('/product-inactive/:id',checkAdminSession,productController.productInactive)
 admin.get('/product-active/:id',checkAdminSession,productController.productActive)
 admin.get('/delete-product/:id',checkAdminSession,productController.productDelete)
