@@ -22,27 +22,32 @@ const login = (req, res) => {
         if (req.session.admin) {
             res.redirect('/admin/dashboard')
         } else {
-            res.render('admin/login',{admin:req.session.admin, title: "Admin Login", alertMessage: "" })
+
+            res.render('admin/login',{admin:req.session.admin, title: "Admin Login",alertMessage:req.flash('errorMessage')})
         }
     } catch (err) {
         console.log(`Error during admin login ${err}`);
     }
 }
 
-const loginPost=(req,res)=>{
+const loginPost = (req,res)=> {
     try {
 
-        if(req.body.email==process.env.ADMIN_USERNAME && req.body.password==process.env.ADMIN_PASSWORD){
+        if(req.body.email==process.env.ADMIN_USERNAME && req.body.password==process.env.ADMIN_PASSWORD)
+            {
             req.session.admin=req.body.email;
             res.redirect('/admin/dashboard')
         }
         else{
-        
-            res.redirect('admin/login',{ title: "Admin Login", alertMessage: "Invalid username or password"})
+           
+            req.flash('errorMessage','invalid username or password')
+            res.redirect('/admin/login')
+           
         }
         
     } catch (err) {
-        console.log(`error during admin login ${err}`)
+        console.log(`Error during admin login ${err}`)
+        res.redirect('/admin/login');
         
     }
 }

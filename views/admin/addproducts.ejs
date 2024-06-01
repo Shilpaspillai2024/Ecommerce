@@ -319,6 +319,17 @@
                     isValid = false
                 }
 
+
+                // Check if the product name already exists (case insensitive)
+             const existingProductNames = Array.from(document.querySelectorAll('[name="productName"]')).map(input => input.value.toLowerCase());
+
+             // Check if the new product name matches an existing one (case insensitive)
+                   if (existingProductNames.includes(productName.value.toLowerCase())) {
+                           errorMessage = "Product name already exists";
+                                   isValid = false;
+                                               }
+
+
                if(isValid===false){
                 Swal.fire({
                     title:"Invalid Inputs",
@@ -394,7 +405,8 @@
                             viewMode: 0,
                             autoCropArea: 1
                         });
-                        currentFileIndex = index;
+                        // currentFileIndex = index;
+                        currentFileIndex = files.indexOf(file);
                     });
                 };
                 reader.readAsDataURL(file);
@@ -414,7 +426,8 @@
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const imgElement = productImagePreview.children[currentFileIndex].querySelector('.preview-img');
+                    // const imgElement = productImagePreview.children[currentFileIndex].querySelector('.preview-img');
+                    const imgElement = cropperImage.parentElement.querySelector('.preview-img');
                     imgElement.src = e.target.result;
                 };
                 reader.readAsDataURL(croppedFile);

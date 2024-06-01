@@ -174,7 +174,6 @@ const editProductPost = async (req, res) => {
 };
 
 
-
 // product deactivating
 const productInactive = async (req,res)=>{
    try {

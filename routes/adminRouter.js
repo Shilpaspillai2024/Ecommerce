@@ -5,6 +5,7 @@ const express=require('express')
  const dashboardController=require('../controller/adminController/dashboardController')
  const productController=require('../controller/adminController/productController')
  const userController=require('../controller/adminController/userController')
+ const orderController=require('../controller/adminController/orderController')
  const multer=require('../middleware/multer')
 
 
@@ -70,6 +71,13 @@ admin.get('/delete-product/:id',checkAdminSession,productController.productDelet
 admin.get('/user',checkAdminSession,userController.user)
 admin.get('/block-user/:id',checkAdminSession,userController.blockUser)
 admin.get('/unblock-user/:id',checkAdminSession,userController.unBlockUser)
+
+
+
+// order routers
+
+admin.get('/order',checkAdminSession,orderController.order)
+
 
 
 
