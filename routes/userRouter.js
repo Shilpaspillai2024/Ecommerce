@@ -25,8 +25,8 @@
 // user.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 // user.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), userController.googleCallback);
 
-user.get('/auth/google', checkUserBlocked, userController.loginAuth);
-user.get('/auth/google/redirect', checkUserBlocked, userController.loginAuthRedirect)
+user.get('/auth/google', userController.loginAuth);
+user.get('/auth/google/redirect', userController.loginAuthRedirect)
 
 
 

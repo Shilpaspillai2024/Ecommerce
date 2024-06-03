@@ -12,7 +12,9 @@ const wordplaySchema = new mongoose.Schema({
     },
     password :{
         type : String,
+
         required : true,
+        
        
     },
     email :{
@@ -22,6 +24,7 @@ const wordplaySchema = new mongoose.Schema({
     number: {
         type: Number,
         required: true,
+        
        
     },
     isBlocked:{

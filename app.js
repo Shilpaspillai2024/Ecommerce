@@ -71,6 +71,9 @@ app.use('/user',userRoutes)
 app.use('/admin',adminRouter);
 
 
+
+
+
 // app.get('/auth/google',
 //   passport.authenticate('google', { scope: ['email','profile'] }
 

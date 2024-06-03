@@ -7,6 +7,7 @@ const sendOtpMail=require('../../services/emailSender')
 const productSchema=require('../../model/productSchema')
 const categorySchema=require('../../model/categorySchema')
 const passport=require('passport')
+const passportSetup = require('../../config/passport-setup')
 // const passportAuth=require('passport-google-oauth20');
 // const auth=require('./config/passport-setup');
 
@@ -48,6 +49,8 @@ const login= (req,res)=>{
                 console.log(passwordCheck)
                 if(passwordCheck){
                     req.session.user=req.body.username;
+
+                  
                     return res.redirect('/user/home')
                  }
                 else{
@@ -72,7 +75,7 @@ const login= (req,res)=>{
     scope: ["profile", "email"],
   });
   
-  const loginAuthRedirect = (req, res, next) => {
+    const loginAuthRedirect = (req, res, next) => {
     passport.authenticate("google", (err, user, info) => {
       if (err) {
         console.log(user, "hello auth1.1");
