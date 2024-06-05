@@ -1,0 +1,157 @@
+
+    <style>
+        body {
+            background-color:black;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        
+
+        .form-control {
+            background-color: #2b2b2b;
+            color: #ffffff;
+            border: none;
+        }
+
+        .form-control:focus {
+            background-color: #2b2b2b;
+            color: #ffffff;
+        }
+
+        .profile-container {
+            margin-top: 20px;
+          
+        }
+        .left-container{
+            background-color:#2b2b2b ;
+           padding: 20px;
+        }
+
+        .profile-header {
+            /* background-color: #333333; */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .profile-header h3 {
+            margin: 0;
+        }
+
+        .profile-header p {
+            margin: 5px 0 0;
+        }
+
+        .btn-save {
+            background-color: #dc3545;
+            border: none;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .side-menu {
+            background-color: #333333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-left: 20px;
+        }
+
+        .side-menu a {
+            color: #ffffff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .side-menu a:hover {
+            text-decoration: underline;
+        }
+
+        .side-menu h4 {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            margin-top: 10px;
+        }
+
+        .form-container {
+            background-color:black;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+
+ <%-include('navbar')%>
+    <div class="container profile-container">
+        <div class="row">
+            <div class="col-md-8 left-container">
+                <div class="profile-header">
+                    <img src="../../image/avatar.png" alt="Profile Picture">
+                    <div>
+                        <h3><%=userDetail.name%></h3>
+                        <p><%=userDetail.email%></p>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <form>
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="Shilpa S">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Pillai">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="shilpas@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="address" placeholder="Rhino's Path, Trivandrum, Pathanamthitta">
+                        </div>
+                       
+                        <button type="submit" class="btn btn-save">Save Changes</button>
+                        <button type="button" class="btn btn-cancel">Cancel</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="side-menu">
+                    <h4>Manage account</h4>
+                    <a href="#">My profile</a>
+                    <a href="#">Edit User Details</a>
+                    <a href="#">Edit Address</a>
+                    <a href="#">Change Password</a>
+                    <h4>My order</h4>
+                    <a href="#">Order status</a>
+                    <a href="#">Order history</a>
+                    <a href="#">Return item</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%-include('footer') %>
+
+  

@@ -110,59 +110,47 @@ const editProduct= async (req,res)=>{
   }
 }
  
-
-// const editProductPost = async (req,res)=>{
-//   try {
-//   const  productId=req.params.id
-
-  
-//     productSchema.findByIdAndUpdate(productId,{productPrice:req.body.productPrice,productDescription: req.body.productDescription, productQuantity: req.body.productQuantity, productDiscount: req.body.productDiscount })
-//     .then((elem) => {
-//       req.flash('errorMessage',"product updated successfully")
-//       res.redirect('/admin/product')
-//     }).catch((err) =>{
-//       console.log(`Error while updating the product ${err}`);
-//       req.flash('errorMessage','product is not updated')
-//       res.redirect('/admin/product')
-//     })
-
-    
-//   } catch (err) {
-//     console.log(`Error during updating the product on database ${err}`);
-//         req.flash('errorMessage', 'Oops the action is not completed')
-//         res.redirect('/admin/product')
-    
-//   }
-// }
-
-
-
-
-
 const editProductPost = async (req, res) => {
   try {
-    const product = await productSchema.findById(req.params.id);
+    const id = req.params.id
 
 
-    let updatedImages = [...product.productImage];
+    const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
 
-    for (let i = 0; i < product.productImage.length; i++) {
-      const file = req.files[`productImage_${i}`];
-      if (file && file.length > 0) { // Check if file exists
-        updatedImages[i] = file[0].path; // Update image path
-      }
+    imageToDelete.forEach(x => fs.unlinkSync(x));
+
+
+
+    if(imageToDelete.length>0){
+      await productSchema.findByIdAndUpdate(id,{
+        $pull:{productImage: {$in: imageToDelete}}
+      })
     }
 
+    const product = await productSchema.findById(id);
+
+    
+    
     const { productPrice, productQuantity, productDiscount, productDescription } = req.body;
 
+    let imgArray = []
+
+    req.files.forEach((x) => {
+      imgArray.push(x.path)
+    })
+
+    const newImages = [...product.productImage, ...imgArray]
+
     // Update product details including images
-    await productSchema.findByIdAndUpdate(req.params.id, {
+    await productSchema.findByIdAndUpdate(id, {
       productPrice,
       productQuantity,
       productDiscount,
       productDescription,
-      productImage: updatedImages
+      productImage: newImages
     });
+
+    
 
     req.flash('errorMessage', 'Product updated successfully');
     res.redirect('/admin/product');

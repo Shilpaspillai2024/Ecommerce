@@ -4,24 +4,6 @@ const dotenv=require('dotenv').config()
 const User = require('../model/userSchema'); // Adjust the path to your user schema
 
 
-// passport.use(new GoogleStrategy({
-//     clientID: process.env.GOOGLE_CLIENT_ID,
-//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//     callbackURL: "http://localhost:3000/auth/google/callback",
-//     passReqToCallback:true,
-//   },
-//   function(request,accessToken, refreshToken, profile, done) {
-   
-//     done(null,profile);
-    
-//   }
-// ));
-// passport.serializeUser((user,done)=>{
-//   done(null,user);
-// })
-// passport.deserializeUser((user,done)=>{
-//   done(null,user);
-// })
 
 passport.serializeUser((user, done) => {
   done(null, user.id); // Serialize only the user ID
@@ -43,17 +25,18 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:3000/user/auth/google/redirect",
     // passReqToCallback: true,
   },
-  async function( profile, done) {
+  async function(accessToken,refreshToken, profile, done) {
     try {
       // Check if the user already exists in your database
-      let user = await User.findOne({ email:profile.email });                                                                                                                                                                                                                                                                                                                                                                                
+      let user = await User.findOne({ email:profile.emails[0].value });                                                                                                                                                                                                                                                                                                                                                                                
       if (!user) {
         // If the user does not exist, create a new user
         user = new User({
         
           name: profile.displayName,
           // email: profile.emails[0].value,
-          email:profile.email,
+          email:profile.emails[0].value,
+          googleId:profile.id
 
           // profilePic: profile.photos[0].value,
 

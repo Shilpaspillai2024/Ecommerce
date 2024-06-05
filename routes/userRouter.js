@@ -6,9 +6,7 @@
  const userController = require("../controller/userController/userController")
  const forgetController=require("../controller/userController/forgetController")
  const productController=require('../controller/userController/productController')
-  //  const passport=require('passport')
-//  const passportAuth=require('passport-google-oauth20')
-//  const auth=require('./config/passport-setup')
+ const profileController=require("../controller/userController/profileController")
  
 
  const user = express.Router()
@@ -18,12 +16,7 @@
  user.get('/login',userController.login)
  user.post('/login',userController.loginPost)
 
-
-//  //google login
-
- 
-// user.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
-// user.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), userController.googleCallback);
+  //google login
 
 user.get('/auth/google', userController.loginAuth);
 user.get('/auth/google/redirect', userController.loginAuthRedirect)
@@ -61,6 +54,11 @@ user.get('/product-view/:id',checkUserBlocked,productController.productView)
 
 
 user.get('/productSeemore',checkUserBlocked,productController.productSeemore)
+
+
+
+//profile route
+user.get('/profile',profileController.profile)
 
 
 user.get('/logout',userController.logout)

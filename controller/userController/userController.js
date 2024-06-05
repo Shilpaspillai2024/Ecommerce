@@ -8,8 +8,6 @@ const productSchema=require('../../model/productSchema')
 const categorySchema=require('../../model/categorySchema')
 const passport=require('passport')
 const passportSetup = require('../../config/passport-setup')
-// const passportAuth=require('passport-google-oauth20');
-// const auth=require('./config/passport-setup');
 
 
 
@@ -46,12 +44,11 @@ const login= (req,res)=>{
                 res.redirect('/user/login')
             }else{
                 const passwordCheck=await bcrypt.compare(req.body.password,checkUser.password)
-                console.log(passwordCheck)
-                if(passwordCheck){
-                    req.session.user=req.body.username;
-
+                // console.log(passwordCheck)
+                if( checkUser && passwordCheck){
+                    req.session.user=checkUser.id;
                   
-                    return res.redirect('/user/home')
+                    res.redirect('/user/home')
                  }
                 else{
                    
@@ -90,8 +87,10 @@ const login= (req,res)=>{
           console.log(user, "hello auth2");
           return next(err);
         }
-        console.log(user, "hello auth");
-        req.session.user = user.email;
+        
+        // console.log(user, "hello auth");
+
+        req.session.user = user.id;
         return res.redirect("/user/home"); // Redirect to profile page if authentication is successful
       });
     })(req, res, next);
@@ -259,10 +258,6 @@ const logout = (req,res)=>{
         }
     })
 }
-
-
-
-
 
 module.exports= {
     user,home,login,loginPost,signup,signpost,otp,otpPost,otpResend,logout,loginAuth,loginAuthRedirect

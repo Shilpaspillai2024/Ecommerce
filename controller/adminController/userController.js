@@ -20,10 +20,7 @@ const userSchema=require('../../model/userSchema')
         const blockUserId=req.params.id
         const blockUser=await userSchema.findByIdAndUpdate(blockUserId,{isBlocked:true})
         req.flash('errorMessage',"user is blocked")
-        res.redirect('/admin/user')
-
-
-        
+        res.redirect('/admin/user')   
     } catch (err) {
         console.log(`error is user block ${err}`)
         

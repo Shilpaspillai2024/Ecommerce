@@ -235,33 +235,22 @@
                 <div class="product-form-bottom">
 
                     <!-- input file for image upload but the button is display is set as none -->
-                    <input type="file" id="product-image-upload" name="productImage" accept="image/png, image/jpeg" multiple class="d-none">
     
                     <!-- using the label the image is uploaded -->
-                    <label for="product-image-upload" class="btn btn-warning">
-                        <i class="fas fa-upload"></i> &nbsp; Choose Images
-                    </label>
+                    <a onclick="addImage()"><label for="product-image-upload" class="btn btn-warning">
+                        <i class="fas fa-upload"></i> &nbsp; Choose Image
+                    </label></a>
 
-                      <!-- the product preview will generate based on what we select -->
-                <!-- <div id="product-image-preview">
+                     
 
-                    <% product.productImage.forEach((img)=>{ %>
-                        <div class="product-image-box">
-                            <img src="../../<%= img %>" alt="" class="preview-img ">
-                       
-                        </div>
-                   <% }) %>
-              </div> -->
+              <div id="add-input"></div>
 
 
               <div id="product-image-preview">
                 <% product.productImage.forEach((img, index) => { %>
-                    <div class="product-image-box">
+                    <div class="product-image-box" data-image-path="<%= img%>">
                         <img src="../../<%= img %>" alt="" class="preview-img">
-
-                       
-                        <!-- <button class="delete-button" data-index="<%= index %>">Change</button> -->
-                        <button type="button" class="delete-button" data-index="<%= index %>">Delete</button>
+                        <a class="btn btn-danger" onclick="deleteImage(`<%= img.replace(/\\/g,'\\\\') %>`)">Delete</a>
                     </div>
                 <% }) %>
             </div>
@@ -283,8 +272,8 @@
 
 
 
-                 <!-- cropeer -->
-    <div id="cropper-modal">
+                 
+    <!-- <div id="cropper-modal">
         <div id="cropper-container">
           <img id="cropper-image">
           <div id="cropper-buttons">
@@ -292,7 +281,10 @@
             <button id="crop-confirm" class="btn btn-primary">Crop</button>
           </div>
         </div>
-      </div>
+      </div> -->
+
+      <input type="hidden" name="deletedImages" id="deletedImages">
+
 
         </form>
     </div>
@@ -300,7 +292,7 @@
    
 
 
-<%- include('footer') %>
+
 
 <script>
     const addProductForm = document.getElementById('add-product-form')
@@ -321,15 +313,7 @@
        let isValid = true
        let errorMessage = ""
 
-       // if (document.getElementById('product-image-upload').value==='') {
-       //     errorMessage="Product image should not be empty";
-       //     isValid = false;
-       // }
-       // if (productName.value.trim() === "" || productName.value.length<=0 || !isNaN(productName.value)) {
-       //     errorMessage="Product Name should not be empty";
-       //     isValid = false;
-       // }
-
+       
        if (isNaN(productPrice.value) || parseFloat(productPrice.value) <= 0) {
            errorMessage='Product Price must be greater than zero and it should not contain any alphabets'
            isValid = false;
@@ -367,145 +351,58 @@
 
 // extra added for edit image     
   
+function addImage() {
+    const inputDiv = document.getElementById('add-input');
+    const newInput = document.createElement('input');
+    newInput.type = 'file';
+    newInput.name = 'productImage';
+    newInput.style.display = 'none';
 
+    newInput.addEventListener('change', (event) => {
+        if (event.target.files && event.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const previewDiv = document.getElementById('product-image-preview');
+                const imageBox = document.createElement('div');
+                imageBox.className = 'product-image-box';
 
-const productImageUpload = document.getElementById('product-image-upload');
-const productImagePreview = document.getElementById('product-image-preview');
-const cropperModal = document.getElementById('cropper-modal');
-const cropperImage = document.getElementById('cropper-image');
-const cropCancel = document.getElementById('crop-cancel');
-const cropConfirm = document.getElementById('crop-confirm');
-const deleteButtons = document.querySelectorAll(".delete-button");
-const imagePreviewContainer = document.getElementById("product-image-preview");
-let cropper;
-let files = [];
-let currentFileIndex;
+                const img = document.createElement('img');
+                img.classList.add('preview-img');
+                img.src = e.target.result;
 
+                let deleteImage = document.createElement('button');
+                deleteImage.textContent = 'Delete';
+                deleteImage.classList.add('btn','btn-danger');
+                deleteImage.addEventListener('click', (e) => {
+                    imageBox.remove();
+                    newInput.remove();
+                });
 
-deleteButtons.forEach((button)=>{
+                imageBox.appendChild(img);
+                imageBox.appendChild(deleteImage);
+                previewDiv.appendChild(imageBox);
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
 
-button.addEventListener('click',function(){
-   const index= this.dataset.index
-   imagePreviewContainer.removeChild(this.parentElement);
-
-
-
-})
-
-})
-
-
-
-productImageUpload.addEventListener('change', () => {
-productImagePreview.innerHTML = '';  // Clear previous previews
-files = Array.from(productImageUpload.files);
-
-// Validate the number of files
-if (files.length > 4) {
-   Swal.fire({
-       icon: "error",
-       title: "Oops...",
-       text: "Maximum file count is 4",
-   });
-   productImageUpload.value = '';
-   files = [];
-   return;
-}
-if (files.length === 0) {
-   Swal.fire({
-       icon: "error",
-       title: "Oops...",
-       text: "Minimum file count is 1",
-   });
-   productImageUpload.value = '';
-   files = [];
-   return;
+    inputDiv.appendChild(newInput);
+    newInput.click();
 }
 
-files.forEach((file, index) => {
-   const reader = new FileReader();
-   reader.onload = (e) => {
-       const imgElement = document.createElement('img');
-       imgElement.src = e.target.result;
-       imgElement.classList.add('preview-img');
+let deletedImages = [];
 
-       const imageBox = document.createElement('div');
-       imageBox.classList.add('product-image-box');
-       imageBox.appendChild(imgElement);
-
-       const deleteButton = document.createElement('button');
-       deleteButton.textContent = 'Delete';
-       deleteButton.classList.add('delete-button');
-       deleteButton.addEventListener('click', () => {
-           files.splice(index, 1);
-           imageBox.remove();
-           console.log('File deleted:', index, files);
-       });
-       imageBox.appendChild(deleteButton);
-
-       productImagePreview.appendChild(imageBox);
-
-       imgElement.addEventListener('click', () => {
-           cropperImage.src = e.target.result;
-           cropperModal.style.display = 'flex';
-           cropper = new Cropper(cropperImage, {
-               aspectRatio: 0,
-               viewMode: 0,
-               autoCropArea: 1
-           });
-           currentFileIndex = index;
-       });
-   };
-   reader.readAsDataURL(file);
-});
-});
-
-cropCancel.addEventListener('click', () => {
-cropperModal.style.display = 'none';
-cropper.destroy();
-});
-
-
-cropConfirm.addEventListener('click', (e) => {
-e.preventDefault(); // Prevent default form submission
-
-const canvas = cropper.getCroppedCanvas();
-canvas.toBlob((blob) => {
-if (blob) { // Check if blob is available
-   const croppedFile = new File([blob], files[currentFileIndex].name, { type: 'image/jpeg' });
-   files[currentFileIndex] = croppedFile;
-
-   const reader = new FileReader();
-   reader.onload = (e) => {
-       const imgElement = productImagePreview.children[currentFileIndex].querySelector('.preview-img');
-       imgElement.src = e.target.result;
-   };
-   reader.readAsDataURL(croppedFile);
-
-   cropperModal.style.display = 'none';
-   cropper.destroy();
-
-} else {
-   // Show error message if blob is not available
-   Swal.fire({
-       icon: "error",
-       title: "Oops...",
-       text: "Image cropping failed. Please try again.",
-   });
+function deleteImage(imagePath) {
+    deletedImages.push(imagePath);
+    document.getElementById('deletedImages').value = JSON.stringify(deletedImages);
+    console.log(deletedImages)
+    const imageBox = document.querySelector(`div[data-image-path="${imagePath.replace(/\\/g, '\\\\')}"]`);
+    if (imageBox) {
+        imageBox.remove();
+    }
 }
-});
-});
-
-
-
-
-
 
 
 
 
 </script>
-
-
-
-

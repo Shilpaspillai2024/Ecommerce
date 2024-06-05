@@ -57,7 +57,6 @@ admin.get('/add-product',checkAdminSession,productController.addProduct)
 admin.post('/add-product',productController.multermiddle,productController.addProductPost)
 admin.get('/edit-product/:id',checkAdminSession,productController.editProduct)
 admin.post('/edit-product/:id',productController.multermiddle,productController.editProductPost)
-// admin.post('/edit-product/:id',multer.upload.array('productImage', 4),productController.editProductPost)
 
 
 admin.get('/product-inactive/:id',checkAdminSession,productController.productInactive)
