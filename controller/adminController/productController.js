@@ -46,47 +46,89 @@ const fs=require('fs')
 
 // addproduct post
 
-const addProductPost= async (req,res)=>{
+// const addProductPost= async (req,res)=>{
+//   try {
+
+//     const imageArray=[]
+//     req.files.forEach((img)=>{
+//       imageArray.push(img.path)
+//     })
+
+
+//     //product details from the form
+
+//     const productDetails= {
+//       productName:req.body.productName,
+//       productAuthor:req.body.productAuthor,
+//       productPrice:req.body.productPrice,
+//       productDescription:req.body.productDescription,
+//       productQuantity:req.body.productQuantity,
+//       productCategory:req.body.productCategory,
+//       productImage:imageArray,
+//       productDiscount:req.body.productDiscount
+//     };
+
+//     const checkProduct=await productSchema.findOne({productName:req.body.productName,productCategory:req.body.productCategory})
+    
+//     if(!checkProduct)
+//       {
+//     await productSchema.insertMany(productDetails)
+//     req.flash('errorMessage','product added successfully')
+//       }
+//       else{
+//         req.flash('errorMessage','product already exsist')
+//       }
+//       res.redirect('/admin/product')
+//   } catch (err) {
+
+//     console.error(`Error during adding new product to DB: ${err}`);
+//         req.flash('errorMessage', err.message || 'Failed to add product. Please try again later.');
+//         res.redirect('/admin/add-product');
+    
+//   }
+// }
+
+
+const addProductPost = async (req, res) => {
   try {
+    const imageArray = [];
+    req.files.forEach((img) => {
+      imageArray.push(img.path);
+    });
 
-    const imageArray=[]
-    req.files.forEach((img)=>{
-      imageArray.push(img.path)
-    })
-
-
-    //product details from the form
-
-    const productDetails= {
-      productName:req.body.productName,
-      productAuthor:req.body.productAuthor,
-      productPrice:req.body.productPrice,
-      productDescription:req.body.productDescription,
-      productQuantity:req.body.productQuantity,
-      productCategory:req.body.productCategory,
-      productImage:imageArray,
-      productDiscount:req.body.productDiscount
+    // Product details from the form
+    const productDetails = {
+      productName: req.body.productName.trim(),// Removes spaces around the product name
+      productAuthor: req.body.productAuthor.trim(),// Removes spaces around the product author
+      productPrice: req.body.productPrice,
+      productDescription: req.body.productDescription.trim(),// Removes spaces around the product description
+      productQuantity: req.body.productQuantity,
+      productCategory: req.body.productCategory,
+      productImage: imageArray,
+      productDiscount: req.body.productDiscount
     };
 
-    const checkProduct=await productSchema.findOne({productName:req.body.productName,productCategory:req.body.productCategory})
-    
-    if(!checkProduct)
-      {
-    await productSchema.insertMany(productDetails)
-    req.flash('errorMessage','product added successfully')
-      }
-      else{
-        req.flash('errorMessage','product already exsist')
-      }
-      res.redirect('/admin/product')
-  } catch (err) {
+    // Check for existing product case-insensitively
+    const checkProduct = await productSchema.findOne({
+      productName: { $regex: new RegExp('^' + req.body.productName + '$', 'i') },
+      productCategory: req.body.productCategory
+    });
 
+    if (!checkProduct) {
+     await productSchema.insertMany(productDetails)
+      req.flash('errorMessage', 'Product added successfully');
+      res.redirect('/admin/product');
+    } else {
+      req.flash('errorMessage', 'Product already exists');
+      res.redirect('/admin/add-product');
+    }
+  } catch (err) {
     console.error(`Error during adding new product to DB: ${err}`);
-        req.flash('errorMessage', err.message || 'Failed to add product. Please try again later.');
-        res.redirect('/admin/add-product');
-    
+    req.flash('errorMessage', err.message || 'Failed to add product. Please try again later.');
+    res.redirect('/admin/add-product');
   }
-}
+};
+
 
 const editProduct= async (req,res)=>{
   try {

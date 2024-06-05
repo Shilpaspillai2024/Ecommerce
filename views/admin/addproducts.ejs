@@ -320,15 +320,7 @@
                 }
 
 
-                // Check if the product name already exists (case insensitive)
-             const existingProductNames = Array.from(document.querySelectorAll('[name="productName"]')).map(input => input.value.toLowerCase());
-
-             // Check if the new product name matches an existing one (case insensitive)
-                   if (existingProductNames.includes(productName.value.toLowerCase())) {
-                           errorMessage = "Product name already exists";
-                                   isValid = false;
-                                               }
-
+           
 
                if(isValid===false){
                 Swal.fire({
