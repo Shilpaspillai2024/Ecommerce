@@ -60,8 +60,12 @@ user.get('/productSeemore',checkUserBlocked,productController.productSeemore)
 //profile route
 user.get('/profile',profileController.profile)
 
+
+//change post personal information
 user.post('/profile',profileController.personalInformation)
 
+//  the password change modal
+user.post('/change-password',profileController.changePassword)
 
 user.get('/logout',userController.logout)
 

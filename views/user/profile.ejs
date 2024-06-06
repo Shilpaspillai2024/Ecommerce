@@ -74,6 +74,7 @@
          .btn-save, .btn-cancel {
           width: 20%; /* Adjust width to fit within the container */
           padding: 10px;
+          margin-top: 10px;
           border: none;
          border-radius:10px ;
          margin-right: 10px;
@@ -87,7 +88,7 @@
 
         .btn-cancel {
          background-color: #6c757d;
-         margin-top: 0; /* Remove top margin */
+    
          color: #fefeeb;
          }
 
@@ -127,7 +128,50 @@
             margin-top: 20px;
             color: #232323;
         }
-       
+
+    /* for change password modal
+        */
+
+        /* Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    color:black
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%; /* Could be more or less, depending on screen size */
+}
+
+/* Close Button */
+.close {
+    color: #aaa;
+    /* float: right; */
+    font-size: 28px;
+    font-weight: bold;
+    text-align: right;
+  
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
     </style>
 
  <%-include('navbar')%>
@@ -177,8 +221,8 @@
                     <h4>Manage account</h4>
                     <a href="/user/profile">Personal Information</a>
                   
-                    <a href="#">Edit Address</a>
-                    <a href="#">Change Password</a>
+                    <a href="#">Address</a>
+                    <a href="#" onclick="openPasswordModal()">Change Password</a>
                     <h4>My order</h4>
                     <a href="#">Order status</a>
                     <a href="#">Order history</a>
@@ -190,7 +234,30 @@
         </div>
     </div>
 
+ <!-- adding modal for password change -->
 
+
+ <div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Change Password</h2>
+        <form action="/user/change-password" method="post" id="change-password-form">
+            <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+            </div>
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" class="form-control" id="newPassword" name="newPassword">
+            </div>
+            <div class="form-group">
+                <label for="confirmNewPassword">Confirm New Password</label>
+                <input type="password" class="form-control" id="confirmNewPassword" name="confirmPassword">
+            </div>
+            <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+    </div>
+</div>
 
 
 
@@ -202,6 +269,23 @@
         function resetForm() {
             document.getElementById("edit-personal-form").reset();
         }
+
+
+        function openPasswordModal() {
+        // Code to open the password change modal
+        document.getElementById("changePasswordModal").style.display = "block";
+    }
+    function closeModal() {
+        document.getElementById("changePasswordModal").style.display = "none";
+    }
+
+    // Close the modal if the user clicks anywhere outside of it
+    window.onclick = function(event) {
+        var modal = document.getElementById("changePasswordModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
     </script>
 
   
