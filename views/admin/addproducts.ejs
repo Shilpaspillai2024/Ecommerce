@@ -397,8 +397,8 @@
                             viewMode: 0,
                             autoCropArea: 1
                         });
-                        // currentFileIndex = index;
-                        currentFileIndex = files.indexOf(file);
+                        currentFileIndex = index;
+                        // currentFileIndex = files.indexOf(file);
                     });
                 };
                 reader.readAsDataURL(file);
@@ -418,10 +418,12 @@
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    // const imgElement = productImagePreview.children[currentFileIndex].querySelector('.preview-img');
-                    const imgElement = cropperImage.parentElement.querySelector('.preview-img');
+                    const imgElement = productImagePreview.children[currentFileIndex].querySelector('.preview-img');
+                    // const imgElement = cropperImage.parentElement.querySelector('.preview-img');
                     imgElement.src = e.target.result;
                 };
+
+              
                 reader.readAsDataURL(croppedFile);
 
                 cropperModal.style.display = 'none';
@@ -449,5 +451,6 @@
 
 
 
+
+
 </script>
-    

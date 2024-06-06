@@ -74,25 +74,7 @@ app.use('/admin',adminRouter);
 
 
 
-// app.get('/auth/google',
-//   passport.authenticate('google', { scope: ['email','profile'] }
 
-//   ));
-
-// app.get('/auth/google/callback', 
-//   passport.authenticate('google', { failureRedirect: '/login' }),
-//   function(req, res) {
-//     // Successful authentication, redirect home.
- 
-
-//     res.redirect('/');
-//     console.log("logged in")
-   
-//   });
-// app.use('/auth/logout',(req,res)=>{
-//     req.session.destroy()
-// })
- 
 
 app.get('/',(req,res)=>{
     res.redirect('/user/home')

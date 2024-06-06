@@ -50,8 +50,7 @@ const login= (req,res)=>{
                   
                     res.redirect('/user/home')
                  }
-                else{
-                   
+                else{                   
                     req.flash('errorMessage','invalid username or password')
                     res.redirect('/user/login')
                 }
