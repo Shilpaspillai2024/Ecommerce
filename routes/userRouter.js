@@ -72,6 +72,15 @@ user.get('/address',checkUserSession,profileController.address)
 
 user.post('/add-address',checkUserSession,profileController.addAddress)
 
+//delete address
+
+user.get('/delete-address/:id',checkUserSession,profileController.deleteAddress)
+
+
+//edit address
+user.post('/edit-address/:id',checkUserSession,profileController.editAddress)
+
+
 user.get('/logout',userController.logout)
 
 module.exports = user;

@@ -141,5 +141,55 @@ const addAddress= async(req,res)=>{
 
 
 
+const deleteAddress= async(req,res)=>{
+    try {
 
-module.exports={profile,personalInformation,changePassword,address,addAddress}
+        const userId=req.session.user;
+        const addressId=req.params.id;
+
+          // Check if the address belongs to the user
+
+        const address=await addressSchema.findOne({_id:addressId,userId:userId})
+
+        if (!address) {
+            req.flash('errorMessage', 'Address not found or not authorized to delete');
+            return res.redirect('/user/address');
+        }
+        await addressSchema.deleteOne({ _id: addressId });
+
+        req.flash('errorMessage', 'Address deleted successfully');
+        res.redirect('/user/address');
+
+        
+    } catch (err) {
+        console.error(`Error during deleting address from DB: ${err}`);
+        req.flash('errorMessage', err.message || 'Failed to delete address. Please try again later.');
+        res.redirect('/user/address');
+        
+    }
+}
+
+
+     const editAddress= async(req,res)=>{
+        try {
+
+            const userId=req.session.user;
+            const addressId=req.params.id;
+            
+        } catch (err) {
+            
+        }
+     }
+
+
+
+
+module.exports={
+    profile,
+    personalInformation,
+    changePassword,
+    address,
+    addAddress,
+    deleteAddress,
+    editAddress
+}
