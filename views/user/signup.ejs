@@ -1,56 +1,57 @@
 <style>
-    body{
+    body {
         background-color: #232323;
     }
-  .admin-register-container {
-      min-height: 120vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      /* background: url('../../image/userRegister.png');
+
+    .admin-register-container {
+        min-height: 120vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* background: url('../../image/userRegister.png');
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat; */
-  }
+    }
 
-  .register-form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3rem;
-      border: 1px solid #c8c8c8;
-      border-radius: 10px;
-      padding: 3rem 2rem;
-      background-color: #232323;
-      -webkit-backdrop-filter: blur(5px);
-      backdrop-filter: blur(5px);
-      width: 35vw;
-      color: white;
-  }
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3rem;
+        border: 1px solid #c8c8c8;
+        border-radius: 10px;
+        padding: 3rem 2rem;
+        background-color: #232323;
+        -webkit-backdrop-filter: blur(5px);
+        backdrop-filter: blur(5px);
+        width: 35vw;
+        color: white;
+    }
 
-  .register-form form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      width: 90%;
-  }
+    .register-form form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        width: 90%;
+    }
 
-  .register-form input {
-      width: 90%;
-      height: 2.5rem;
-      border-radius: 10px;
-      outline: none;
-      border: none;
-      background-color: #e7e7e7;
-      color: #232323;
-      padding: 10px;
-  }
+    .register-form input {
+        width: 90%;
+        height: 2.5rem;
+        border-radius: 10px;
+        outline: none;
+        border: none;
+        background-color: #e7e7e7;
+        color: #232323;
+        padding: 10px;
+    }
 
-  .register-form button {
-      width: 10rem;
-      background-color: rgb(162, 218, 33) ;
-  }
+    .register-form button {
+        width: 10rem;
+        background-color: rgb(162, 218, 33);
+    }
 </style>
 
 
@@ -58,110 +59,110 @@
 <%- include('navbar') %>
 
 
-  <div class="admin-register-container">
-      <div class="register-form">
-          <form action="/user/signup" method="post" id="registration-form">
-              <h2>User Registration</h2>
-              <input type="text" name="name" placeholder="Full name">
-              <input type="email" name="email" placeholder="Email address">
-              <input type="tel" name="phone" placeholder="Phone number">
-              <input type="password" name="password" placeholder="password" id="user-password">
-              <input type="password" name="confirmPassword" placeholder="Confirm password" id="user-confirm-password">
+    <div class="admin-register-container">
+        <div class="register-form">
+            <form action="/user/signup" method="post" id="registration-form">
+                <h2>User Registration</h2>
+                <input type="text" name="name" placeholder="Full name">
+                <input type="email" name="email" placeholder="Email address">
+                <input type="tel" name="phone" placeholder="Phone number">
+                <input type="password" name="password" placeholder="password" id="user-password">
+                <input type="password" name="confirmPassword" placeholder="Confirm password" id="user-confirm-password">
 
-              <button class="btn btn-primary" type="submit" id="register-button">Register</button>
-              <p>Already have an account? <a href="/user/login">Login</a></p>
-          </form>
+                <button class="btn btn-primary" type="submit" id="register-button">Register</button>
+                <p>Already have an account? <a href="/user/login">Login</a></p>
+            </form>
 
-      </div>
+        </div>
 
-  </div>
+    </div>
 
 
-  <%- include('footer') %>
+    <%- include('footer') %>
 
-  <script>
-    
-    function validatePassword(password) {
-        if (password.length < 8) {
-            return false;
-        }
+        <script>
 
-        // Check if the password contains at least one uppercase letter
-        if (!/[A-Z]/.test(password)) {
-            return false;
-        }
+            function validatePassword(password) {
+                if (password.length < 8) {
+                    return false;
+                }
 
-        // Check if the password contains at least one lowercase letter
-        if (!/[a-z]/.test(password)) {
-            return false;
-        }
+                // Check if the password contains at least one uppercase letter
+                if (!/[A-Z]/.test(password)) {
+                    return false;
+                }
 
-        // Check if the password contains at least one digit
-        if (!/\d/.test(password)) {
-            return false;
-        }
+                // Check if the password contains at least one lowercase letter
+                if (!/[a-z]/.test(password)) {
+                    return false;
+                }
 
-        // Check if the password contains at least one special character
-        if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
-            return false;
-        }
+                // Check if the password contains at least one digit
+                if (!/\d/.test(password)) {
+                    return false;
+                }
 
-        return true;
-    }
+                // Check if the password contains at least one special character
+                if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+                    return false;
+                }
 
-    function validateEmail(email) {
-        const re = /\S+@\S+\.\S+/;
-        return re.test(email);
-    }
+                return true;
+            }
 
-    const registerForm = document.getElementById('registration-form');
-    const password = document.getElementById("user-password");
-    const confirmPassword = document.getElementById("user-confirm-password");
-    const registerBtn = document.getElementById('register-button');
-    const email = document.getElementsByName('email')[0];
-    const phoneNumber = document.getElementsByName('phone')[0];
-    const name = document.getElementsByName('name')[0];
+            function validateEmail(email) {
+                const re = /\S+@\S+\.\S+/;
+                return re.test(email);
+            }
 
-    // event listener for registration form
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+            const registerForm = document.getElementById('registration-form');
+            const password = document.getElementById("user-password");
+            const confirmPassword = document.getElementById("user-confirm-password");
+            const registerBtn = document.getElementById('register-button');
+            const email = document.getElementsByName('email')[0];
+            const phoneNumber = document.getElementsByName('phone')[0];
+            const name = document.getElementsByName('name')[0];
 
-        let isValid = true;
-        let errorMessage = "";
+            // event listener for registration form
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
 
-        if (name.value.trim() === '' || !isNaN(name.value) || name.value.length > 40) {
-            isValid = false;
-            errorMessage = "Username should not contain number and maximum size limit is 40 characters.";
-        }
+                let isValid = true;
+                let errorMessage = "";
 
-        if (!validateEmail(email.value)) {
-            isValid = false;
-            errorMessage = "Check your email address and enter a correct address.";
-        }
+                if (name.value.trim() === '' || !isNaN(name.value) || name.value.length > 40) {
+                    isValid = false;
+                    errorMessage = "Username should not contain number and maximum size limit is 40 characters.";
+                }
 
-        if (isNaN(phoneNumber.value) || phoneNumber.value.length != 10) {
-            isValid = false;
-            errorMessage = "Phone number should be a valid 10-digit number.";
-        }
+                if (!validateEmail(email.value)) {
+                    isValid = false;
+                    errorMessage = "Check your email address and enter a correct address.";
+                }
 
-        if (!validatePassword(password.value)) {
-            isValid = false;
-            errorMessage = "Invalid Password. It must be strong (at least 8 characters, including uppercase, lowercase, digit, and special character).";
-        }
+                if (isNaN(phoneNumber.value) || phoneNumber.value.length != 10) {
+                    isValid = false;
+                    errorMessage = "Phone number should be a valid 10-digit number.";
+                }
 
-        if (password.value !== confirmPassword.value) {
-            isValid = false;
-            errorMessage = "Password and Confirm Password must be the same.";
-        }
+                if (!validatePassword(password.value)) {
+                    isValid = false;
+                    errorMessage = "Invalid Password. It must be strong (at least 8 characters, including uppercase, lowercase, digit, and special character).";
+                }
 
-        if (isValid === false) {
-            Swal.fire({
-                title: "Invalid Inputs",
-                text: errorMessage,
-                icon: "error"
+                if (password.value !== confirmPassword.value) {
+                    isValid = false;
+                    errorMessage = "Password and Confirm Password must be the same.";
+                }
+
+                if (isValid === false) {
+                    Swal.fire({
+                        title: "Invalid Inputs",
+                        text: errorMessage,
+                        icon: "error"
+                    });
+                } else {
+                    registerForm.submit();
+                }
             });
-        } else {
-            registerForm.submit();
-        }
-    });
-</script>
+        </script>

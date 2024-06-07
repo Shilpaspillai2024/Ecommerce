@@ -1,218 +1,237 @@
-
-    <style>
-        body {
-            background-color:black;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-
-        
-
-        .form-control {
-            background-color: #F1D9D9;
-            color: #0f0f0f;
-            border: none;
-        }
-
-        .form-control:focus {
-            background-color: #e7dfdf;
-            color: #0e0d0d;
-        }
-
-        .profile-container {
-            margin-top: 20px;
-          
-        }
-        .left-container{
-            background-color:#2b2b2b ;
-            border-radius: 20px;
-           padding: 20px;
-        }
-
-        .profile-header {
-            /* background-color: #333333; */
-            padding: 20px;
-            border-radius: 10px;
-            text-align: left;
-            display: flex;
-            align-items: center;
-        }
-
-        .profile-header img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
-
-        .profile-header h3 {
-            margin: 0;
-        }
-
-        .profile-header p {
-            margin: 5px 0 0;
-        }
-         .form-group input:focus{
-            color: #131212;
-        }
-
-         .form-group input::placeholder{
-            color: #1f1e1e;
-        }  
-      
+<style>
+    body {
+        background-color: black;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+    }
 
 
 
-        .button-container {
-         display: flex;
-         justify-content:center;
+    .form-control {
+        background-color: #F1D9D9;
+        color: #0f0f0f;
+        border: none;
+    }
 
-         margin-top: 1rem;
-         width: 100%; /* Adjust width as needed */
-         }
+    .form-control:focus {
+        background-color: #e7dfdf;
+        color: #0e0d0d;
+    }
 
-         .btn-save, .btn-cancel {
-          width: 20%; /* Adjust width to fit within the container */
-          padding: 10px;
-          margin-top: 10px;
-          border: none;
-         border-radius:10px ;
-         margin-right: 10px;
+    .profile-container {
+        margin-top: 20px;
 
-         }
+    }
 
-       .btn-save {
+    .left-container {
+        background-color: #2b2b2b;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .profile-header {
+        /* background-color: #333333; */
+        padding: 20px;
+        border-radius: 10px;
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-header img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-right: 20px;
+    }
+
+    .profile-header h3 {
+        margin: 0;
+    }
+
+    .profile-header p {
+        margin: 5px 0 0;
+    }
+
+    .form-group input:focus {
+        color: #131212;
+    }
+
+    .form-group input::placeholder {
+        color: #1f1e1e;
+    }
+
+
+
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+
+        margin-top: 1rem;
+        width: 100%;
+        /* Adjust width as needed */
+    }
+
+    .btn-save,
+    .btn-cancel {
+        width: 20%;
+        /* Adjust width to fit within the container */
+        padding: 10px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 10px;
+        margin-right: 10px;
+
+    }
+
+    .btn-save {
         background-color: #DB4444;
         color: #fefeeb;
-         }
+    }
 
-        .btn-cancel {
-         background-color: #6c757d;
-    
-         color: #fefeeb;
-         }
+    .btn-cancel {
+        background-color: #6c757d;
+
+        color: #fefeeb;
+    }
 
 
-      
 
-        .side-menu {
-            background-color: #333333;
-            border-radius: 10px;
-            padding: 20px;
-            margin-left: 20px;
-        }
 
-        .side-menu a {
-            color: #ffffff;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-        }
+    .side-menu {
+        background-color: #333333;
+        border-radius: 10px;
+        padding: 20px;
+        margin-left: 20px;
+    }
 
-        .side-menu a:hover {
-            text-decoration: underline;
-        }
+    .side-menu a {
+        color: #ffffff;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 10px;
+    }
 
-        .side-menu h4 {
-            margin-bottom: 20px;
-        }
+    .side-menu a:hover {
+        text-decoration: underline;
+    }
 
-        .form-group label {
-            margin-top: 10px;
-        }
+    .side-menu h4 {
+        margin-bottom: 20px;
+    }
 
-        .form-container {
-            background-color:#fefeeb;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            color: #232323;
-        }
+    .form-group label {
+        margin-top: 10px;
+    }
+
+    .form-container {
+        background-color: #fefeeb;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        color: #232323;
+    }
 
     /* for change password modal
         */
 
-        /* Modal */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-    color:black
-}
+    /* Modal */
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Black w/ opacity */
+        color: black
+    }
 
-/* Modal Content */
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 60%; /* Could be more or less, depending on screen size */
-}
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 60%;
+        /* Could be more or less, depending on screen size */
+    }
 
-/* Close Button */
-.close {
-    color: #aaa;
-    /* float: right; */
-    font-size: 28px;
-    font-weight: bold;
-    text-align: right;
-  
-}
+    /* Close Button */
+    .close {
+        color: #aaa;
+        /* float: right; */
+        font-size: 28px;
+        font-weight: bold;
+        text-align: right;
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
+    }
 
-    </style>
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
 
- <%-include('navbar')%>
+<%-include('navbar')%>
     <div class="container profile-container">
         <div class="row">
             <div class="col-md-8 left-container">
                 <div class="profile-header">
                     <img src="../../image/avatar.png" alt="Profile Picture">
                     <div>
-                        <h3><%=userDetail.name%></h3>
-                        <p><%=userDetail.email%></p>
+                        <h3>
+                            <%=userDetail.name%>
+                        </h3>
+                        <p>
+                            <%=userDetail.email%>
+                        </p>
                     </div>
                 </div>
                 <div class="form-container">
-                
-                    
-               
-                        <form action="/user/profile" method="post" id="edit-personal-form" >
+
+
+
+                    <form action="/user/profile" method="post" id="edit-personal-form">
 
                         <div class="form-group">
                             <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="name" value="<%=userDetail.name%>">
+                            <input type="text" class="form-control" id="firstName" name="name"
+                                value="<%=userDetail.name%>">
                         </div>
-                      
-                        
+
+
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="number" name="number" value="<%=userDetail.number%>">
+                            <input type="text" class="form-control" id="number" name="number"
+                                value="<%=userDetail.number%>">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email"   value="<%=userDetail.email%>" disabled>
+                            <input type="email" class="form-control" id="email" name="email"
+                                value="<%=userDetail.email%>" disabled>
                         </div>
-                       
+
                         <div class="button-container">
                             <button type="submit" class="btn-save">Save Changes</button>
                             <!-- <button  type="button" class="btn-cancel" >Cancel</button> -->
 
                             <button type="button" class="btn-cancel" onclick="resetForm()">Cancel</button>
-                          </div>
-                     
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -220,8 +239,8 @@
                 <div class="side-menu">
                     <h4>Manage account</h4>
                     <a href="/user/profile">Personal Information</a>
-                  
-                    <a href="#">Address</a>
+
+                    <a href="/user/address">My Address</a>
                     <a href="#" onclick="openPasswordModal()">Change Password</a>
                     <h4>My order</h4>
                     <a href="#">Order status</a>
@@ -234,30 +253,30 @@
         </div>
     </div>
 
- <!-- adding modal for password change -->
+    <!-- adding modal for password change -->
 
 
- <div id="changePasswordModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Change Password</h2>
-        <form action="/user/change-password" method="post" id="change-password-form">
-            <div class="form-group">
-                <label for="currentPassword">Current Password</label>
-                <input type="password" class="form-control" id="currentPassword" name="currentPassword">
-            </div>
-            <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="password" class="form-control" id="newPassword" name="newPassword">
-            </div>
-            <div class="form-group">
-                <label for="confirmNewPassword">Confirm New Password</label>
-                <input type="password" class="form-control" id="confirmNewPassword" name="confirmPassword">
-            </div>
-            <button type="submit" class="btn-save">Save Changes</button>
-        </form>
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Change Password</h2>
+            <form action="/user/change-password" method="post" id="change-password-form">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword">
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">Confirm New Password</label>
+                    <input type="password" class="form-control" id="confirmNewPassword" name="confirmPassword">
+                </div>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </form>
+        </div>
     </div>
-</div>
 
 
 
@@ -265,27 +284,25 @@
     <%-include('footer') %>
 
 
-    <script>
-        function resetForm() {
-            document.getElementById("edit-personal-form").reset();
-        }
+        <script>
+            function resetForm() {
+                document.getElementById("edit-personal-form").reset();
+            }
 
 
-        function openPasswordModal() {
-        // Code to open the password change modal
-        document.getElementById("changePasswordModal").style.display = "block";
-    }
-    function closeModal() {
-        document.getElementById("changePasswordModal").style.display = "none";
-    }
+            function openPasswordModal() {
+                // Code to open the password change modal
+                document.getElementById("changePasswordModal").style.display = "block";
+            }
+            function closeModal() {
+                document.getElementById("changePasswordModal").style.display = "none";
+            }
 
-    // Close the modal if the user clicks anywhere outside of it
-    window.onclick = function(event) {
-        var modal = document.getElementById("changePasswordModal");
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    }
-    </script>
-
-  
+            // Close the modal if the user clicks anywhere outside of it
+            window.onclick = function (event) {
+                var modal = document.getElementById("changePasswordModal");
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>

@@ -1,6 +1,7 @@
  const express =require('express')
 
  const userSchema = require('../model/userSchema')
+ 
  const checkUserSession=require('../middleware/userSession')
  const checkUserBlocked=require('../middleware/userSessionBlocked')
  const userController = require("../controller/userController/userController")
@@ -58,14 +59,18 @@ user.get('/productSeemore',checkUserBlocked,productController.productSeemore)
 
 
 //profile route
-user.get('/profile',profileController.profile)
+user.get('/profile',checkUserSession,profileController.profile)
 
 
 //change post personal information
-user.post('/profile',profileController.personalInformation)
+user.post('/profile',checkUserSession,profileController.personalInformation)
 
 //  the password change modal
-user.post('/change-password',profileController.changePassword)
+user.post('/change-password',checkUserSession,profileController.changePassword)
+
+user.get('/address',checkUserSession,profileController.address)
+
+user.post('/add-address',checkUserSession,profileController.addAddress)
 
 user.get('/logout',userController.logout)
 

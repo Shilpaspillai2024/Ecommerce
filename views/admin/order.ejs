@@ -1,30 +1,35 @@
 <style>
-    .admin-orders-container{
+    .admin-orders-container {
         min-height: 100vh;
     }
-   .search-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 3rem 0; 
-   }
-   .admin-order-search-box{
-    border: 1px solid #3a3939;
-    border-radius: 10px;
-    padding: .2rem .3rem;
-    margin-top: 2rem;
-    background-color: #e4dada;
-   }
-   #order-search{
-    border: none;
-    outline: none;
-    width: 30rem;
-    height: 2.5rem;
-   }
-   table th,td{
-    text-align: center;
-   }
+
+    .search-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 3rem 0;
+    }
+
+    .admin-order-search-box {
+        border: 1px solid #3a3939;
+        border-radius: 10px;
+        padding: .2rem .3rem;
+        margin-top: 2rem;
+        background-color: #e4dada;
+    }
+
+    #order-search {
+        border: none;
+        outline: none;
+        width: 30rem;
+        height: 2.5rem;
+    }
+
+    table th,
+    td {
+        text-align: center;
+    }
 </style>
 
 
@@ -39,12 +44,12 @@
 
     <div class="admin-orders-container container">
 
-      
+
         <div class="search-container d-flex">
             <h2 class="text-white mt-4 ">Orders</h2>
 
-              <!-- order search -->
-            <form action="/admin/order" method="get"  class="admin-order-search-box d-flex">
+            <!-- order search -->
+            <form action="/admin/order" method="get" class="admin-order-search-box d-flex">
                 <input type="text" placeholder="search for orders" name="orderSearch" id="order-search">
                 <button class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                 <!-- <input class="btn btn-primary" type="button" value="Search"> -->
@@ -52,48 +57,48 @@
         </div>
 
 
-        
-        
-         
-        
 
-         
-          <div class="order-list-box">
+
+
+
+
+
+        <div class="order-list-box">
             <table class="table table-dark">
                 <thead>
-                  <tr>
-                    <th scope="col">Si.No</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">ProductName</th>
-                    <th scope="col">Order Date</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Payment Method</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
-                  </tr>
+                    <tr>
+                        <th scope="col">Si.No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">ProductName</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
 
-               
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Shilpa S Pillai</td>
-                            <td>Atomic Habits</td>
-                            <td> 01/06/2024</td>
-                            <td><i class="fa-solid fa-indian-rupee-sign"></i> 1200</td>
-                            <td>Cash on Delivery</td>
-                            <td>Processing</td>
-                          
-                            <td>
-                                <a class="btn btn-warning" href="">View</a>
-                                <!-- <a class="btn btn-danger" href="">Cancel</a> -->
-                            </td>
-                        </tr>
 
-              </tbody>
-          </table>
-      </div>
-  </div>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Shilpa S Pillai</td>
+                        <td>Atomic Habits</td>
+                        <td> 01/06/2024</td>
+                        <td><i class="fa-solid fa-indian-rupee-sign"></i> 1200</td>
+                        <td>Cash on Delivery</td>
+                        <td>Processing</td>
+
+                        <td>
+                            <a class="btn btn-warning" href="">View</a>
+                            <!-- <a class="btn btn-danger" href="">Cancel</a> -->
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
-  <%- include('footer') %>
+    <%- include('footer') %>

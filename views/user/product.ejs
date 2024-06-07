@@ -1,50 +1,55 @@
 <style>
-    body{
-        background-color:black;
+    body {
+        background-color: black;
     }
-    .prdocut-container{
-        padding: 2rem,0;
+
+    .prdocut-container {
+        padding: 2rem, 0;
         margin-bottom: 5rem;
     }
-    .product-container h2{
-        display: flex;
-       justify-content: center;
-       margin-top: 4rem;
-       font-family: 'Times New Roman', Times, serif;
-       font-style: italic;
-       text-decoration: underline;
-       
-        color:  rgb(162, 218, 33);
-    }
-    .product-category-container{
-        display: flex;
-       justify-content: space-around;
-       font-family: "Roboto", sans-serif;
-       flex-wrap: wrap;
-       gap: 2rem;
 
-    
+    .product-container h2 {
+        display: flex;
+        justify-content: center;
+        margin-top: 4rem;
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        text-decoration: underline;
+
+        color: rgb(162, 218, 33);
     }
-    .product-category-container a{
+
+    .product-category-container {
+        display: flex;
+        justify-content: space-around;
+        font-family: "Roboto", sans-serif;
+        flex-wrap: wrap;
+        gap: 2rem;
+
+
+    }
+
+    .product-category-container a {
         cursor: pointer;
         transition: .3s ease-in-out;
         text-decoration: none;
         color: aqua;
-   
+
     }
 
-    .product-category-container a :hover{
+    .product-category-container a :hover {
         scale: 1.1;
     }
-    .product-list-box{
+
+    .product-list-box {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: space-around;
-        
+
     }
-   
-    .product-box{
+
+    .product-box {
         text-decoration: none;
         border: 1px solid #b2b2b2;
         border-radius: 10px;
@@ -53,9 +58,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
-      
+
 
     }
+
     /* .product-box:hover{
         transform: scale(1.5); 
     } */
@@ -71,11 +77,11 @@
         object-fit: scale-down;
         /* cursor: pointer;
         transition: transform 0.3s; */
-     
+
         /* transform: scale(1);  */
-       
+
     }
-   
+
 
     .product-text-row {
         max-width: 250px;
@@ -83,11 +89,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .product-name-box{
-        color:white;
+
+    .product-name-box {
+        color: white;
         margin-left: 4rem;
-       
-       
+
+
     }
 
     .product-discount-box {
@@ -109,31 +116,34 @@
         background-color: rgb(50, 195, 50);
         border-radius: 5px 0;
     }
-    .product-price{
+
+    .product-price {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: .5rem;
     }
-  
-    .Book-more a{
+
+    .Book-more a {
         display: flex;
-       justify-content: center;
-       margin-top: 4rem;
-       font-family: 'Times New Roman', Times, serif;
-       font-size:xx-large;
-       font-style: italic;
-       text-decoration: underline;
-       
-        color:  rgb(162, 218, 33);
+        justify-content: center;
+        margin-top: 4rem;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: xx-large;
+        font-style: italic;
+        text-decoration: underline;
+
+        color: rgb(162, 218, 33);
     }
-    .banner-caption h6{
-        color:  rgb(162, 218, 33);
+
+    .banner-caption h6 {
+        color: rgb(162, 218, 33);
         display: flex;
         justify-content: center;
     }
-    .banner-caption p{
-        color:  rgb(162, 218, 33);
+
+    .banner-caption p {
+        color: rgb(162, 218, 33);
         display: flex;
         justify-content: center;
     }
@@ -141,69 +151,69 @@
 
 <div class="banner-caption">
     <h6>"FIND YOUR PLACE AT WORDPLAY ONLINE BOOKSTORE"</h6>
-      <p> 
-        "Embark on a literary journey filled with endless possibilities and 
+    <p>
+        "Embark on a literary journey filled with endless possibilities and
         explore our vast collection of books,<br> where every page holds a
-         new adventure waiting to be discovered – start your exploration today!"</p>
+        new adventure waiting to be discovered – start your exploration today!"</p>
 </div>
 
 <div class="product-container">
 
     <h2 class="product-book">BOOKS</h2>
-    
+
     <div class="product-category-container container">
 
-    <% category.forEach((item)=>{ %>
-      <%  if(item.isActive) {%>
-        <input type="text" name="" id="">
-        <a href="/user/home/?category=<%= item.categoryName %>" class="category-name">
-            <%- item.categoryName %>
-        </a>
+        <% category.forEach((item)=>{ %>
+            <% if(item.isActive) {%>
+                <input type="text" name="" id="">
+                <a href="/user/home/?category=<%= item.categoryName %>" class="category-name">
+                    <%- item.categoryName %>
+                </a>
 
-     <% }%>
-   <% }) %>
+                <% }%>
+                    <% }) %>
     </div>
 
     <div class="product-list-box container">
         <% product.forEach((product)=>{ %>
 
-           <a href="/user/product-view/<%=product.id %>?from=productSeemore" class="product-box">
+            <a href="/user/product-view/<%=product.id %>?from=productSeemore" class="product-box">
 
-             <% if(product.productDiscount!=0) {%>
-                <div class="product-discount-box">
-                    <h6>
-                        <%= product.productDiscount %> &percnt; OFF
-                    </h6>
-                </div>
-               <% } else if(new Date(product.addedOn).getTime()>(Date.now() - (1 * 24 * 60 * 60 * 1000))) {%>
+                <% if(product.productDiscount!=0) {%>
+                    <div class="product-discount-box">
+                        <h6>
+                            <%= product.productDiscount %> &percnt; OFF
+                        </h6>
+                    </div>
+                    <% } else if(new Date(product.addedOn).getTime()>(Date.now() - (1 * 24 * 60 * 60 * 1000))) {%>
 
-                <div class="product-newarrival-box">
-                    <h6>New Arrival</h6>
-                </div>
-                <% } %>
+                        <div class="product-newarrival-box">
+                            <h6>New Arrival</h6>
+                        </div>
+                        <% } %>
 
 
-                <div class="product-image-box">
-                    <img src="/<%=product.productImage[0] %>" alt="">
-                </div>
+                            <div class="product-image-box">
+                                <img src="/<%=product.productImage[0] %>" alt="">
+                            </div>
 
-                <div class="product-name-box">
-                    <h6 class="product-text-row">
-                        <%=product.productName%>
-                    </h6>
-                    <p class="product-description product-text-row">
-                        <%=product.productAuthor %>
+                            <div class="product-name-box">
+                                <h6 class="product-text-row">
+                                    <%=product.productName%>
+                                </h6>
+                                <p class="product-description product-text-row">
+                                    <%=product.productAuthor %>
 
-                    </p>
-                    <h5 class="product-price"><i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
-                        <%=product.productPrice.toLocaleString() %>
-                    </h5>
-                </div>
-           </a>
-            
-            
+                                </p>
+                                <h5 class="product-price"><i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+                                    <%=product.productPrice.toLocaleString() %>
+                                </h5>
+                            </div>
+            </a>
 
-       <% }) %>
+
+
+            <% }) %>
     </div>
 
 </div>

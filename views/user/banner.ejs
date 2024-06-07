@@ -1,50 +1,57 @@
- 
 <style>
-     body {
-            background-color: black;
-        }
-        .banner-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 3rem 0;
-        }
-        .banner-center {
-            width: 90vw; 
-            height: 50vh;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-        .banner-image {
-            width: 90vw;
-            height: 50vh;
-            object-fit:cover;
-            display: none;
-        }
-        .banner-image.active {
-            display:block
-        }
-        .banner-action-btn {
-            scale: 2;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-        .banner-action-btn.left {
-            left: 10px;
-        }
-        .banner-action-btn.right {
-            right: 10px;
-        }
-        .banner-action-btn i {
-            color: #bcbcbc;
-        }
+    body {
+        background-color: black;
+    }
+
+    .banner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 3rem 0;
+    }
+
+    .banner-center {
+        width: 90vw;
+        height: 50vh;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .banner-image {
+        width: 90vw;
+        height: 50vh;
+        object-fit: cover;
+        display: none;
+    }
+
+    .banner-image.active {
+        display: block
+    }
+
+    .banner-action-btn {
+        scale: 2;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .banner-action-btn.left {
+        left: 10px;
+    }
+
+    .banner-action-btn.right {
+        right: 10px;
+    }
+
+    .banner-action-btn i {
+        color: #bcbcbc;
+    }
 </style>
 
 <div class="banner-container">
@@ -59,7 +66,7 @@
 </div>
 
 <script>
-   
+
     const images = document.querySelectorAll('.banner-image');
     let currentIndex = 0;
 
@@ -81,6 +88,3 @@
 
 
 </script>
-
-
-    

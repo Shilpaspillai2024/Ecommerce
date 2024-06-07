@@ -1,9 +1,9 @@
 <style>
-
-    body{
-        background-color:black;
+    body {
+        background-color: black;
     }
-     .product-view-container {
+
+    .product-view-container {
         display: flex;
         min-height: 100vh;
         padding: 5rem 0;
@@ -28,7 +28,7 @@
     .product-image-array {
         display: flex;
         flex-direction: row;
-        justify-content:center;
+        justify-content: center;
         width: 100%;
         gap: 2rem;
     }
@@ -40,7 +40,7 @@
         background-color: #e4dcdc;
         border-radius: 10px;
         overflow: hidden;
-       
+
     }
 
     .product-image-each img {
@@ -49,10 +49,11 @@
         object-fit: scale-down;
         transition: transform 0.3s;
         cursor: pointer;
-        
+
 
     }
-    .product-image-each:hover img{
+
+    .product-image-each:hover img {
         transform: scale(1.5);
 
     }
@@ -66,7 +67,8 @@
         align-items: center;
         justify-content: space-between;
     }
-    .product-out-offstock{
+
+    .product-out-offstock {
         color: green;
     }
 
@@ -83,7 +85,7 @@
         width: 400px;
         height: 400px;
         object-fit: scale-down;
-        transition:transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
     }
 
     .product-detail-container {
@@ -154,55 +156,61 @@
         font-size: 1.5rem;
     }
 
-    .similar-product-container{
+    .similar-product-container {
         color: white;
     }
-/* Breadcrumb navigation styles */
-.breadcrumbs {
-    margin: 20px 0; /* Adjust margin as needed */
-    font-size: 16px; /* Adjust font size as needed */
-}
 
-.breadcrumbs ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-}
+    /* Breadcrumb navigation styles */
+    .breadcrumbs {
+        margin: 20px 0;
+        /* Adjust margin as needed */
+        font-size: 16px;
+        /* Adjust font size as needed */
+    }
 
-.breadcrumbs li {
-    display: inline;
-    margin-right: 10px; /* Adjust spacing between breadcrumb items */
-}
+    .breadcrumbs ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+    }
 
-.breadcrumbs li:last-child {
-    font-weight: bold; /* Make the last breadcrumb item bold */
-}
+    .breadcrumbs li {
+        display: inline;
+        margin-right: 10px;
+        /* Adjust spacing between breadcrumb items */
+    }
 
-.breadcrumbs a {
-    text-decoration: none;
-    color:white; /* Link color */
-}
-.breadcrumbs span{
-    color: white;
-}
+    .breadcrumbs li:last-child {
+        font-weight: bold;
+        /* Make the last breadcrumb item bold */
+    }
 
-.breadcrumbs a:hover {
-    text-decoration: underline;
-    color: rgb(75, 75, 172); /* Underline on hover */
-}
+    .breadcrumbs a {
+        text-decoration: none;
+        color: white;
+        /* Link color */
+    }
 
-/* Style for the current page (last breadcrumb item) */
-.breadcrumbs span {
-    font-weight: bold;
-}
+    .breadcrumbs span {
+        color: white;
+    }
 
+    .breadcrumbs a:hover {
+        text-decoration: underline;
+        color: rgb(75, 75, 172);
+        /* Underline on hover */
+    }
 
+    /* Style for the current page (last breadcrumb item) */
+    .breadcrumbs span {
+        font-weight: bold;
+    }
 </style>
 
 <%-include('navbar') %>
 
-<!-- <nav class="breadcrumbs">
+    <!-- <nav class="breadcrumbs">
     <ul>
         <li><a href="/">Home</a></li>
         <span>/</span>
@@ -212,71 +220,71 @@
 </nav> -->
 
 
-<nav class="breadcrumbs">
-    <ul>
-        <li><a href="/">Home</a></li>
-        <span>/</span>
-        <% if (referrer === 'productSeemore') { %>
-           
-            <li><a href="/user/product">Product </a></li>
-        <% } else { %>
-            <li><a href="/user/productSeemore">productSeemore</a></li>
+    <nav class="breadcrumbs">
+        <ul>
+            <li><a href="/">Home</a></li>
             <span>/</span>
-            <li><a href="/user/product">Product</a></li>
-        <% } %>
-    </ul>
-</nav>
+            <% if (referrer==='productSeemore' ) { %>
 
-  <div class="product-view-container container">
-    <div class="product-view-details">
-        <div class="product-image-container">
-            <div class="product-full-view">
-                <i class="fa-solid fa-chevron-left" id="left-arrow-img"></i>
-                <div class="product-full-image-view">
-                    <img src="../../<%= product.productImage[0] %>" alt="" id="product-image-img">
-                </div>
-                <input type="text" name="image" value="<%=product.productImage[0]%>" hidden>
-                <i class="fa-solid fa-chevron-right" id="right-arrow-img"></i>
-            </div>
-            <div class="product-image-array">
-                <% product.productImage.forEach((img)=> {%>
+                <li><a href="/user/product">Product </a></li>
+                <% } else { %>
+                    <li><a href="/user/productSeemore">productSeemore</a></li>
+                    <span>/</span>
+                    <li><a href="/user/product">Product</a></li>
+                    <% } %>
+        </ul>
+    </nav>
 
-                <div class="product-image-each" onclick="change(`<%= img.replace(/\\/g, '\\\\') %>`)">
-                    <img src="../../<%= img %>" alt="">
+    <div class="product-view-container container">
+        <div class="product-view-details">
+            <div class="product-image-container">
+                <div class="product-full-view">
+                    <i class="fa-solid fa-chevron-left" id="left-arrow-img"></i>
+                    <div class="product-full-image-view">
+                        <img src="../../<%= product.productImage[0] %>" alt="" id="product-image-img">
+                    </div>
+                    <input type="text" name="image" value="<%=product.productImage[0]%>" hidden>
+                    <i class="fa-solid fa-chevron-right" id="right-arrow-img"></i>
                 </div>
-              <%  }) %>
+                <div class="product-image-array">
+                    <% product.productImage.forEach((img)=> {%>
+
+                        <div class="product-image-each" onclick="change(`<%= img.replace(/\\/g, '\\\\') %>`)">
+                            <img src="../../<%= img %>" alt="">
+                        </div>
+                        <% }) %>
+                </div>
             </div>
         </div>
-    </div>
 
 
 
-          <!-- right side product name, price, description addToCart section-->
+        <!-- right side product name, price, description addToCart section-->
 
 
-          <div class="product-detail-container">
+        <div class="product-detail-container">
             <div class="product-name">
                 <h5>
                     <%= product.productName %>
                 </h5>
             </div>
             <div class="product-offer">
-               <% if(product.productDiscount!=0){ %>
-                    
-                     <div class="offer-box">
+                <% if(product.productDiscount!=0){ %>
+
+                    <div class="offer-box">
                         <h6>
                             <%= product.productDiscount %>&percnt; OFF
                         </h6>
-                     </div>
+                    </div>
 
-             <%  } %>
-             <div class="rating" id="rating">
-                <span class="star-rating-product" data-value="1">&#9733;</span>
-                <span class="star-rating-product" data-value="2">&#9733;</span>
-                <span class="star-rating-product" data-value="3">&#9733;</span>
-                <span class="star-rating-product" data-value="4">&#9733;</span>
-                <span class="star-rating-product" data-value="5">&#9733;</span>
-             </div>
+                    <% } %>
+                        <div class="rating" id="rating">
+                            <span class="star-rating-product" data-value="1">&#9733;</span>
+                            <span class="star-rating-product" data-value="2">&#9733;</span>
+                            <span class="star-rating-product" data-value="3">&#9733;</span>
+                            <span class="star-rating-product" data-value="4">&#9733;</span>
+                            <span class="star-rating-product" data-value="5">&#9733;</span>
+                        </div>
 
 
             </div>
@@ -288,60 +296,60 @@
                 </h3>
             </div>
 
-       
 
-             <% if(product.productQuantity>0 ) {%>
+
+            <% if(product.productQuantity>0 ) {%>
                 <div class="product-action-buttons">
                     <button class="btn btn-warning">Add To Cart</button>
                     <button class="btn btn-danger">Buy Now</button>
                 </div>
 
 
-            <% } else { %>
-                <div class="product-out-offstock">
-                    <h5>product is out offstock</h5>
-                </div>
+                <% } else { %>
+                    <div class="product-out-offstock">
+                        <h5>product is out offstock</h5>
+                    </div>
 
-            <% } %>
+                    <% } %>
 
-            <div class="product-description mt-5">
-                <p>
-                    <%= product.productDescription %>
-                </p>
-            </div>
-            <div class="product-coupns">
-                <form action="">
-                    <input type="text" placeholder="xxxx-xxxx-xxxx" required>
-                    <button class="btn btn-secondary">Apply Coupon</button>
-                </form>
-            </div>
-          </div>
-    
-  </div>
+                        <div class="product-description mt-5">
+                            <p>
+                                <%= product.productDescription %>
+                            </p>
+                        </div>
+                        <div class="product-coupns">
+                            <form action="">
+                                <input type="text" placeholder="xxxx-xxxx-xxxx" required>
+                                <button class="btn btn-secondary">Apply Coupon</button>
+                            </form>
+                        </div>
+        </div>
 
- <!-- if similar products exist in the collection then only then product is shown  -->
-
- <% if(similarProducts.length!==0) {%>
-
-    <div class="similar-product-container container">
-        <h2>similar Products</h2>
-        <%-include ('similarProduct') %>
     </div>
-<%} %> 
+
+    <!-- if similar products exist in the collection then only then product is shown  -->
+
+    <% if(similarProducts.length!==0) {%>
+
+        <div class="similar-product-container container">
+            <h2>similar Products</h2>
+            <%-include ('similarProduct') %>
+        </div>
+        <%} %>
 
 
-<%-include('footer') %>
+            <%-include('footer') %>
 
-<script>
+                <script>
 
-    // image Zoom efffect
-    const imageContainer=document.getElementsByClassName("product-full-image-view")[0]
-    const productImg= document.getElementById('product-image-img')
-    const productImageEach = document.querySelectorAll(".product-image-each img");
+                    // image Zoom efffect
+                    const imageContainer = document.getElementsByClassName("product-full-image-view")[0]
+                    const productImg = document.getElementById('product-image-img')
+                    const productImageEach = document.querySelectorAll(".product-image-each img");
 
 
-      imageContainer.addEventListener("mousemove",(e)=>{
-        const rect = e.target.getBoundingClientRect();
+                    imageContainer.addEventListener("mousemove", (e) => {
+                        const rect = e.target.getBoundingClientRect();
                         const x = (e.clientX - rect.left) / rect.width;
                         const y = (e.clientY - rect.top) / rect.height;
 
@@ -390,11 +398,11 @@
                         }
 
                     })
-    
-    function change(src) {
-        productImg.src = `../../${src}`
-    }
 
-            
-    
-</script>
+                    function change(src) {
+                        productImg.src = `../../${src}`
+                    }
+
+
+
+                </script>

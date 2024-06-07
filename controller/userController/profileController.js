@@ -1,4 +1,5 @@
 const userSchema=require('../../model/userSchema')
+const addressSchema=require('../../model/addressSchem')
 const bcrypt=require('bcrypt')
 
 
@@ -77,8 +78,45 @@ const changePassword = async(req,res)=>{
 }
 
 
+const address= async(req,res)=>{
+     try {
+        const userId=req.session.user
+
+        //  const user = await userSchema.findById(req.session.user)
+
+         const userAddress= await addressSchema.findById(userId)
+
+         res.render('user/address',{title:"user-address",alertMessage:req.flash('errorMessage'),user:req.session.user,userAddress})
+        
+        
+     } catch (err) {
+        
+     }
+}
+
+
+const addAddress= async(req,res)=>{
+    try {
+        const userId=req.session.user
+        const newAddress={
+            userId: userId,
+            contactName: req.body.contactName,
+            doorNo: req.body.doorNo,
+            homeAddress: req.body.homeAddress,
+            areaAddress: req.body.areaAddress,
+            landmark: req.body.landmark,
+            pincode: req.body.pincode
+        }
+
+        await addressSchema.insertMany(newAddress)
+        res.redirect('/user/address');
+        
+    } catch (err) {
+        
+    }
+}
 
 
 
 
-module.exports={profile,personalInformation,changePassword}
+module.exports={profile,personalInformation,changePassword,address,addAddress}
