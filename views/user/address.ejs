@@ -19,18 +19,64 @@
     }
 
     .address-header {
-        font-weight: bold;
+        /* font-weight: bold; */
         font-size: 1.2em;
+      
+    }
+    .address-index{
+        margin-right: 1rem;
     }
 
     .address-body {
         margin-top: 10px;
+        margin-left: 2rem;
     }
 
-    .modal-header,
-    .modal-body,
-    .modal-footer {
+
+    .modal-content {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        color: black;
+    }
+
+    .modal-header {
+        background-color: #007bff;
+        /* color: rgb(24, 23, 23); */
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .modal-title {
+        font-weight: bold;
+    }
+
+    .modal-body {
         padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        color: black;
+    }
+
+    .address-actions .action-link {
+        /* width: 30%; */
+        color: #fefeeb; /* Change this to your desired color */
+        margin-right: 1em;
+    }
+
+    .address-actions .action-link:hover {
+        color: #ff3300; /* Change this to your desired hover color */
+    }
+
+    .address-actions .fa-pen-to-square,
+    .address-actions .fa-trash-can {
+        margin-right: 0.5em; /* Add spacing between icons */
     }
 </style>
 
@@ -38,33 +84,53 @@
 <%- include('navbar') %>
 
     <div class="container">
-        <h1 class="mt-5">My Addresses</h1>
-        <button class="btn btn-outline-secondary my-3" data-toggle="modal" data-target="#addAddressModal">+ Add a new
+        <h1 class="mt-5">My Address</h1>
+        <button class="btn btn-outline-secondary my-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">+ Add a
+            new
             address</button>
 
-        <% if (userAddress) { %>
+        <% if (userAddress && userAddress.length > 0) { %>
             <div class="list-group">
                 <% userAddress.forEach(address=> { %>
                     <div class="address-card">
                         <div class="address-actions">
-                            <button class="btn btn-link">Edit</button>
-                            <button class="btn btn-link">Remove</button>
+                            <!-- <button class="btn btn-link">Edit</button>
+                            <button class="btn btn-link">Remove</button> -->
+                            <a href="" class="action-link me-3"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="" class="action-link"><i class="fa-solid fa-trash-can"></i></a>
+
                         </div>
+
+                       
                         <div class="address-header">
-                            <%= address.contactName %> <span class="badge badge-secondary">HOME</span>
+                            <span class="address-index"><%= address.index %></span>
+                            
+                            <%= address.contactName %>
+                             <!-- <span class="badge badge-secondary">HOME</span> -->
+
+                            <% if (address.addressType === 'home') { %>
+                                <span class="badge badge-secondary me-2"><i class="fas fa-home"style="margin-left: 1em;" ></i>Home</span>
+                            <% } else if (address.addressType === 'office') { %>
+                                <span class="badge badge-primary me-2"><i class="fas fa-building" style="margin-left: 1em;"></i>Office</span>
+                                <% } else if (address.addressType === 'other') { %>
+                                    <span class="badge badge-primary me-2"> <i class="fas fa-map-marker-alt" style="margin-left: 1em;"></i>Other</span>
+                            <% } %>
                         </div>
+
+                      
                         <div class="address-body">
-                            <p>Contact Name: <%= address.contactName %>
+                          
+                            <p> <%= address.doorNo %>
                             </p>
-                            <p>Door No: <%= address.doorNo %>
+                            <p><%= address.Address %>
                             </p>
-                            <p>Home Address: <%= address.homeAddress %>
+                            <p><%= address.areaAddress %>
                             </p>
-                            <p>Area Address: <%= address.areaAddress %>
+                            <p><%= address.landmark %>
                             </p>
-                            <p>Landmark: <%= address.landmark %>
+                            <p><%= address.phone %>
                             </p>
-                            <p>Pincode: <%= address.pincode %>
+                            <p><%= address.pincode %>
                             </p>
                         </div>
                     </div>
@@ -84,12 +150,20 @@
                     <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
 
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form id="address-form" action="/user/add-address" method="POST">
+                        <div class="form-group">
+                            <label for="address-type">Address Type:</label>
+                            <select class="form-select" id="address-type" name="addressType">
+                                <option value="home">Home</option>
+                                <option value="office">Office</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="new-address-contactName">Contact Name:</label>
                             <input type="text" class="form-control" id="new-address-contactName" name="contactName"
@@ -100,7 +174,7 @@
                             <input type="text" class="form-control" id="new-address-doorNo" name="doorNo" required>
                         </div>
                         <div class="form-group">
-                            <label for="new-address-homeAddress">Home Address:</label>
+                            <label for="new-address-homeAddress">Address:</label>
                             <input type="text" class="form-control" id="new-address-homeAddress" name="homeAddress"
                                 required>
                         </div>
@@ -113,11 +187,17 @@
                             <label for="new-address-landmark">Landmark:</label>
                             <input type="text" class="form-control" id="new-address-landmark" name="landmark" required>
                         </div>
+
+                        <div class="form-group">
+                            <label for="new-address-landmark">Phone:</label>
+                            <input type="text" class="form-control" id="new-address-phone" name="phone" required>
+                        </div>
                         <div class="form-group">
                             <label for="new-address-pincode">Pincode:</label>
                             <input type="text" class="form-control" id="new-address-pincode" name="pincode" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Add Address</button>
+
                     </form>
                 </div>
             </div>

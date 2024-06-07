@@ -15,6 +15,10 @@ const profile= async (req,res) =>{
         res.render('user/profile',{title:'profile-view',alertMessage:req.flash("errorMessage"),user:req.session.user,userDetail})
         
     } catch (err) {
+
+       console.log(`error during profile page load ${err}`)
+        req.flash('errorMessage', 'Failed to load profile page.');
+        res.redirect('/user/home'); 
         
     }
 
@@ -32,7 +36,7 @@ const personalInformation = async(req,res)=>{
         req.flash('errorMessage', 'Personal information updated successfully.');
         res.redirect('/user/profile');
     } catch (err) {
-        console.error(`Error updating personal information: ${err}`);
+        console.log(`Error updating personal information: ${err}`);
         req.flash('errorMessage', 'Failed to update personal information. Please try again later.');
         res.redirect('/user/profile');
     }
@@ -82,14 +86,25 @@ const address= async(req,res)=>{
      try {
         const userId=req.session.user
 
-        //  const user = await userSchema.findById(req.session.user)
+        
 
-         const userAddress= await addressSchema.findById(userId)
+        //  const userAddress= await addressSchema.find({userId:userId}) ;
+
+
+        const userAddress = await addressSchema.find({ userId }).sort({ _id: -1 });
+
+        // Adding an index like number to each address
+        userAddress.forEach((address, index) => {
+            address.index = index + 1;
+        });
 
          res.render('user/address',{title:"user-address",alertMessage:req.flash('errorMessage'),user:req.session.user,userAddress})
         
         
      } catch (err) {
+        console.log(`Error when loading the address page ${err}`)
+        req.flash('errorMessage','Failed to load address page')
+        res.redirect('/user/profile')
         
      }
 }
@@ -100,18 +115,26 @@ const addAddress= async(req,res)=>{
         const userId=req.session.user
         const newAddress={
             userId: userId,
+            addressType:req.body.addressType,
             contactName: req.body.contactName,
             doorNo: req.body.doorNo,
-            homeAddress: req.body.homeAddress,
+            Address: req.body.homeAddress,
             areaAddress: req.body.areaAddress,
             landmark: req.body.landmark,
+            phone:req.body.phone,
             pincode: req.body.pincode
         }
 
         await addressSchema.insertMany(newAddress)
+
+        req.flash('errorMessage', ' address added successfully');
+      
         res.redirect('/user/address');
         
     } catch (err) {
+        console.error(`Error during adding address to DB: ${err}`);
+        req.flash('errorMessage', err.message || 'Failed to add address. Please try again later.');
+        res.redirect('/user/address');
         
     }
 }

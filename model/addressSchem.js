@@ -1,6 +1,12 @@
 const mongoose=require('mongoose')
 
 const schema = new mongoose.Schema({
+
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
+    },
     contactName:{
         type:String
     },
@@ -9,7 +15,7 @@ const schema = new mongoose.Schema({
         type:Number
     },
 
-    homeAddress:{
+    Address:{
         type:String
     },
     areaAddress:{
@@ -25,6 +31,17 @@ const schema = new mongoose.Schema({
 
     landmark:{
         type:String
+    },
+
+    phone:{
+        type:Number
+    },
+
+    addressType: {
+        type: String,
+        enum: ['home', 'office','other'], // Enumerated values: 'home' or 'office'
+        default: 'home'
+         // Default value is 'home'
     }
 
 })
