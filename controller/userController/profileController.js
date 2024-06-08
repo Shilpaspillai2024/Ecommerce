@@ -1,5 +1,5 @@
 const userSchema=require('../../model/userSchema')
-const addressSchema=require('../../model/addressSchem')
+const addressSchema=require('../../model/addressSchema')
 const bcrypt=require('bcrypt')
 
 

@@ -57,6 +57,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
+       
+       
     }
 
     /* .product-box:hover{
@@ -150,6 +152,22 @@
         display: flex;
         justify-content: center;
     }
+    .wishlist-icon{
+        font-size: 24px; 
+    color: #e4d9d9; 
+    margin-left: 10rem;
+    padding-left: 3rem;
+
+    }
+.cart-icon {
+    font-size: 24px; 
+    color: #e4d9d9; 
+    margin-left: 1rem;
+}
+.clicked {
+    color: red; /* Change to desired color */
+}
+  
 </style>
 
 <div class="container banner-caption ">
@@ -218,7 +236,11 @@
                                     <%=product.productPrice.toLocaleString() %>
                                 </h5>
                             </div>
-                         
+                            <!-- wishlist-icon -->
+                            <a href="#" class="wishlist-icon" onclick="toggleColor(this)"><i class="fas fa-heart"></i></a>
+                            <!-- Cart Icon -->
+                            <a href="#" class="cart-icon" onclick="toggleColor(this)"><i class="fas fa-shopping-cart"></i></a>
+                    
 
             </div>
 
@@ -232,3 +254,9 @@
 
     <a href="/user/productSeemore">See More</a>
 </div>
+
+<script>
+    function toggleColor(element) {
+    element.classList.toggle('clicked');
+}
+</script>

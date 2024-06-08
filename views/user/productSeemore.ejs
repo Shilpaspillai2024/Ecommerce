@@ -176,6 +176,19 @@
         font-weight: bold;
     }
 
+    .wishlist-icon{
+        font-size: 24px; 
+    color: #e4d9d9; 
+    margin-left: 10rem;
+    padding-left: 3rem;
+
+    }
+.cart-icon {
+    font-size: 24px; 
+    color: #e4d9d9; 
+    margin-left: 1rem;
+}
+
 
       /* Responsive adjustments */
       @media (max-width: 576px) {
@@ -226,7 +239,7 @@
         <div class="product-list-box container">
             <% product.forEach((product)=>{ %>
 
-                <!-- <a href="/user/product-view/<%=product.id %>" class="product-box"> -->
+               
                     <div class="product-box">
 
                     <% if(product.productDiscount!=0) {%>
@@ -262,7 +275,11 @@
                                     </h5>
                                 </a>
                                 </div>
-                <!-- </a> -->
+                                   <!-- wishlist-icon -->
+                            <a href="#" class="wishlist-icon"><i class="fas fa-heart"></i></a>
+                            <!-- Cart Icon -->
+                            <a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
+               
 
                </div>
 

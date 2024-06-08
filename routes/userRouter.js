@@ -82,6 +82,12 @@ user.get('/edit-address/:id',checkUserSession,profileController.editAddress)
 user.post('/edit-address/:id',checkUserSession,profileController.editAddressPost)
 
 
+
+// user cart routes
+
+user.get('/cart',checkUserSession,profileController.cart)
+
+
 user.get('/logout',userController.logout)
 
 module.exports = user;

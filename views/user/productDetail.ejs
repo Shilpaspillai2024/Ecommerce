@@ -211,72 +211,72 @@
 
 
 
-       /* Responsive adjustments */
-       @media (max-width: 768px) {
-            .product-full-view {
-                max-width: 300px;
-                height: 300px;
-            }
-
-            .product-full-image-view {
-                max-width: 270px;
-                height: 270px;
-            }
-
-            .product-full-view img {
-                width: 250px;
-                height: 250px;
-            }
-
-            .product-image-each {
-                width: 80px;
-                height: 80px;
-            }
-
-            .product-detail-container {
-                padding: 0 1rem;
-            }
-
-            .btn {
-                width: 100%;
-            }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .product-full-view {
+            max-width: 300px;
+            height: 300px;
         }
 
-        @media (max-width: 576px) {
-            .product-full-view {
-                max-width: 200px;
-                height: 200px;
-            }
-
-            .product-full-image-view {
-                max-width: 170px;
-                height: 170px;
-            }
-
-            .product-full-view img {
-                width: 150px;
-                height: 150px;
-            }
-
-            .product-image-each {
-                width: 60px;
-                height: 60px;
-            }
-
-            .product-action-buttons {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .btn {
-                width: 100%;
-            }
+        .product-full-image-view {
+            max-width: 270px;
+            height: 270px;
         }
+
+        .product-full-view img {
+            width: 250px;
+            height: 250px;
+        }
+
+        .product-image-each {
+            width: 80px;
+            height: 80px;
+        }
+
+        .product-detail-container {
+            padding: 0 1rem;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .product-full-view {
+            max-width: 200px;
+            height: 200px;
+        }
+
+        .product-full-image-view {
+            max-width: 170px;
+            height: 170px;
+        }
+
+        .product-full-view img {
+            width: 150px;
+            height: 150px;
+        }
+
+        .product-image-each {
+            width: 60px;
+            height: 60px;
+        }
+
+        .product-action-buttons {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
 </style>
 
 <%-include('navbar') %>
 
-   
+
 
 
     <nav class="breadcrumbs">
@@ -348,7 +348,7 @@
 
             </div>
 
-            <div class="product-price">
+            <!-- <div class="product-price">
                 <h3>
                     <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
                     <%= product.productPrice.toLocaleString() %>
@@ -381,8 +381,52 @@
                                 <input type="text" placeholder="xxxx-xxxx-xxxx" required>
                                 <button class="btn btn-secondary">Apply Coupon</button>
                             </form>
+                        </div> -->
+
+                        <div class="product-price">
+                            <% if (product.productDiscount === 0) { %>
+                                <h3>&#8377; <%= product.productPrice.toLocaleString() %></h3>
+                            <% } else { %>
+                                <h3>
+                                    <del>&#8377; <%= product.productPrice.toLocaleString() %></del>
+                                </h3>
+                                <h3>&#8377; <%= parseInt(product.productPrice - ((product.productDiscount / 100) * product.productPrice)).toLocaleString() %></h3>
+                            <% } %>
                         </div>
+                        
+                        <% if (product.productQuantity > 0) { %>
+                            <% if (itemInCart) { %>
+                                <!-- If the product is already in the cart, show "Go to Cart" button -->
+                                <a href="/user/cart" class="btn btn-warning go-to-cart">Go to Cart <i class="fa-solid fa-cart-shopping"></i></a>
+                            <% } else { %>
+                                <!-- Form for adding the product to the cart -->
+                                <form action="/user/add-to-cart/<%= product.id %>/?price=<%= product.productPrice %>" method="post" id="product-add-to-cart-form">
+                                    <button type="submit" class="btn btn-warning" id="add-to-cart-btn">Add to Cart</button>
+                                </form>
+                            <% } %>
+                        <% } else { %>
+                            <div class="product-out-offstock">
+                                <h5>Product is out of stock</h5>
+                            </div>
+                        <% } %>
+                        
+                        <div class="product-description mt-5">
+                            <p><%= product.productDescription %></p>
+                        </div>
+                        
+                        <div class="product-coupons-section">
+                            <form action="">
+                                <input type="text" placeholder="xxxx-xxxx-xxxx" required>
+                                <button class="btn btn-secondary">Apply Coupon</button>
+                            </form>
+                        </div>
+                        
+
+
         </div>
+
+
+
 
     </div>
 
