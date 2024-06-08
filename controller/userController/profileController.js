@@ -170,16 +170,73 @@ const deleteAddress= async(req,res)=>{
 }
 
 
-     const editAddress= async(req,res)=>{
-        try {
 
-            const userId=req.session.user;
-            const addressId=req.params.id;
-            
+
+    const editAddress =async (req,res)=>{
+    try {
+
+
+           const userId=req.session.user;
+            const addressId = req.params.id;
+
+            const address = await addressSchema.findOne({ _id: addressId, userId: userId })
+
+            if (!address) {
+                req.flash('errorMessage', 'Address not found or not authorized to edit');
+                return res.redirect('/user/address');
+            }
+
+            res.render('user/editAddress',{title:"user-editAddress",alertMessage:req.flash('errorMessage'),user:req.session.user,address})
+        
+    } catch (err) {
+
+        console.log(`Error when loading the address page ${err}`)
+        req.flash('errorMessage','Failed to load editaddress page')
+        res.redirect('/user/address')
+        
+        
+    }
+      }
+
+
+      const editAddressPost = async (req, res) => {
+        try {
+            const userId = req.session.user;
+            const addressId = req.params.id;
+    
+            // Extract updated address details from the request body
+            const { addressType, contactName, doorNo, homeAddress, areaAddress, landmark, phone, pincode } = req.body;
+    
+            // Find the address by ID and update its details
+            const updatedAddress = await addressSchema.findByIdAndUpdate(addressId, {
+                addressType,
+                contactName,
+                doorNo,
+                Address: homeAddress, // Assuming your schema has Address field instead of homeAddress
+                areaAddress,
+                landmark,
+                phone,
+                pincode
+            }, { new: true });
+    
+            if (!updatedAddress) {
+                // If address is not found or not authorized, redirect with error message
+                req.flash('errorMessage', 'Address not found or not authorized to edit');
+                return res.redirect('/user/editAddress');
+            }
+    
+            // Redirect to the address page with success message
+            req.flash('errorMessage', 'Address updated successfully');
+            res.redirect('/user/address');
         } catch (err) {
-            
+            console.log(`Error when updating the address: ${err}`);
+            req.flash('errorMessage', 'Failed to update address');
+            res.redirect('/user/address');
         }
-     }
+    }
+    
+            
+       
 
 
 
@@ -191,5 +248,6 @@ module.exports={
     address,
     addAddress,
     deleteAddress,
-    editAddress
+    editAddress,
+    editAddressPost
 }

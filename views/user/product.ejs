@@ -175,7 +175,9 @@
     </div>
 
     <div class="product-list-box container">
-        <% product.forEach((product)=>{ %>
+
+        <% product.slice(0, 6).forEach((product)=> { %>
+
 
             <a href="/user/product-view/<%=product.id %>?from=productSeemore" class="product-box">
 
@@ -215,6 +217,7 @@
 
             <% }) %>
     </div>
+
 
 </div>
 

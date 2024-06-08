@@ -1,0 +1,124 @@
+<style>
+    body{
+        background-color: black;
+    }
+    .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: .2em solid yellowgreen;
+    border-radius:1rem ;
+    color: #f0f0f0;
+    margin-top: 2rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+ 
+
+.save-changes-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #208826;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    
+}
+.cancel-btn{
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+
+
+}
+
+
+
+.save-changes-btn:hover {
+    background-color: #2ab300;
+}
+
+
+.mt-5 {
+    margin-top: 30px;
+}
+
+</style>
+
+
+
+
+
+<%-include('navbar') %>
+
+<div class="container">
+    <h2 class="mt-5 text-center">Edit Address</h2>
+
+    <!-- Form for editing the address -->
+    <form id="edit-address-form" action="/user/edit-address/<%= address._id %>" method="POST">
+        <div class="form-group">
+            <label for="edit-address-type">Address Type:</label>
+            <select class="form-select" id="edit-address-type" name="addressType">
+                <option value="home">Home</option>
+                <option value="office">Office</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="edit-address-contactName">Contact Name:</label>
+            <input type="text" class="form-control" id="edit-address-contactName" name="contactName" value="<%= address.contactName %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="new-address-doorNo">Door No:</label>
+            <input type="text" class="form-control" id="new-address-doorNo" name="doorNo"value="<%= address.doorNo %>" required>
+        </div>
+        <div class="form-group">
+            <label for="new-address-homeAddress">Address:</label>
+            <input type="text" class="form-control" id="new-address-homeAddress" name="homeAddress"value="<%= address.Address %>">
+        </div>
+        <div class="form-group">
+            <label for="new-address-areaAddress">Area Address:</label>
+            <input type="text" class="form-control" id="new-address-areaAddress" name="areaAddress"value="<%= address.areaAddress %>">
+        </div>
+        <div class="form-group">
+            <label for="new-address-landmark">Landmark:</label>
+            <input type="text" class="form-control" id="new-address-landmark" name="landmark"value="<%= address.landmark %>">
+        </div>
+
+        <div class="form-group">
+            <label for="new-address-landmark">Phone:</label>
+            <input type="text" class="form-control" id="new-address-phone" name="phone"value="<%= address.phone %>">
+        </div>
+        <div class="form-group">
+            <label for="new-address-pincode">Pincode:</label>
+            <input type="text" class="form-control" id="new-address-pincode" name="pincode" value="<%= address.pincode %>">
+        </div>
+      
+        <!-- Hidden input field to store the address ID -->
+        <input type="hidden" id="edit-address-id" name="id">
+
+        <div class="col-auto text-center ">
+            <a href="/user/address" class="btn btn-secondary cancel-btn">Cancel</a>
+            <button type="submit" class="btn btn-primary save-changes-btn">Save Changes</button>
+        </div>
+
+       
+
+        
+
+
+    </form>
+</div>
+
+<%- include('footer') %>
+
+<script>
+  
+</script>

@@ -8,6 +8,7 @@
         padding: 2rem 0;
         margin-bottom: 5rem;
         margin-top: 3rem;
+        transition: transform 0.3s ease-in-out;
     }
 
     .banner-inner-box {
@@ -15,6 +16,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        transition: transform 0.3s ease-in-out; /* Smooth transition for scaling */
     }
 
     .banner-content-box {
@@ -26,17 +28,26 @@
         align-items: center;
         justify-content: center;
         margin-bottom: 1rem;
+        transition: transform 0.3s ease-in-out; /* Smooth transition for scaling */
     }
 
     .banner-content-box i {
         color: #ffffff;
         scale: 1.5;
+        transition: transform 0.3s ease-in-out; /* Smooth transition for scaling */
     }
 
     .banner-inner-box h5,
     p {
         color: white;
     }
+    .banner-inner-box:hover .banner-content-box {
+    transform: scale(1.1); /* Scale up the icon box on hover */
+}
+
+.banner-inner-box:hover {
+    transform: scale(1.05); /* Scale up the inner box on hover */
+}
 </style>
 
 

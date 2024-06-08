@@ -78,7 +78,8 @@ user.get('/delete-address/:id',checkUserSession,profileController.deleteAddress)
 
 
 //edit address
-user.post('/edit-address/:id',checkUserSession,profileController.editAddress)
+user.get('/edit-address/:id',checkUserSession,profileController.editAddress)
+user.post('/edit-address/:id',checkUserSession,profileController.editAddressPost)
 
 
 user.get('/logout',userController.logout)

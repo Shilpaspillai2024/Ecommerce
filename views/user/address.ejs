@@ -42,7 +42,6 @@
 
     .modal-header {
         background-color: #007bff;
-        /* color: rgb(24, 23, 23); */
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
     }
@@ -68,19 +67,31 @@
     .address-actions .action-link {
         /* width: 30%; */
         color: #fefeeb;
-        /* Change this to your desired color */
+        
         margin-right: 1em;
     }
 
     .address-actions .action-link:hover {
         color: #ff3300;
-        /* Change this to your desired hover color */
+      
+    }
+
+    .address-actions .action-edit-link {
+        /* width: 30%; */
+        color: #fefeeb;
+        
+        margin-right: 1em;
+    }
+
+    .address-actions .action-edit-link:hover {
+        color: #ff3300;
+      
     }
 
     .address-actions .fa-pen-to-square,
     .address-actions .fa-trash-can {
         margin-right: 0.5em;
-        /* Add spacing between icons */
+       
     }
 </style>
 
@@ -98,10 +109,12 @@
                 <% userAddress.forEach(address=> { %>
                     <div class="address-card">
                         <div class="address-actions">
-                            <!-- <button class="btn btn-link">Edit</button>
-                            <button class="btn btn-link">Remove</button> -->
-                            <a href="/user/edit-address/<%= address.id %>" class="action-link me-3"><i
+                           
+                            <a href="/user/edit-address/<%= address._id %>" class="action-edit-link me-3"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
+
+
+                                   
                             <a href="/user/delete-address/<%= address.id %>" class="action-link"><i
                                     class="fa-solid fa-trash-can"></i></a>
 
@@ -114,8 +127,7 @@
                             </span>
 
                             <%= address.contactName %>
-                                <!-- <span class="badge badge-secondary">HOME</span> -->
-
+                            
                                 <% if (address.addressType==='home' ) { %>
                                     <span class="badge badge-secondary me-2"><i class="fas fa-home"
                                             style="margin-left: 1em;"></i>Home</span>
@@ -223,6 +235,17 @@
 
 
 
+    
+
+   
+
+
+   
+
+
+
+   
+
 
     <%-include('footer')%>
         <script>
@@ -252,5 +275,7 @@
                 });
             });
 
+
+           
 
         </script>

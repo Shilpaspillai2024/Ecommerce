@@ -119,6 +119,40 @@
         background-color: #707070;
         color: #ffffff;
     }
+
+
+    @media only screen and (max-width: 768px) {
+    .admin-navbar-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-navlinks {
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .navbar-search-box {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .toggle-btn {
+        position: static;
+        margin-top: 1rem;
+    }
+
+    .sidebar {
+        width: 100%;
+        right: -100%;
+        transition: right 0.3s ease;
+    }
+
+    .sidebar ul li {
+        width: 100%;
+        text-align: center;
+    }
+}
 </style>
 
 
@@ -129,6 +163,10 @@
         <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
     </form>
     <nav class="admin-navlinks">
+
+        <a href="/user/home" class="nav-link-items"><i class="fa-solid fa-house"
+            style="color:  rgb(162, 218, 33);"></i></a>
+
         <a href="/user/wishlist" class="nav-link-items"><i class="fa-solid fa-heart"
                 style="color:  rgb(162, 218, 33);"></i></a>
         <a href="/user/cart" class="nav-link-items"><i class="fa-solid fa-cart-shopping"
