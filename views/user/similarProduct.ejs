@@ -9,7 +9,7 @@
     }
 
     .product-box {
-        text-decoration: none;
+        /* text-decoration: none; */
         color: #000000;
         border: 1px solid #b2b2b2;
         border-radius: 10px;
@@ -19,6 +19,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
+    }
+    .product-name-link{
+        text-decoration: none;
+        color: white;
     }
 
     .product-image-box {
@@ -81,7 +85,7 @@
     <!-- this will render each product on the product collection which is not blocked -->
     <% similarProducts.forEach((product)=>{ %>
         <!-- this is the product container and when it is clicked it redirect to product detail page -->
-        <a href="/user/product-view/<%= product.id %>" class="product-box">
+       <div class="product-box">
 
             <!-- if product discount is available then it is shown as a banner in product top  -->
             <% if(product.productDiscount!=0){ %>
@@ -105,17 +109,20 @@
                         </div>
                         <!-- product description with text overflow as ... -->
                         <div class="product-description-box">
+                            <a href="/user/product-view/<%= product.id %>" class="product-name-link">
                             <h6 class="product-text-row">
-                                <%= product.productAuthor %>
-                            </h6>
-                            <p class="product-name product-text-row">
                                 <%= product.productName %>
+                            </h6>
+                        </a>
+                            <p class="product-name product-text-row">
+                                <%= product.productAuthor %>
                             </p>
                             <h5 class="product-price"><i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
                                 <%= product.productPrice.toLocaleString() %>
                             </h5>
                         </div>
-        </a>
+        <!-- </a> -->
+       </div>
 
         <% }) %>
 </div>

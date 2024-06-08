@@ -256,6 +256,8 @@
     <!-- adding modal for password change -->
 
 
+
+
     <div id="changePasswordModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -268,16 +270,19 @@
                 <div class="form-group">
                     <label for="newPassword">New Password</label>
                     <input type="password" class="form-control" id="newPassword" name="newPassword">
+                    <!-- Error message for new password -->
+                    <div id="newPasswordError" class="invalid-feedback"></div>
                 </div>
                 <div class="form-group">
                     <label for="confirmNewPassword">Confirm New Password</label>
                     <input type="password" class="form-control" id="confirmNewPassword" name="confirmPassword">
+                    <!-- Error message for confirm new password -->
+                    <div id="confirmNewPasswordError" class="invalid-feedback"></div>
                 </div>
                 <button type="submit" class="btn-save">Save Changes</button>
             </form>
         </div>
     </div>
-
 
 
 
@@ -305,4 +310,49 @@
                     modal.style.display = "none";
                 }
             }
+
+
+
+            // change password validation
+            const changePasswordForm = document.getElementById('change-password-form');
+            const newPassword = document.getElementById('newPassword');
+            const confirmNewPassword = document.getElementById('confirmNewPassword');
+            const newPasswordError = document.getElementById('newPasswordError');
+            const confirmNewPasswordError = document.getElementById('confirmNewPasswordError');
+
+            changePasswordForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                // Regular expressions for password validation
+                const uppercaseRegex = /[A-Z]/;
+                const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+                // Check if new password and confirm password match
+                if (newPassword.value !== confirmNewPassword.value) {
+                    // Display error message for confirm new password
+                    confirmNewPasswordError.textContent = "New password and confirm password must match";
+                    confirmNewPassword.classList.add('is-invalid');
+                    return;
+                } else {
+                    // Remove error message and invalid class if passwords match
+                    confirmNewPasswordError.textContent = "";
+                    confirmNewPassword.classList.remove('is-invalid');
+                }
+
+                // Check if new password meets complexity requirements
+                if (newPassword.value.length < 8 || !uppercaseRegex.test(newPassword.value) || !specialCharacterRegex.test(newPassword.value)) {
+                    // Display error message for new password
+                    newPasswordError.textContent = "Password must be at least 8 characters long and contain at least one uppercase letter and one special character";
+                    newPassword.classList.add('is-invalid');
+                    return;
+                } else {
+                    // Remove error message and invalid class if password meets requirements
+                    newPasswordError.textContent = "";
+                    newPassword.classList.remove('is-invalid');
+                }
+
+                // If all validations pass, submit the form
+                this.submit();
+            });
+
         </script>

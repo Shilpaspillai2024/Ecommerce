@@ -50,7 +50,7 @@
     }
 
     .product-box {
-        text-decoration: none;
+        /* text-decoration: none; */
         border: 1px solid #b2b2b2;
         border-radius: 10px;
         width: 300px;
@@ -95,6 +95,11 @@
         margin-left: 4rem;
 
 
+    }
+    .product-name-link {
+        text-decoration: none;
+        color: white;
+        /* Set the color you prefer */
     }
 
     .product-discount-box {
@@ -170,6 +175,35 @@
     .breadcrumbs span {
         font-weight: bold;
     }
+
+
+      /* Responsive adjustments */
+      @media (max-width: 576px) {
+            .product-container h2 {
+                font-size: 1.5rem;
+                margin-top: 2rem;
+            }
+
+            .product-box {
+                width: 90%;
+                margin: 1rem auto;
+            }
+
+            .product-image-box {
+                height: 200px;
+                width: 200px;
+            }
+
+            .product-text-row {
+                max-width: 200px;
+            }
+
+            .product-discount-box,
+            .product-newarrival-box {
+                padding: 0 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
 </style>
 <%-include ('navbar') %>
 
@@ -192,7 +226,8 @@
         <div class="product-list-box container">
             <% product.forEach((product)=>{ %>
 
-                <a href="/user/product-view/<%=product.id %>" class="product-box">
+                <!-- <a href="/user/product-view/<%=product.id %>" class="product-box"> -->
+                    <div class="product-box">
 
                     <% if(product.productDiscount!=0) {%>
                         <div class="product-discount-box">
@@ -213,6 +248,7 @@
                                 </div>
 
                                 <div class="product-name-box">
+                                    <a href="/user/product-view/<%=product.id %>" class="product-name-link">
                                     <h6 class="product-text-row">
                                         <%=product.productName%>
                                     </h6>
@@ -224,10 +260,11 @@
                                             class="fa-solid fa-indian-rupee-sign product-text-row"></i>
                                         <%=product.productPrice.toLocaleString() %>
                                     </h5>
+                                </a>
                                 </div>
-                </a>
+                <!-- </a> -->
 
-
+               </div>
 
                 <% }) %>
         </div>

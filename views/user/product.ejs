@@ -50,7 +50,6 @@
     }
 
     .product-box {
-        text-decoration: none;
         border: 1px solid #b2b2b2;
         border-radius: 10px;
         width: 300px;
@@ -58,8 +57,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
-
-
     }
 
     /* .product-box:hover{
@@ -88,6 +85,12 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .product-name-link {
+        text-decoration: none;
+        color: white;
+        /* Set the color you prefer */
     }
 
     .product-name-box {
@@ -149,7 +152,7 @@
     }
 </style>
 
-<div class="banner-caption">
+<div class="container banner-caption ">
     <h6>"FIND YOUR PLACE AT WORDPLAY ONLINE BOOKSTORE"</h6>
     <p>
         "Embark on a literary journey filled with endless possibilities and
@@ -179,8 +182,9 @@
         <% product.slice(0, 6).forEach((product)=> { %>
 
 
-            <a href="/user/product-view/<%=product.id %>?from=productSeemore" class="product-box">
+           
 
+            <div class="product-box">
                 <% if(product.productDiscount!=0) {%>
                     <div class="product-discount-box">
                         <h6>
@@ -200,9 +204,12 @@
                             </div>
 
                             <div class="product-name-box">
-                                <h6 class="product-text-row">
-                                    <%=product.productName%>
-                                </h6>
+                                <a href="/user/product-view/<%= product.id %>?from=productSeemore"
+                                    class="product-name-link">
+                                    <h6 class="product-text-row">
+                                        <%=product.productName%>
+                                    </h6>
+                                </a>
                                 <p class="product-description product-text-row">
                                     <%=product.productAuthor %>
 
@@ -211,9 +218,9 @@
                                     <%=product.productPrice.toLocaleString() %>
                                 </h5>
                             </div>
-            </a>
+                         
 
-
+            </div>
 
             <% }) %>
     </div>
