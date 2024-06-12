@@ -152,6 +152,11 @@
         width: 100%;
         text-align: center;
     }
+
+    .cart-count-badge {
+        font-size: 0.75rem;
+        padding: 0.25em 0.5em;
+    }
 }
 </style>
 
@@ -170,7 +175,14 @@
         <a href="/user/wishlist" class="nav-link-items"><i class="fa-solid fa-heart"
                 style="color:  rgb(162, 218, 33);"></i></a>
         <a href="/user/cart" class="nav-link-items"><i class="fa-solid fa-cart-shopping"
-                style="color:  rgb(162, 218, 33);"></i></a>
+                style="color:  rgb(162, 218, 33);"></i>
+
+                <% if (cartItemCount > 0) { %>
+                    <span class="cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <%= cartItemCount %>
+                    </span>
+                <% } %>
+            </a>
 
         <!-- if user is logged in -->
         <% if (user) { %>

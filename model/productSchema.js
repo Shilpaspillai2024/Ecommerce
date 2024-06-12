@@ -35,25 +35,22 @@ const schema=new mongoose.Schema({
            
          },
 
+         productDiscountPrice:{
+            type:Number,
+        },
+
          productImage:{
             type:[],
             required:true
          },
 
-         addedOn: {
-            type: Date,
-            default: Date.now,
-        },
-        updatedOn: {
-            type: Date,
-            default: Date.now,
-        },
+       
         isActive:{
             type:Boolean,
             default:true,
         }
 
 
-})
+},{timestamps:true})
 
 module.exports=mongoose.model('product',schema)

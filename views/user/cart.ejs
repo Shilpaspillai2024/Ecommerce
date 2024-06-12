@@ -1,204 +1,482 @@
 <style>
-    body{
-    margin-top:20px;
-    background-color: #f1f3f7;
-}
+    body {
 
-.avatar-lg {
-    height: 5rem;
-    width: 5rem;
-}
+        background-color: black;
 
-.font-size-18 {
-    font-size: 18px!important;
-}
+    }
 
-.text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+    .avatar-lg {
+        height: 5rem;
+        width: 5rem;
+    }
 
-a {
-    text-decoration: none!important;
-}
+    .font-size-18 {
+        font-size: 18px !important;
+    }
 
-.w-xl {
-    min-width: 160px;
-}
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
-.card {
-    margin-bottom: 24px;
-    -webkit-box-shadow: 0 2px 3px #e4e8f0;
-    box-shadow: 0 2px 3px #e4e8f0;
-}
+    a {
+        text-decoration: none !important;
+    }
 
-.card {
-    position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid #eff0f2;
-    border-radius: 1rem;
-}
+    .w-xl {
+        min-width: 160px;
+    }
+
+    .card {
+        margin-bottom: 24px;
+        -webkit-box-shadow: 0 2px 3px #e4e8f0;
+        box-shadow: 0 2px 3px #e4e8f0;
+    }
+
+    .card {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid #eff0f2;
+        border-radius: 1rem;
+    }
+
+    .btn-link {
+        color: #fff
+    }
+
+    .btn-link:hover {
+        color: royalblue
+    }
+
+    .container {
+        display: flex;
+    }
+
+    .cart-item {
+        width: 95%;
+    }
 </style>
 
 
 
 
+<%- include('navbar') %>
+
+    <% if (cart) { %>
+        <div class="container">
+            <div class="row mt-5">
+                <% if (cart.items.length !=0) { %>
+                    <% cart.items.forEach((items, index)=> { %>
+                        <div class="col-xl-8 cart-item">
+                            <div class="card border shadow-none">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start border-bottom pb-3">
+                                        <div class="me-4">
+                                            <img src="../../<%= items.productId.productImage[0] %>" alt=""
+                                                class="avatar-lg rounded">
+                                        </div>
+                                        <div class="flex-grow-1 align-self-center overflow-hidden">
+                                            <div>
+                                                <h5 class="text-truncate font-size-18">
+                                                    <a href="/user/product-view/<%= items.productId.id %>"
+                                                        class="text-dark">
+                                                        <%= items.productId.productName %>
+                                                    </a>
+                                                </h5>
+                                                <p class="text-muted mb-0">
+                                                    <i class="bx bxs-star text-warning"></i>
+                                                    <i class="bx bxs-star text-warning"></i>
+                                                    <i class="bx bxs-star text-warning"></i>
+                                                    <i class="bx bxs-star text-warning"></i>
+                                                    <i class="bx bxs-star-half text-warning"></i>
+                                                </p>
+                                                <p class="mb-0 mt-1 badge badge-success">
+                                                    <%= items.productId.productDiscount %>&percnt; OFF
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0 ms-2">
+                                            <ul class="list-inline mb-0 font-size-16">
+                                                <li class="list-inline-item">
+                                                    <a href="#" class="text-muted px-1"
+                                                        onclick="removeCartProduct('<%= items.productId.id %>')">
+                                                        <i class="mdi mdi-trash-can-outline"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a href="#" class="text-muted px-1">
+                                                        <i class="mdi mdi-heart-outline"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Price</p>
+                                                    <h5 class="mb-0 mt-2">
+                                                        <% if (items.productId.productDiscount !=0) { %>
+                                                            <span class="text-muted me-2">
+                                                                <del class="font-size-16 fw-normal">&#8377; <%=
+                                                                        items.productId.productPrice.toLocaleString() %>
+                                                                        <% }%>
+                                                                </del>
+                                                            </span>
+                                                            &#8377; <%= items.productId.productDiscountPrice %>
+
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Quantity</p>
+                                                    <div class="d-inline-flex align-items-center quantity">
+                                                        <!-- <button
+                                                            class="btn btn-outline-secondary btn-sm quantity-decrease"
+                                                            onclick="decreaseQuantity('<%= items.productId.id %>', '<%= index %>')">-</button> -->
+
+                                                            <button class="btn minus1"
+                                                            onclick="decreaseQuantity('<%= items.productId.id %>','<%= index %>')">-</button>
+                                                        <input type="number" class="form-control text-center mx-2 "
+                                                            id="quantity-count" name="quantityCount"
+                                                            value="<%= items.productCount %>" disabled
+                                                            style="width: 50px;">
+
+                                                            <button class="btn add1"
+                                                                onclick="increaseQuantity('<%= items.productId.id%>','<%= index %>')">+</button>
+
+
+                                                        <!-- <button
+                                                            class="btn btn-outline-secondary btn-sm quantity-increase"
+                                                            onclick="increaseQuantity('<%= items.productId.id %>', '<%= index %>')">+</button> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
+                                            
 
 
 
-<div class="container">
-    <div class="row">
-        <% cartItems.forEach(item => { %>
-        <div class="col-xl-8">
-            <div class="card border shadow-none">
-                <div class="card-body">
-                    <div class="d-flex align-items-start border-bottom pb-3">
-                        <div class="me-4">
-                            <img src="<%= item.imageUrl %>" alt="" class="avatar-lg rounded">
-                        </div>
-                        <div class="flex-grow-1 align-self-center overflow-hidden">
-                            <div>
-                                <h5 class="text-truncate font-size-18">
-                                    <a href="#" class="text-dark"><%= item.name %></a>
-                                </h5>
-                                <p class="text-muted mb-0">
-                                    <% for (let i = 1; i <= 5; i++) { %>
-                                        <i class="bx bxs-star <%= i <= Math.floor(item.rating) ? 'text-warning' : (i - item.rating < 1 ? 'bx-half text-warning' : 'text-muted') %>"></i>
-                                    <% } %>
-                                </p>
-                                <p class="mb-0 mt-1">Color : <span class="fw-medium"><%= item.color %></span></p>
-                            </div>
-                        </div>
-                        <div class="flex-shrink-0 ms-2">
-                            <ul class="list-inline mb-0 font-size-16">
-                                <li class="list-inline-item">
-                                    <a href="#" class="text-muted px-1">
-                                        <i class="mdi mdi-trash-can-outline"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#" class="text-muted px-1">
-                                        <i class="mdi mdi-heart-outline"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
 
-                    <div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mt-3">
-                                    <p class="text-muted mb-2">Price</p>
-                                    <h5 class="mb-0 mt-2">
-                                        <span class="text-muted me-2">
-                                            <del class="font-size-16 fw-normal">$<%= item.originalPrice %></del>
-                                        </span>
-                                        $<%= item.price %>
-                                    </h5>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="mt-3">
-                                    <p class="text-muted mb-2">Quantity</p>
-                                    <div class="d-inline-flex">
-                                        <select class="form-select form-select-sm w-xl">
-                                            <% for (let i = 1; i <= 10; i++) { %>
-                                                <option value="<%= i %>" <%= item.quantity === i ? 'selected' : '' %>><%= i %></option>
-                                            <% } %>
-                                        </select>
+
+                                            <div class="col-md-3">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-2">Total</p>
+                                                    <h5>&#8377; <span class="each-product-total"
+                                                            data-product-id="<%= items.productId._id %>">
+                                                            <%=items.productId.productDiscountPrice*items.productCount%>
+                                                        </span>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="mt-3">
-                                    <p class="text-muted mb-2">Total</p>
-                                    <h5>$<%= item.total %></h5>
+                            <!-- end card -->
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="empty-cart-container">
+                                    <a href="/user/home" class="btn btn-primary">
+                                        <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
+                                    </a>
                                 </div>
+                                <% } %>
+            </div>
+
+            <div class="col-xl-4 mt-5">
+                <div class="mt-5 mt-lg-0">
+                    <div class="card border shadow-none">
+                        <div class="card-header bg-transparent border-bottom py-3 px-4">
+                            <h5 class="font-size-16">Order Summary</h5>
+                        </div>
+                        <div class="card-body p-4 pt-2">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Sub Total</td>
+                                            <td>:</td>
+                                            <td class="text-end">&#8377; <span id="sub-total-price">
+                                                    <%= parseInt(cart.totalPrice).toLocaleString() %>
+                                                </span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Discount</td>
+                                            <td>:</td>
+                                            <td class="text-end text-success">&#8377; <span id="savings-price">
+                                                    <%= Math.round(cart.totalPrice -
+                                                        cart.payableAmount).toLocaleString() %>
+                                                </span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Coupon Discount</td>
+                                            <td>:</td>
+                                            <td class="text-end text-success">&#8377; <span
+                                                    id="count=discount-savings-price">00</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping Charge</td>
+                                            <td>:</td>
+                                            <td class="text-end">&#8377; <%= cart.payableAmount> 3000 ? "FREE" : 50 %>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg-light">
+                                            <th>Total</th>
+                                            <td>:</td>
+                                            <td class="text-end">
+                                                <span class="fw-bold">&#8377; <span id="total-price-box">
+                                                        <%= parseInt(cart.payableAmount).toLocaleString() %>
+                                                    </span></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- end table-responsive -->
+                        </div>
+                    </div>
+
+                    <div class="row my-4">
+                        <div class="col-sm-6">
+                            <a href="/user/home" class="btn btn-link">
+                                <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
+                            </a>
+                        </div>
+                        <!-- end col -->
+                        <div class="col-sm-6">
+                            <div class="text-sm-end mt-2 mt-sm-0">
+                                <a href="/user/checkout" class="btn btn-success">
+                                    <i class="mdi mdi-cart-outline me-1"></i> Checkout
+                                </a>
                             </div>
                         </div>
+                        <!-- end col -->
                     </div>
-
-                </div>
-            </div>
-            <!-- end card -->
-        </div>
-        <% }); %>
-    </div>
-</div>
-
-        
-          
-
-            <div class="row my-4">
-                <div class="col-sm-6">
-                    <a href="" class="btn btn-link text-muted">
-                        <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping </a>
-                </div> <!-- end col -->
-                <div class="col-sm-6">
-                    <div class="text-sm-end mt-2 mt-sm-0">
-                        <a href="" class="btn btn-success">
-                            <i class="mdi mdi-cart-outline me-1"></i> Checkout </a>
-                    </div>
-                </div> <!-- end col -->
-            </div> <!-- end row-->
-        </div>
-
-        <div class="col-xl-4">
-            <div class="mt-5 mt-lg-0">
-                <div class="card border shadow-none">
-                    <div class="card-header bg-transparent border-bottom py-3 px-4">
-                        <h5 class="font-size-16 mb-0">Order Summary <span class="float-end">#MN0124</span></h5>
-                    </div>
-                    <div class="card-body p-4 pt-2">
-
-                        <div class="table-responsive">
-                            <table class="table mb-0">
-                                <tbody>
-                                    <tr>
-                                        <td>Sub Total :</td>
-                                        <td class="text-end">$ 780</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Discount : </td>
-                                        <td class="text-end">- $ 78</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Shipping Charge :</td>
-                                        <td class="text-end">$ 25</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Estimated Tax : </td>
-                                        <td class="text-end">$ 18.20</td>
-                                    </tr>
-                                    <tr class="bg-light">
-                                        <th>Total :</th>
-                                        <td class="text-end">
-                                            <span class="fw-bold">
-                                                $ 745.2
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- end table-responsive -->
-                    </div>
+                    <!-- end row-->
                 </div>
             </div>
         </div>
-    </div>
-    <!-- end row -->
-    
-</div>
+        <% } else { %>
+            <div class="empty-cart-container">
+                <a href="/user/home" class="btn btn-primary">
+                    <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
+                </a>
+            </div>
+            <% } %>
+
+
+                <script>
+
+
+
+
+                
+                    const productQualityInput = document.querySelectorAll('#quantity-count');
+                    const productTotal = document.querySelectorAll('.each-product-total')
+                    const subTotalPrice = document.getElementById('sub-total-price')
+                    const savingsAmount = document.getElementById('savings-price')
+                    const totalAmount = document.getElementById('total-price-box')
+                  
+
+                    function increaseQuantity(productId, index) {
+                        if (productQualityInput[index].value >= 10) {
+                            Swal.fire({
+                                icon: "info",
+                                title: "Product Limit reached",
+
+                            })
+                        }
+
+
+                        if (productQualityInput[index].value >= 1 && productQualityInput[index].value < 10) {
+                            const URL = `/user/increment-product/${productId}`
+
+                            fetch(URL, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-type": "application/json"
+                                },
+                                body: JSON.stringify({ quantity: productQualityInput[index].value})
+
+                                // body: JSON.stringify({ quantity: parseInt(productQualityInput[index].value) + 1 })
+                            }).then((res) => {
+                                if (res.ok) {
+                                    return res.json()
+                                } else {
+                                    throw new Error("Cannot update product quantity")
+                                }
+                            }).then((data) => {
+                                if (data.productCount) {
+                                    productQualityInput[index].value = data.productCount
+                                    productTotal[index].innerHTML = data.productTotal
+                                    subTotalPrice.innerHTML = data.subTotal.toLocaleString()
+                                    savingsAmount.innerHTML = data.savings.toLocaleString()
+                                    totalAmount.innerHTML = data.total.toLocaleString()
+                                }
+
+                            })
+                        }
+                    }
+
+
+
+                    // decrese quantity
+
+
+                    function decreaseQuantity(productId, index) {
+
+                        document.getElementsByName('minus1')[0].disabled = false;
+
+
+                        if (productQualityInput[index].value <= 1) {
+                            document.getElementsByClassName('minus1')[0].disabled = true
+                        }
+
+                        if (productQualityInput[index].value > 1) {
+                            const URL = `/user/decrement-product/${productId}`
+
+                            fetch(URL, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-type": "application/json"
+                                },
+                                body: JSON.stringify({quantity: productQualityInput[index].value })
+                                // body: JSON.stringify({ quantity: parseInt(productQualityInput[index].value) - 1 })
+
+                            }).then((res) => {
+                                if (res.ok) {
+                                    return res.json()
+                                } else {
+                                    throw new Error("Cannot update product quantity")
+                                }
+                            }).then((data) => {
+                                if (data.productCount) {
+                                    productQualityInput[index].value = data.productCount
+                                    productTotal[index].innerHTML = data.productTotal
+                                    subTotalPrice.innerHTML = data.subTotal.toLocaleString()
+                                    savingsAmount.innerHTML = data.savings.toLocaleString()
+                                    totalAmount.innerHTML = data.total.toLocaleString()
+                                }
+
+                            })
+                        }
+                    }
+
+
+                    
+
+
+
+                    // product quantity and productID on onChange function
+                    function updateProductCount(productId, value) {
+
+                        // url for the fetch request 
+                        const URL = `/user/cart-count/${productId}/?productCount=${value}`;
+
+                        // fetch request for updating product count in cart
+                        fetch(URL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        }).then((Response) => {
+
+                            // if the product updated without any error then an alert with success is fired
+                            if (Response.ok) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Count Updated",
+                                    showConfirmButton: false,
+                                    timer: 800,
+                                });
+                                // after the timer from sweet alert then reload the page
+                                setTimeout(() => {
+                                    // window.location.reload()
+                                }, 800)
+
+                            } else {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: "Unexpected error occurred please try again later",
+                                });
+                            }
+                            return Response.json();
+                        }).then((data) => {
+                            console.log(data);
+                            if (data.error) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: `${data.message} Product is remaining`,
+                                    text: data.error,
+                                });
+                            }
+                        })
+                    }
+
+
+
+
+
+
+
+                    // for remove product
+
+                    function removeCartProduct(productId) {
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, remove it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                URL = `/user/remove-cart-product/${productId}`
+                                fetch(URL, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                }).then((Response) => {
+                                    if (Response.ok) {
+                                        Swal.fire({
+                                            icon: "Success",
+                                            title: "product removed from cart",
+                                            showConfirmButton: false,
+                                            timer: 800
+                                        })
+                                        setTimeout(() => {
+                                            window.location.reload()
+                                        }, 800)
+                                    }
+                                })
+                            }
+                        })
+                    }
+
+
+
+
+
+
+                </script>
+
+                <%- include('footer') %>

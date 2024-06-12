@@ -4,7 +4,7 @@ const {defalutMaxListeners}=require('nodemailer/lib/xoauth2')
 const wordplaySchema = new mongoose.Schema({
     googleId:{
         type:String,
-        required:true,
+        
     },
     name : {
         type : String,

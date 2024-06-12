@@ -348,40 +348,7 @@
 
             </div>
 
-            <!-- <div class="product-price">
-                <h3>
-                    <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
-                    <%= product.productPrice.toLocaleString() %>
-                </h3>
-            </div>
-
-
-
-            <% if(product.productQuantity>0 ) {%>
-                <div class="product-action-buttons">
-                    <button class="btn btn-warning">Add To Cart</button>
-                    <button class="btn btn-danger">Buy Now</button>
-                </div>
-
-
-                <% } else { %>
-                    <div class="product-out-offstock">
-                        <h5>product is out offstock</h5>
-                    </div>
-
-                    <% } %>
-
-                        <div class="product-description mt-5">
-                            <p>
-                                <%= product.productDescription %>
-                            </p>
-                        </div>
-                        <div class="product-coupns">
-                            <form action="">
-                                <input type="text" placeholder="xxxx-xxxx-xxxx" required>
-                                <button class="btn btn-secondary">Apply Coupon</button>
-                            </form>
-                        </div> -->
+            
 
                         <div class="product-price">
                             <% if (product.productDiscount === 0) { %>
@@ -397,12 +364,14 @@
                         <% if (product.productQuantity > 0) { %>
                             <% if (itemInCart) { %>
                                 <!-- If the product is already in the cart, show "Go to Cart" button -->
-                                <a href="/user/cart" class="btn btn-warning go-to-cart">Go to Cart <i class="fa-solid fa-cart-shopping"></i></a>
+                                <a href="/user/cart" class="btn btn-danger go-to-cart">Go to Cart <i class="fa-solid fa-cart-shopping"></i></a>
                             <% } else { %>
                                 <!-- Form for adding the product to the cart -->
-                                <form action="/user/add-to-cart/<%= product.id %>/?price=<%= product.productPrice %>" method="post" id="product-add-to-cart-form">
+                                <!-- <form action="/user/add-to-cart/<%= product.id %>/?price=<%= product.productPrice %>" method="post" id="product-add-to-cart-form">
                                     <button type="submit" class="btn btn-warning" id="add-to-cart-btn">Add to Cart</button>
-                                </form>
+                                </form> -->
+
+                                <button onclick="addToCart('<%= product.id %>','<%= product.productPrice %>')" class="btn btn-warning" id="add-to-cart-btn">Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
                             <% } %>
                         <% } else { %>
                             <div class="product-out-offstock">
@@ -502,6 +471,46 @@
 
                     })
 
+// add to cart
+ // Improved addToCart function
+async function addToCart(productId, price) {
+    const URL = `/user/add-to-cart/${productId}/?price=${price}`;
+
+    try {
+        const response = await fetch(URL, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            Swal.fire({
+                icon: "success",
+                title: data.message || "Product added to cart",
+                showConfirmButton: false,
+                timer: 700,
+            }).then(() => {
+                window.location.reload();
+            });
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to add product to cart");
+        }
+    } catch (err) {
+        Swal.fire({
+            icon: "error",
+            title: "Cannot add product to cart",
+            text: err.message
+        });
+    }
+}
+
+
+
+                       
+                   
                     function change(src) {
                         productImg.src = `../../${src}`
                     }

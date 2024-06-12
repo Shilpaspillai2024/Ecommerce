@@ -10,8 +10,8 @@ const nocache=require('nocache')
 const flash=require('connect-flash')
 const { v4: uuidv4 } = require('uuid');
 const passport=require('passport')
-// const passportAuth=require('passport-google-oauth20')
 const passportSetup = require('./config/passport-setup')
+const setCartItemCount = require('./middleware/cartItemCount')
 
 
 
@@ -30,6 +30,8 @@ app.use(flash())
 //nocache
 app.use(nocache())
 
+// Middleware to set cart item count
+app.use(setCartItemCount);
 
 
 // made the uploads file static

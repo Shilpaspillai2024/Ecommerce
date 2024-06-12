@@ -164,9 +164,7 @@
     color: #e4d9d9; 
     margin-left: 1rem;
 }
-.clicked {
-    color: red; /* Change to desired color */
-}
+
   
 </style>
 
@@ -223,6 +221,8 @@
 
                             <div class="product-name-box">
                                 <a href="/user/product-view/<%= product.id %>?from=productSeemore"
+
+                                  
                                     class="product-name-link">
                                     <h6 class="product-text-row">
                                         <%=product.productName%>
@@ -237,11 +237,12 @@
                                 </h5>
                             </div>
                             <!-- wishlist-icon -->
-                            <a href="#" class="wishlist-icon" onclick="toggleColor(this)"><i class="fas fa-heart"></i></a>
+                            <a href="#" class="wishlist-icon" ><i class="fas fa-heart"></i></a>
                             <!-- Cart Icon -->
-                            <a href="#" class="cart-icon" onclick="toggleColor(this)"><i class="fas fa-shopping-cart"></i></a>
-                    
+                            <a href="#" class="cart-icon" ><i class="fas fa-shopping-cart"></i></a>
 
+
+                           
             </div>
 
             <% }) %>
@@ -256,7 +257,9 @@
 </div>
 
 <script>
-    function toggleColor(element) {
-    element.classList.toggle('clicked');
-}
+  
+
+
+
+
 </script>

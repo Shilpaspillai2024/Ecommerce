@@ -96,6 +96,18 @@ const addProductPost = async (req, res) => {
       imageArray.push(img.path);
     });
 
+
+    // find the productDiscount Price
+
+    let discountPrice
+       if(req.body.productDiscount !=0){
+           discountPrice=req.body.productPrice * (1-(req.body.productDiscount) / 100)
+       }
+       else
+       {
+        discountPrice = req.body.productPrice
+       }
+
     // Product details from the form
     const productDetails = {
       productName: req.body.productName.trim(),// Removes spaces around the product name
@@ -105,7 +117,8 @@ const addProductPost = async (req, res) => {
       productQuantity: req.body.productQuantity,
       productCategory: req.body.productCategory,
       productImage: imageArray,
-      productDiscount: req.body.productDiscount
+      productDiscount: req.body.productDiscount,
+      productDiscountPrice: discountPrice,
     };
 
     // Check for existing product case-insensitively
@@ -157,6 +170,9 @@ const editProductPost = async (req, res) => {
     const id = req.params.id
 
 
+
+
+
     const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
 
     imageToDelete.forEach(x => fs.unlinkSync(x));
@@ -183,13 +199,24 @@ const editProductPost = async (req, res) => {
 
     const newImages = [...product.productImage, ...imgArray]
 
+
+    
+    let discountPrice
+    if (req.body.productDiscount != 0) {
+        discountPrice = req.body.productPrice * (1 - (req.body.productDiscount) / 100)
+    } else {
+        discountPrice = req.body.productPrice
+    }
+
     // Update product details including images
     await productSchema.findByIdAndUpdate(id, {
       productPrice,
       productQuantity,
       productDiscount,
       productDescription,
-      productImage: newImages
+      productImage: newImages,
+      productDiscountedPrice: discountPrice
+
     });
 
     

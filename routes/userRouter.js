@@ -8,6 +8,8 @@
  const forgetController=require("../controller/userController/forgetController")
  const productController=require('../controller/userController/productController')
  const profileController=require("../controller/userController/profileController")
+ const cartController=require("../controller/userController/cartController")
+ const checkoutController=require("../controller/userController/checkoutController")
  
 
  const user = express.Router()
@@ -65,7 +67,7 @@ user.get('/profile',checkUserSession,profileController.profile)
 //change post personal information
 user.post('/profile',checkUserSession,profileController.personalInformation)
 
-//  the password change modal
+//  the password change route 
 user.post('/change-password',checkUserSession,profileController.changePassword)
 
 user.get('/address',checkUserSession,profileController.address)
@@ -85,7 +87,19 @@ user.post('/edit-address/:id',checkUserSession,profileController.editAddressPost
 
 // user cart routes
 
-user.get('/cart',checkUserSession,profileController.cart)
+user.get('/cart',checkUserSession,cartController.cart)
+user.post('/add-to-cart/:id',checkUserSession,cartController.addToCartPost)
+
+user.delete('/remove-cart-product/:id',checkUserSession,cartController.removeCartItem)
+user.post('/cart-count/:id',checkUserSession,cartController.cartCountFetch)
+user.put('/increment-product/:id',checkUserSession,cartController.incrementProduct)
+user.put('/decrement-product/:id',checkUserSession,cartController.decrementProduct)
+
+
+
+// checkout
+
+user.get('/checkout',checkUserSession,checkoutController.checkout)
 
 
 user.get('/logout',userController.logout)
