@@ -1,32 +1,32 @@
-const express=require('express');
-const app=express();
-const path=require('path')
-const session=require('express-session')
-const expresslayouts=require('express-ejs-layouts')
-const dotenv=require('dotenv').config()
-const user=require('./routes/userRouter')
-const mongodbConnection=require('./config/mongodb')
-const nocache=require('nocache')
-const flash=require('connect-flash')
+const express = require('express');
+const app = express();
+const path = require('path')
+const session = require('express-session')
+const expresslayouts = require('express-ejs-layouts')
+const dotenv = require('dotenv').config()
+const user = require('./routes/userRouter')
+const mongodbConnection = require('./config/mongodb')
+const nocache = require('nocache')
+const flash = require('connect-flash')
 const { v4: uuidv4 } = require('uuid');
-const passport=require('passport')
+const passport = require('passport')
 const passportSetup = require('./config/passport-setup')
 const setCartItemCount = require('./middleware/cartItemCount')
 
 
 
 // env port
-const port=process.env.PORT || 3000
+const port = process.env.PORT || 3000
 
-const userRoutes=require('./routes/userRouter')
-const adminRouter=require('./routes/adminRouter')
+const userRoutes = require('./routes/userRouter')
+const adminRouter = require('./routes/adminRouter')
 
 mongodbConnection();
 
 // flash
 
 app.use(flash())
- 
+
 //nocache
 app.use(nocache())
 
@@ -49,28 +49,28 @@ app.use('/style', express.static(path.join(__dirname, 'public', 'style')));
 
 app.use(expresslayouts)
 
-app.set('layout','./layouts/layout')
+app.set('layout', './layouts/layout')
 
 //ejs setup
-app.set('view engine','ejs')
+app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.json())
-app.use(express.urlencoded({extended:false}))
+app.use(express.urlencoded({ extended: false }))
 
 app.use(session({
-    secret:uuidv4(),
-    resave:false,
-    saveUninitialized:true,
-    cookie: {secure:false}
+    secret: uuidv4(),
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
 }))
-  
+
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/user',userRoutes)
-app.use('/admin',adminRouter);
+app.use('/user', userRoutes)
+app.use('/admin', adminRouter);
 
 
 
@@ -78,12 +78,12 @@ app.use('/admin',adminRouter);
 
 
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
     res.redirect('/user/home')
 })
 
-app.get('*',(req,res)=>{
-    res.render('pageNotfound',{title:"page Not Found"})
+app.get('*', (req, res) => {
+    res.render('pageNotfound', { title: "page Not Found" })
 })
 
 

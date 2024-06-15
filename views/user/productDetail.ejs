@@ -478,7 +478,7 @@ async function addToCart(productId, price) {
 
     try {
         const response = await fetch(URL, {
-            method: "POST",
+            method: "GET",
             headers: {
                 'Content-Type': 'application/json'
             }

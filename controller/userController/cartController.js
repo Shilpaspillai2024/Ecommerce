@@ -187,7 +187,7 @@ const incrementProduct = async (req, res) => {
             }
         })
 
-        console.log(productCart)
+        // console.log(productCart)
 
         productCart[0].productCount += 1;
 
