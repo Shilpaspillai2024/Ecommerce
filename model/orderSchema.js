@@ -1,33 +1,55 @@
 const mongoose =require('mongoose')
 const schema=new mongoose.Schema({
-    userId: { type: String },
+    userId: 
+    { type: mongoose.Schema.Types.ObjectId,
+        ref:"user",
+        required:true
+    },
+
+
+    contactInfo:{
+
+        name:String,
+        email:String,
+        phone:Number,
+    },
     products:[{
-        produtId:{type:mongoose.Schema.Types.ObjectId},
-        productName:{type:String},
-        Author:{type:String},
+        productId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref: 'product',
+            required: true,
+        },
+       
         quantity:{type:Number},
         price:{type:Number},
         productStatus:{type:String},
-        discountPrice:{type:Number},
-        productImage:{type:String}
+       
+        
 
 
     }],
 
-    totalQuantity:{type:Number},
+    
     totalPrice:{type:Number},
-     address:{
-        contactName:String,
-        homeAddress:String,
-        location:String,
-        landmark:String,
-        pincode:Number
-
+    address:{
+        type: Object,
+        require: true
      },
-     paymentMethod:{type:String},
+     paymentMethod:{type:String,
+        required:true
+     },
+     isCancelled: {
+        type: Boolean,
+        default: false
+    },
 
-     orderDate:{type:Date}
+     status:{ type:String,
+        enum:['processing','confirmed','shipped','cancelled','delivered','returned']
 
-})
+     }
+
+     
+
+},{timestamps:true})
 
 module.exports=mongoose.model('order',schema)

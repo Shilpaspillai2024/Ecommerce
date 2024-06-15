@@ -1,534 +1,803 @@
-
 <style>
-    body{
+    body {
 
         background-color: black;
 
     }
-    
-
-
-.card {
-    margin-bottom: 24px;
-    -webkit-box-shadow: 0 2px 3px #e4e8f0;
-    box-shadow: 0 2px 3px #e4e8f0;
-}
-.card {
-    position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid #eff0f2;
-    border-radius: 1rem;
-}
-.activity-checkout {
-    list-style: none
-}
-
-.activity-checkout .checkout-icon {
-    position: absolute;
-    top: -4px;
-    left: -24px
-}
-
-.activity-checkout .checkout-item {
-    position: relative;
-    padding-bottom: 24px;
-    padding-left: 35px;
-    border-left: 2px solid #f5f6f8
-}
-
-.activity-checkout .checkout-item:first-child {
-    border-color: #3b76e1
-}
-
-.activity-checkout .checkout-item:first-child:after {
-    background-color: #3b76e1
-}
-
-.activity-checkout .checkout-item:last-child {
-    border-color: transparent
-}
-
-.activity-checkout .checkout-item.crypto-activity {
-    margin-left: 50px
-}
-
-.activity-checkout .checkout-item .crypto-date {
-    position: absolute;
-    top: 3px;
-    left: -65px
-}
 
 
 
-.avatar-xs {
-    height: 1rem;
-    width: 1rem
-}
+    .card {
+        margin-bottom: 24px;
+        -webkit-box-shadow: 0 2px 3px #e4e8f0;
+        box-shadow: 0 2px 3px #e4e8f0;
+    }
 
-.avatar-sm {
-    height: 2rem;
-    width: 2rem
-}
+    .card {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid #eff0f2;
+        border-radius: 1rem;
+    }
 
-.avatar {
-    height: 3rem;
-    width: 3rem
-}
+    .activity-checkout {
+        list-style: none
+    }
 
-.avatar-md {
-    height: 4rem;
-    width: 4rem
-}
+    .activity-checkout .checkout-icon {
+        position: absolute;
+        top: -4px;
+        left: -24px
+    }
 
-.avatar-lg {
-    height: 5rem;
-    width: 5rem
-}
+    .activity-checkout .checkout-item {
+        position: relative;
+        padding-bottom: 24px;
+        padding-left: 35px;
+        border-left: 2px solid #f5f6f8
+    }
 
-.avatar-xl {
-    height: 6rem;
-    width: 6rem
-}
+    .activity-checkout .checkout-item:first-child {
+        border-color: #3b76e1
+    }
 
-.avatar-title {
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    background-color: #3b76e1;
-    color: #fff;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    font-weight: 500;
-    height: 100%;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    width: 100%
-}
+    .activity-checkout .checkout-item:first-child:after {
+        background-color: #3b76e1
+    }
 
-.avatar-group {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    padding-left: 8px
-}
+    .activity-checkout .checkout-item:last-child {
+        border-color: transparent
+    }
 
-.avatar-group .avatar-group-item {
-    margin-left: -8px;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    -webkit-transition: all .2s;
-    transition: all .2s
-}
+    .activity-checkout .checkout-item.crypto-activity {
+        margin-left: 50px
+    }
 
-.avatar-group .avatar-group-item:hover {
-    position: relative;
-    -webkit-transform: translateY(-2px);
-    transform: translateY(-2px)
-}
-
-.card-radio {
-    background-color: #fff;
-    border: 2px solid #eff0f2;
-    border-radius: .75rem;
-    padding: .5rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: block
-}
-
-.card-radio:hover {
-    cursor: pointer
-}
-
-.card-radio-label {
-    display: block
-}
-
-.edit-btn {
-    width: 35px;
-    height: 35px;
-    line-height: 40px;
-    text-align: center;
-    position: absolute;
-    right: 25px;
-    margin-top: -50px
-}
-
-.card-radio-input {
-    display: none
-}
-
-.card-radio-input:checked+.card-radio {
-    border-color: #3b76e1!important
-}
+    .activity-checkout .checkout-item .crypto-date {
+        position: absolute;
+        top: 3px;
+        left: -65px
+    }
 
 
-.font-size-16 {
-    font-size: 16px!important;
-}
-.text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
-a {
-    text-decoration: none!important;
-}
+    .avatar-xs {
+        height: 1rem;
+        width: 1rem
+    }
+
+    .avatar-sm {
+        height: 2rem;
+        width: 2rem
+    }
+
+    .avatar {
+        height: 3rem;
+        width: 3rem
+    }
+
+    .avatar-md {
+        height: 4rem;
+        width: 4rem
+    }
+
+    .avatar-lg {
+        height: 5rem;
+        width: 5rem
+    }
+
+    .avatar-xl {
+        height: 6rem;
+        width: 6rem
+    }
+
+    .avatar-title {
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        background-color: #3b76e1;
+        color: #fff;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        font-weight: 500;
+        height: 100%;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        width: 100%
+    }
+
+    .avatar-group {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        padding-left: 8px
+    }
+
+    .avatar-group .avatar-group-item {
+        margin-left: -8px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        -webkit-transition: all .2s;
+        transition: all .2s
+    }
+
+    .avatar-group .avatar-group-item:hover {
+        position: relative;
+        -webkit-transform: translateY(-2px);
+        transform: translateY(-2px)
+    }
+
+    .card-radio {
+        background-color: #fff;
+        border: 2px solid #eff0f2;
+        border-radius: .75rem;
+        padding: .5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block
+    }
+
+    .card-radio:hover {
+        cursor: pointer
+    }
+
+    .card-radio-label {
+        display: block
+    }
+
+    .edit-btn {
+        width: 35px;
+        height: 35px;
+        line-height: 40px;
+        text-align: center;
+        position: absolute;
+        right: 25px;
+        margin-top: -50px
+    }
+
+    .card-radio-input {
+        display: none
+    }
+
+    .card-radio-input:checked+.card-radio {
+        border-color: #3b76e1 !important
+    }
 
 
-.form-control {
-    display: block;
-    width: 100%;
-    padding: 0.47rem 0.75rem;
-    font-size: .875rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #545965;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #e2e5e8;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: 0.75rem;
-    -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-}
+    .font-size-16 {
+        font-size: 16px !important;
+    }
 
-.edit-btn {
-    width: 35px;
-    height: 35px;
-    line-height: 40px;
-    text-align: center;
-    position: absolute;
-    right: 25px;
-    margin-top: -50px;
-}
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
-.ribbon {
-    position: absolute;
-    right: -26px;
-    top: 20px;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 1px 22px;
-    font-size: 13px;
-    font-weight: 500
-}
+    a {
+        text-decoration: none !important;
+    }
 
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.47rem 0.75rem;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #545965;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #e2e5e8;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 0.75rem;
+        -webkit-transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+    }
+
+    .edit-btn {
+        width: 35px;
+        height: 35px;
+        line-height: 40px;
+        text-align: center;
+        position: absolute;
+        right: 25px;
+        margin-top: -50px;
+    }
+
+    .ribbon {
+        position: absolute;
+        right: -26px;
+        top: 20px;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 1px 22px;
+        font-size: 13px;
+        font-weight: 500
+    }
 </style>
 
 
 
 <%-include('navbar')%>
 
-<div class="container mt-5">
+    <div class="container mt-5">
 
-    <div class="row">
-        <div class="col-xl-8">
+        <div class="row">
+            <div class="col-xl-8">
 
-            <div class="card">
-                <div class="card-body">
-                    <ol class="activity-checkout mb-0 px-4 mt-3">
-                        <li class="checkout-item">
-                            <div class="avatar checkout-icon p-1">
-                                <div class="avatar-title rounded-circle bg-primary">
-                                    <i class="bx bxs-receipt text-white font-size-20"></i>
-                                </div>
-                            </div>
-                            <div class="feed-item-list">
-                                <div>
-                                    <h5 class="font-size-16 mb-1">Billing Info</h5>
-                                    <p class="text-muted text-truncate mb-4">Enter your Billing Details !....</p>
-                                    <div class="mb-3">
-                                        <form>
-                                            <div>
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="billing-name">Name</label>
-                                                            <input type="text" class="form-control" id="billing-name" placeholder="Enter name">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="billing-email-address">Email Address</label>
-                                                            <input type="email" class="form-control" id="billing-email-address" placeholder="Enter email">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="billing-phone">Phone</label>
-                                                            <input type="text" class="form-control" id="billing-phone" placeholder="Enter Phone no.">
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="billing-address">Address</label>
-                                                    <textarea class="form-control" id="billing-address" rows="3" placeholder="Enter full address"></textarea>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <div class="mb-4 mb-lg-0">
-                                                            <label class="form-label">Country</label>
-                                                            <select class="form-control form-select" title="Country">
-                                                                <option value="0">Select Country</option>
-                                                                <option value="AF">Afghanistan</option>
-                                                                <option value="AL">Albania</option>
-                                                                <option value="DZ">Algeria</option>
-                                                                <option value="AS">American Samoa</option>
-                                                                <option value="AD">Andorra</option>
-                                                                <option value="AO">Angola</option>
-                                                                <option value="AI">Anguilla</option>                                   
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-4">
-                                                        <div class="mb-4 mb-lg-0">
-                                                            <label class="form-label" for="billing-city">City</label>
-                                                            <input type="text" class="form-control" id="billing-city" placeholder="Enter City">
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-4">
-                                                        <div class="mb-0">
-                                                            <label class="form-label" for="zip-code">Zip / Postal code</label>
-                                                            <input type="text" class="form-control" id="zip-code" placeholder="Enter Postal code">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
+                <div class="card">
+                    <div class="card-body">
+                        <ol class="activity-checkout mb-0 px-4 mt-3">
+                            <li class="checkout-item">
+                                <div class="avatar checkout-icon p-1">
+                                    <div class="avatar-title rounded-circle bg-primary">
+                                        <i class="bx bxs-receipt text-white font-size-20"></i>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li class="checkout-item">
-                            <div class="avatar checkout-icon p-1">
-                                <div class="avatar-title rounded-circle bg-primary">
-                                    <i class="bx bxs-truck text-white font-size-20"></i>
-                                </div>
-                            </div>
-                            <div class="feed-item-list">
-                                <div>
-                                    <h5 class="font-size-16 mb-1">Shipping Info</h5>
-                                    <p class="text-muted text-truncate mb-4">Select your Shipping Address</p>
-                                    <div class="mb-3">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-sm-6">
-                                                <div data-bs-toggle="collapse">
-                                                    <label class="card-radio-label mb-0">
-                                                        <input type="radio" name="address" id="info-address1" class="card-radio-input" checked="">
-                                                        <div class="card-radio text-truncate p-3">
-                                                            <span class="fs-14 mb-4 d-block">Address 1</span>
-                                                            <span class="fs-14 mb-2 d-block">Bradley McMillian</span>
-                                                            <span class="text-muted fw-normal text-wrap mb-1 d-block">109 Clarksburg Park Road Show Low, AZ 85901</span>
-                                                           
-                                                            <span class="text-muted fw-normal d-block">Mo. 012-345-6789</span>
-                                                        </div>
-                                                    </label>
-                                                    <div class="edit-btn bg-light  rounded">
-                                                        <a href="#" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Edit">
-                                                            <i class="bx bx-pencil font-size-16"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-4 col-sm-6">
+                                <div class="feed-item-list">
+                                    <div>
+                                        <h5 class="font-size-16 mb-1">Billing Info</h5>
+                                        <p class="text-muted text-truncate mb-4">Enter your Billing Details !....</p>
+                                        <div class="mb-3">
+                                            <form id="checkout-form">
                                                 <div>
-                                                    <label class="card-radio-label mb-0">
-                                                        <input type="radio" name="address" id="info-address2" class="card-radio-input">
-                                                        <div class="card-radio text-truncate p-3">
-                                                            <span class="fs-14 mb-4 d-block">Address 2</span>
-                                                            <span class="fs-14 mb-2 d-block">Bradley McMillian</span>
-                                                            <span class="text-muted fw-normal text-wrap mb-1 d-block">109 Clarksburg Park Road Show Low, AZ 85901</span>
-                                                            <span class="text-muted fw-normal d-block">Mo. 012-345-6789</span>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <div class="mb-3">
+                                                                <label class="form-label"
+                                                                    for="billing-name">Name</label>
+                                                                <input type="text" name="name" class="form-control"
+                                                                    id="billing-name" placeholder="Enter name">
+                                                            </div>
                                                         </div>
-                                                    </label>
-                                                    <div class="edit-btn bg-light  rounded">
-                                                        <a href="#" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Edit">
-                                                            <i class="bx bx-pencil font-size-16"></i>
-                                                        </a>
+
+
+                                                        <div class="col-lg-4">
+                                                            <div class="mb-3">
+                                                                <label class="form-label"
+                                                                    for="billing-email-address">Email Address</label>
+                                                                <input type="email" name="email" class="form-control"
+                                                                    id="billing-email-address"
+                                                                    placeholder="Enter email">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-4">
+                                                            <div class="mb-3">
+                                                                <label class="form-label"
+                                                                    for="billing-phone">Phone</label>
+                                                                <input type="text" name="phone" class="form-control"
+                                                                    id="billing-phone" placeholder="Enter Phone no.">
+                                                            </div>
+                                                        </div>
+
                                                     </div>
+
+
+
+                                                    <button type="button" class="btn btn-outline-secondary "
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#addAddresscheckoutModal">
+                                                        + Add a new address
+                                                    </button>
+
+
+                                                </div>
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="checkout-item">
+                                <div class="avatar checkout-icon p-1">
+                                    <div class="avatar-title rounded-circle bg-primary">
+                                        <i class="bx bxs-truck text-white font-size-20"></i>
+                                    </div>
+                                </div>
+                                <div class="feed-item-list">
+                                    <div>
+                                        <h5 class="font-size-16 mb-1">Shipping Info</h5>
+                                        <p class="text-muted text-truncate mb-4">Select your Shipping Address</p>
+                                        <div class="mb-3">
+                                            <div class="row">
+
+                                                <% address.forEach((address, index)=> { %>
+                                                    <div class="col-lg-4 col-sm-6">
+                                                        <div data-bs-toggle="collapse">
+                                                            <label class="card-radio-label mb-0">
+                                                                <input type="radio" name="address"
+                                                                    value="<%= address %>"
+                                                                    id="info-address<%= index + 1 %>"
+                                                                   
+                                                                  
+                                                                    class="card-radio-input" >
+                                                                <div class="card-radio text-truncate p-3">
+                                                                    <div
+                                                                        class="d-flex justify-content-between align-items-end">
+                                                                        <span class="fs-14 mb-4 d-block">Address <%=
+                                                                                index + 1 %>
+
+                                                                        </span>
+
+                                                                        <a href="/user/delete-checkout-address/<%= address.id %>"
+                                                                            class="action-link"><i
+                                                                                class="fa-solid fa-trash-can"></i></a>
+
+
+                                                                    </div>
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address.contactName %>
+                                                                    </span>
+
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address.doorNo %>
+                                                                    </span>
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address.Address %>
+                                                                    </span>
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address.areaAddress %>
+                                                                    </span>
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address.landmark %>
+                                                                    </span>
+                                                                    <span class="fs-14 mb-2 d-block">
+                                                                        <%= address.pincode %>
+                                                                    </span>
+
+
+
+                                                                    <span class="text-muted fw-normal d-block">Mo. <%=
+                                                                            address.phone %></span>
+                                                                </div>
+                                                            </label>
+
+
+
+
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="checkout-item">
+                                <div class="avatar checkout-icon p-1">
+                                    <div class="avatar-title rounded-circle bg-primary">
+                                        <i class="bx bxs-wallet-alt text-white font-size-20"></i>
+                                    </div>
+                                </div>
+                                <div class="feed-item-list">
+                                    <div>
+                                        <h5 class="font-size-16 mb-1">Payment Info</h5>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-size-14 mb-3">Payment method :</h5>
+                                        <div class="row">
+                                            <!-- <div class="col-lg-3 col-sm-6">
+                                                <div data-bs-toggle="collapse">
+                                                    <label class="card-radio-label">
+                                                        <input type="radio" name="pay-method" id="pay-methodoption1"
+                                                            class="card-radio-input">
+                                                        <span class="card-radio py-3 text-center text-truncate">
+                                                            <i class="bx bx-credit-card d-block h2 mb-3"></i>
+                                                            Credit / Debit Card
+                                                        </span>
+                                                    </label>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="checkout-item">
-                            <div class="avatar checkout-icon p-1">
-                                <div class="avatar-title rounded-circle bg-primary">
-                                    <i class="bx bxs-wallet-alt text-white font-size-20"></i>
-                                </div>
-                            </div>
-                            <div class="feed-item-list">
-                                <div>
-                                    <h5 class="font-size-16 mb-1">Payment Info</h5>
-                                    <p class="text-muted text-truncate mb-4">Payment Options</p>
-                                </div>
-                                <div>
-                                    <h5 class="font-size-14 mb-3">Payment method :</h5>
-                                    <div class="row">
-                                        
-                                        <div class="col-lg-3 col-sm-6">
-                                            <div>
-                                                <label class="card-radio-label">
-                                                    <input type="radio" name="pay-method" id="pay-methodoption3" class="card-radio-input" checked="">
 
-                                                    <span class="card-radio py-3 text-center text-truncate">
-                                                        <i class="bx bx-money d-block h2 mb-3"></i>
-                                                        <span>Cash on Delivery</span>
-                                                    </span>
-                                                </label>
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div>
+                                                    <label class="card-radio-label">
+                                                        <input type="radio" name="pay-method" id="pay-methodoption2"
+                                                            class="card-radio-input">
+                                                        <span class="card-radio py-3 text-center text-truncate">
+                                                            <i class="bx bxl-paypal d-block h2 mb-3"></i>
+                                                            Paypal
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div> -->
+
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div>
+                                                    <label class="card-radio-label">
+                                                        <input type="radio" name="paymentMethod" value="COD"
+                                                            id="pay-methodoption3" class="card-radio-input">
+
+                                                        <span class="card-radio py-3 text-center text-truncate">
+                                                            <i class="bx bx-money d-block h2 mb-3"></i>
+                                                            <span>Cash on Delivery</span>
+                                                        </span>
+                                                    </label>
+                                                </div>
                                             </div>
+                                            </form>
                                         </div>
-                                        
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ol>
+                            </li>
+                        </ol>
+                    </div>
                 </div>
+
+                <div class="row my-4">
+                    <div class="col">
+                        <a href="/user/home" class="btn btn-link text-white">
+                            <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping </a>
+                    </div>
+                </div> <!-- end row-->
             </div>
 
-            <div class="row my-4">
-                <div class="col">
-                    <a href="/user/home" class="btn btn-link text-white">
-                        <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping </a>
-                </div> <!-- end col -->
-                <div class="col">
-                    <div class="text-end mt-2 mt-sm-0">
-                        <a href="#" class="btn btn-success">
-                            <i class="mdi mdi-cart-outline me-1"></i> Procced </a>
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="font-size-16 mb-0">Order Summary</h5>
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row-->
-        </div>
-        <div class="col-xl-4">
-            <div class="card checkout-order-summary">
-                <div class="card-body">
-                    <div class="p-3 bg-light mb-3">
-                        <h5 class="font-size-16 mb-0">Order Summary <span class="float-end ms-2">#MN0124</span></h5>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-centered mb-0 table-nowrap">
-                            <thead>
-                                <tr>
-                                    <th class="border-top-0" style="width: 110px;" scope="col">Product</th>
-                                    <th class="border-top-0" scope="col">Product Desc</th>
-                                    <th class="border-top-0" scope="col">Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row"><img src="https://www.bootdey.com/image/280x280/FF00FF/000000" alt="product-img" title="product-img" class="avatar-lg rounded"></th>
-                                    <td>
-                                        <h5 class="font-size-16 text-truncate"><a href="#" class="text-dark">Waterproof Mobile Phone</a></h5>
-                                        <p class="text-muted mb-0">
-                                            <i class="bx bxs-star text-warning"></i>
-                                            <i class="bx bxs-star text-warning"></i>
-                                            <i class="bx bxs-star text-warning"></i>
-                                            <i class="bx bxs-star text-warning"></i>
-                                            <i class="bx bxs-star-half text-warning"></i>
-                                        </p>
-                                        <p class="text-muted mb-0 mt-1">$ 260 x 2</p>
-                                    </td>
-                                    <td>$ 520</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><img src="https://www.bootdey.com/image/280x280/FF00FF/000000" alt="product-img" title="product-img" class="avatar-lg rounded"></th>
-                                    <td>
-                                        <h5 class="font-size-16 text-truncate"><a href="#" class="text-dark">Smartphone Dual Camera</a></h5>
-                                        <p class="text-muted mb-0">
-                                            <i class="bx bxs-star text-warning"></i>
-                                            <i class="bx bxs-star text-warning"></i>
-                                            <i class="bx bxs-star text-warning"></i>
-                                            <i class="bx bxs-star text-warning"></i>
-                                        </p>
-                                        <p class="text-muted mb-0 mt-1">$ 260 x 1</p>
-                                    </td>
-                                    <td>$ 260</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <h5 class="font-size-14 m-0">Sub Total :</h5>
-                                    </td>
-                                    <td>
-                                        $ 780
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <h5 class="font-size-14 m-0">Discount :</h5>
-                                    </td>
-                                    <td>
-                                        - $ 78
-                                    </td>
-                                </tr>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                <tr>
-                                    <td colspan="2">
-                                        <h5 class="font-size-14 m-0">Shipping Charge :</h5>
-                                    </td>
-                                    <td>
-                                        $ 25
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <h5 class="font-size-14 m-0">Estimated Tax :</h5>
-                                    </td>
-                                    <td>
-                                        $ 18.20
-                                    </td>
-                                </tr>                              
-                                    
-                                <tr class="bg-light">
-                                    <td colspan="2">
-                                        <h5 class="font-size-14 m-0">Total:</h5>
-                                    </td>
-                                    <td>
-                                        $ 745.2
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
+                                    <% let total=0; cartItems.forEach((product,index)=>{
+                                        total += product.productCount * product.productId.productDiscountPrice
+                                        %>
+                                        <tr>
+                                            <th>
+                                                <%= product.productId.productName %>
+                                            </th>
+                                            <th>
+                                                <%= product.productCount %>
+                                            </th>
+                                            <td><i class="bi bi-currency-rupee"></i>
+                                                <%= product.productId.productDiscountPrice * product.productCount %>
+                                            </td>
+                                        </tr>
+
+                                        <% } ) %>
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total :</th>
+                                        <th></th>
+                                        <td><i class="bi bi-currency-rupee"></i>
+                                            <%= total %>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="mt-4">
+                            <div class="alert alert-success" role="alert">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-shield-fill-check h4 me-2"></i>
+                                    <div class="flex-grow-1">
+                                        Your order is eligible for FREE Delivery.
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-center">
+                                <button class="btn btn-dark" id="cancelButton">Cancel</button>
+                                <a href="/user/orderConfirm">
+                                    <button type="submit" class="btn btn-success" form="checkout-form"    
+                                onclick="checkoutSubmit(event)">Complete
+                            Order</button>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+
+
     <!-- end row -->
-    
-</div>
 
 
-<%-include('footer')%>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addAddresscheckoutModal" tabindex="-1" aria-labelledby="addAddressModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addAddressForm" action="/user/add-checkout-address" method="POST">
+
+                        <div class="form-group">
+                            <label for="address-type">Address Type:</label>
+                            <select class="form-select" id="address-type" name="addressType">
+                                <option value="home">Home</option>
+                                <option value="office">Office</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-address-contactName">Contact Name:</label>
+                            <input type="text" class="form-control" id="new-address-contactName" name="contactName"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-address-doorNo">Door No:</label>
+                            <input type="text" class="form-control" id="new-address-doorNo" name="doorNo"
+                                placeholder="eg:House no,Building No">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-address-homeAddress">Address:</label>
+                            <input type="text" class="form-control" id="new-address-homeAddress" name="homeAddress"
+                                maxlength="100">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="new-address-areaAddress">Area Address:</label>
+                            <input type="text" class="form-control" id="new-address-areaAddress" name="areaAddress"
+                                maxlength="100" placeholder="eg:Area, Street, Sector, Village">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-address-landmark">Landmark:</label>
+                            <input type="text" class="form-control" id="new-address-landmark" name="landmark"
+                                maxlength="100" placeholder="eg: near Federal Bank">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-address-landmark">Phone:</label>
+                            <input type="text" class="form-control" id="new-address-phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-address-pincode">Pincode:</label>
+                            <input type="text" class="form-control" id="new-address-pincode" name="pincode"
+                                placeholder="XXXXXX">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Save Address</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <%-include('footer')%>
+
+
+        <!-- JavaScript to populate billing address -->
+        <script>
+
+            //delete confirmation
+
+            document.querySelectorAll('.action-link').forEach((x) => {
+                x.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent the default action
+
+                    Swal.fire({
+                        title: "Delete Address!",
+                        text: "Are you sure you want to delete this address?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // If confirmed, redirect to the delete URL
+                            window.location.href = this.href;
+                        }
+                    });
+                });
+            });
+
+
+            function showError(msg) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops',
+                    text: msg
+                })
+            }
+
+//validating checkout form
+function validateCheckoutForm(data) {
+    if (!data.name.trim() || /\d/.test(data.name)) {
+            showError("A valid name is required (no numbers)");
+            return false;
+    }
+     
+        if (!data.email.trim() || !/^\S+@\S+\.\S+$/.test(data.email)) {
+            showError("A valid email address is required");
+            return false;
+        }
+        if (!data.phone.trim() || !/^\d{10}$/.test(data.phone)) {
+            showError("A valid 10-digit phone number is required");
+            return false;
+        }
+        if (!data.address) {
+            showError("Shipping address is required");
+            return false;
+        }
+        if (!data['paymentMethod']) {
+            showError("Payment method is required");
+            return false;
+        }
+        return true;
+    }
+
+
+
+            // submitting order
+
+            async function checkoutSubmit(event) {
+                try {
+                    event.preventDefault();
+
+                    const form = document.getElementById('checkout-form');
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+
+                    if (!validateCheckoutForm(data)) {
+            return;
+        }
+
+                    const res = await fetch('/user/checkout-submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (res.ok) {
+                        window.location.href = '/user/order-confirm';
+                    } else {
+                        const error = await res.text();
+                        showError(error);
+                    }
+                } catch (error) {
+                    console.log(`Error in order placing: ${error}`);
+                }
+            }
+
+
+
+
+            // when click cancel btn go to cart page
+            document.getElementById('cancelButton').addEventListener('click', function () {
+                window.location.href = '/user/cart'; // Replace 'cart.html' with the URL of your cart page
+            });
+
+
+
+
+            // validation for address modal
+           
+
+            const addressForm = document.getElementById('addAddressForm');
+    const contactName = document.getElementsByName('contactName')[0];
+    const pincode = document.getElementsByName('pincode')[0];
+    const homeAddress = document.getElementsByName('homeAddress')[0];
+    const areaAddress = document.getElementsByName('areaAddress')[0];
+    const landmark = document.getElementsByName('landmark')[0];
+    const phone = document.getElementById("new-address-phone");
+    const doorNo = document.getElementsByName('doorNo')[0];
+
+    // Validation for adding new address
+    addressForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let isValid = true;
+        let validateMessage = "";
+
+        // Check if contact name is empty or contains only numbers
+        if (contactName.value.trim() === "" || !isNaN(contactName.value)) {
+            validateMessage = "Enter a valid name";
+            isValid = false;
+        }
+        // Check pincode
+        else if (pincode.value.length !== 6 || !/^\d{6}$/.test(pincode.value)) {
+        validateMessage = "Enter a valid 6-digit Pincode";
+          isValid = false;
+}
+        // Validate home address
+        else if (homeAddress.value.length < 10 || homeAddress.value.length > 100 || !isNaN(homeAddress.value)) {
+            validateMessage = "Enter a valid home address between 20 and 100 characters";
+            isValid = false;
+        }
+        // Validate area address
+        else if (areaAddress.value.length < 3 || areaAddress.value.length > 100 || !isNaN(areaAddress.value)) {
+            validateMessage = "Enter a valid area address between 10 and 100 characters";
+            isValid = false;
+        }
+        // Validate landmark
+        else if (landmark.value.length > 50 || !isNaN(landmark.value)) {
+            validateMessage = "Enter a valid landmark with maximum 50 characters";
+            isValid = false;
+        }
+       
+
+                else if (phone.value.length !== 10 || isNaN(phone.value)) {
+            validateMessage = "Enter a valid 10-digit phone number";
+            isValid = false;
+        }
+        // Validate door number
+        else if (doorNo.value.trim() === "") {
+            validateMessage = "Enter a door number";
+            isValid = false;
+        }
+
+        // If any of the above is invalid, display an error message
+        if (!isValid) {
+            Swal.fire({
+                icon: "error",
+                title: "Invalid Information",
+                text: validateMessage
+            });
+        } else {
+            addressForm.submit();
+        }
+    });
+
+
+
+ 
+  
+
+        </script>

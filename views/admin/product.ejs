@@ -99,7 +99,13 @@
                                 <%= product.productPrice %>
                             </td>
                             <td>
-                                <%= product.productQuantity %>
+                                <!-- <%= product.productQuantity %> -->
+
+                                <% if (product.productQuantity <= 0) { %>
+                                    <span class="text-danger"> Out of Stock</span>
+                                <% } else { %>
+                                    <%= product.productQuantity %>
+                                <% } %>
                             </td>
                             <td>
                                 <%= product.productCategory %>

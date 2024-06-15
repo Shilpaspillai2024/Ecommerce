@@ -333,6 +333,11 @@
             validateMessage = "Enter a valid 10-digit phone number";
             isValid = false;
         }
+
+//         else if (!/^\d{10}$/.test(phone.value)) {
+//     validateMessage = "Enter a valid 10-digit phone number";
+//     isValid = false;
+// }
         // Validate door number
         else if (doorNo.value.trim() === "") {
             validateMessage = "Enter a door number";

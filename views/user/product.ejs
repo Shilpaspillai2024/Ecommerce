@@ -239,7 +239,7 @@
                             <!-- wishlist-icon -->
                             <a href="#" class="wishlist-icon" ><i class="fas fa-heart"></i></a>
                             <!-- Cart Icon -->
-                            <a href="#" class="cart-icon" ><i class="fas fa-shopping-cart"></i></a>
+                            <a onclick="addToCart('<%= product.id %>','<%= product.productPrice %>')" class="cart-icon" ><i class="fas fa-shopping-cart"></i></a>
 
 
                            
@@ -258,6 +258,41 @@
 
 <script>
   
+// add tocart from icon
+
+async function addToCart(productId, price) {
+    const URL = `/user/add-to-cart/${productId}/?price=${price}`;
+
+    try {
+        const response = await fetch(URL, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            Swal.fire({
+                icon: "success",
+                title: data.message || "Product added to cart",
+                showConfirmButton: false,
+                timer: 700,
+            }).then(() => {
+                window.location.reload();
+            });
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to add product to cart");
+        }
+    } catch (err) {
+        Swal.fire({
+            icon: "error",
+            title: "Cannot add product to cart",
+            text: err.message
+        });
+    }
+}
 
 
 

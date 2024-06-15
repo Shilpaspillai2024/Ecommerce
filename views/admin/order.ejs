@@ -68,34 +68,45 @@
                 <thead>
                     <tr>
                         <th scope="col">Si.No</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">ProductName</th>
+                       
+                        <th scope="col">OrderId</th>
+                        <th scope="col">CustomerName</th>
+                     
                         <th scope="col">Order Date</th>
+
                         <th scope="col">Price</th>
                         <th scope="col">Payment Method</th>
                         <th scope="col">Status</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+              
 
+                  
+                    <tbody>
+                        <% order.forEach((order, index) => { %>
+                           
+                                <tr>
+                                    <th scope="row"><%= index + 1 %></th>
+                                    <td><%= order._id %></td>
+                                    <td><%= order.contactInfo.name %></td>
+                                  
+                                    <td><%= order.createdAt.toDateString() %></td>
+                                    <td><i class="fa-solid fa-indian-rupee-sign"></i> <%= order.totalPrice %></td>
+                                    <td><%= order.paymentMethod %></td>
+                                    <td><%= order.status %></td>
+                                    <td>
+                                        <a href="/admin/order-view/<%= order._id %>" id="view-order-button" class="btn" >
+                                            <i class="fa-solid fa-pen-to-square" style="color: #e2df19;"></i>
+                                        </a>
+        
+                                    </td>
+                                </tr>
+                         
+                        <% }) %>
+                    </tbody>
 
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Shilpa S Pillai</td>
-                        <td>Atomic Habits</td>
-                        <td> 01/06/2024</td>
-                        <td><i class="fa-solid fa-indian-rupee-sign"></i> 1200</td>
-                        <td>Cash on Delivery</td>
-                        <td>Processing</td>
-
-                        <td>
-                            <a class="btn btn-warning" href="">View</a>
-                            <!-- <a class="btn btn-danger" href="">Cancel</a> -->
-                        </td>
-                    </tr>
-
-                </tbody>
+              
             </table>
         </div>
     </div>

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
-const {defalutMaxListeners}=require('nodemailer/lib/xoauth2')
+// const {defalutMaxListeners}=require('nodemailer/lib/xoauth2');
+const addressSchema = require("./addressSchema");
 
 const wordplaySchema = new mongoose.Schema({
     googleId:{
@@ -12,10 +13,11 @@ const wordplaySchema = new mongoose.Schema({
     },
     password :{
         type : String,
-
-        
-       
     },
+
+   
+       
+    
     email :{
         type : String,
         required : true,

@@ -7,10 +7,10 @@ const cart = async (req, res) => {
 
         var totalPrice = 0;
         var totalPriceWithOutDiscount = 0;
-        var cartItemCount=0;
+        var cartItemCount = 0;
 
 
-        if (cart ) {
+        if (cart) {
             // find the total price of cart items
 
             cart.items.forEach((ele) => {
@@ -31,7 +31,7 @@ const cart = async (req, res) => {
 
 
 
-      
+
             // if the totalPrice and payable amount in the cart and the calculated total price is different then update the collection with the new values
 
             if (cart.payableAmount != totalPrice || cart.totalPrice != totalPriceWithOutDiscount) {
@@ -41,7 +41,7 @@ const cart = async (req, res) => {
             }
             await cart.save();
 
-            res.render('user/cart', { title: "cart", cart, totalPrice,cartItemCount, totalPriceWithOutDiscount, alertMessage: req.flash('errorMessage'), user: req.session.user })
+            res.render('user/cart', { title: "cart", cart, totalPrice, cartItemCount, totalPriceWithOutDiscount, alertMessage: req.flash('errorMessage'), user: req.session.user })
 
         }
         // else {
@@ -70,7 +70,7 @@ const addToCartPost = async (req, res) => {
         const userId = req.session.user;
         const productPrice = parseInt(req.query.price);
         const productQuantity = 1;
-      
+
         // Find the product from the collection
         const actualProductDetails = await productSchema.findById(productId);
 
@@ -91,8 +91,8 @@ const addToCartPost = async (req, res) => {
                     productExist = true;
 
                     // ele.productCount += 1; 
-                    
-                   
+
+
                 }
             });
 
@@ -102,12 +102,12 @@ const addToCartPost = async (req, res) => {
 
             await checkUserCart.save();
 
-           
-        } 
+
+        }
         else {
 
 
-           
+
             const newCart = new cartSchema({
                 userId: userId,
                 items: [{ productId: actualProductDetails._id, productCount: 1, productPrice: productPrice }]
@@ -115,48 +115,48 @@ const addToCartPost = async (req, res) => {
 
             await newCart.save();
         }
-            // req.flash('errorMessage', "Product successfully added to cart.");
-            return res.status(200).json({ message: "Product added to cart" })
-        
-        
+        // req.flash('errorMessage', "Product successfully added to cart.");
+        return res.status(200).json({ message: "Product added to cart" })
+
+
         // res.redirect(`/user/product-view/${productId}`);
     }
     catch (err) {
         console.log(`Error during adding product to cart: ${err}`);
     }
-    }
+}
 
 
 // remove product from cart
-  
-const removeCartItem= async(req,res) =>{
+
+const removeCartItem = async (req, res) => {
     try {
 
-        productId=req.params.id
+        productId = req.params.id
 
-        const cartItems=await cartSchema.findOne({userId:req.session.user}).populate('items.productId')
+        const cartItems = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId')
 
-        if(cartItems===null){
+        if (cartItems === null) {
             return res.status(404).json({ success: false, error: "Cart not found" });
         }
 
-         // filter out the cart products without the removed products
-         const newCart = cartItems.items.filter((ele) => {
+        // filter out the cart products without the removed products
+        const newCart = cartItems.items.filter((ele) => {
             if (ele.productId.id != productId) {
                 return ele
             }
         })
-         cartItems.items= newCart;
+        cartItems.items = newCart;
 
-         await cartItems.save()
+        await cartItems.save()
 
-         return res.status(200).json({ success: true, message: "Product removed from cart" });
+        return res.status(200).json({ success: true, message: "Product removed from cart" });
 
 
     } catch (err) {
         console.log(`Error removing product from cart: ${err}`);
         return res.status(500).json({ success: false, error: `An error occurred while removing the product from the cart: ${err}` })
-        
+
     }
 }
 
@@ -165,9 +165,19 @@ const incrementProduct = async (req, res) => {
         const productId = req.params.productId
         const productQuantity = req.body.quantity
 
+        const product = await productSchema.findById(productId)
+
+
         if (!productQuantity) {
             return res.status(404).json({ error: "Product quantity not found" })
         }
+
+        if (productQuantity >= product.productQuantity) {
+
+            return res.status(404).json({ error: "Product is not in that much count pls decrement" })
+        }
+
+
 
         const cart = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId')
 
@@ -176,6 +186,8 @@ const incrementProduct = async (req, res) => {
                 return ele
             }
         })
+
+        console.log(productCart)
 
         productCart[0].productCount += 1;
 
@@ -186,9 +198,9 @@ const incrementProduct = async (req, res) => {
 
         cart.items.forEach((ele) => {
             totalPriceWithoutDiscount += ele.productId.productPrice * ele.productCount
-            totalPrice += ele.productId.productDiscountedPrice * ele.productCount
+            totalPrice += ele.productId.productDiscountPrice * ele.productCount
             if (ele.productId.id === productId) {
-                productTotal = ele.productId.productDiscountedPrice * ele.productCount
+                productTotal = ele.productId.productDiscountPrice * ele.productCount
             }
         })
 
@@ -245,9 +257,9 @@ const decrementProduct = async (req, res) => {
 
         cart.items.forEach((ele) => {
             totalPriceWithoutDiscount += ele.productId.productPrice * ele.productCount
-            totalPrice += ele.productID.productDiscountedPrice * ele.productCount
+            totalPrice += ele.productId.productDiscountPrice * ele.productCount
             if (ele.productId.id === productId) {
-                productTotal = ele.productId.productDiscountedPrice * ele.productCount
+                productTotal = ele.productId.productDiscountPrice * ele.productCount
             }
         })
 
@@ -275,55 +287,7 @@ const decrementProduct = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" })
     }
 }
-// product count using fetch
-const cartCountFetch = async (req, res) => {
-    try {
 
-        // product id from the request
-        const productId = req.params.id;
-
-        // product count from the dropdown
-        const productCount = parseInt(req.query.productCount)
-
-
-        if (productCount <= 0 || isNaN(productCount)) {
-            return res.status(404).json({ error: "Error Invalid product count" })
-        }
-
-        // get the cart details of the current user
-        const cartItem = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId')
-
-
-        // filter out the current product from the items inside the cart collections
-        const currentProduct = cartItem.items.filter((item) => {
-            if (item.productId.id === productId) {
-                return item
-            }
-        })
-
-        // if the product stock is not enough then show an error
-        if (currentProduct[0].productd.productQuantity - productCount < 0) {
-            return res.status(422).json({ error: "Please reduce the product count. The selected quantity is not available right now", message: currentProduct[0].productID.productQuantity })
-        }
-
-        // update the product count of the product in the collection with the selected count
-        currentProduct[0].productCount = productCount
-
-
-        // save the changes to the database
-        await cartItem.save()
-
-        // return the success message to the fetch 
-        return res.status(200).json({ message: "Product Count updated" })
-
-
-    } catch (err) {
-        console.log(`Error during updating the count of products in cart using FETCH ${err}`);
-        return res.status(500).json({ error: `An error occurred while updating the product count ${err}` })
-    }
-
-
-}
 
 
 
@@ -332,11 +296,10 @@ const cartCountFetch = async (req, res) => {
 
 
 module.exports = {
-    cart, 
+    cart,
     addToCartPost,
-    cartCountFetch,
     incrementProduct,
     decrementProduct,
-   
+
     removeCartItem
 }

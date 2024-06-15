@@ -144,35 +144,20 @@
                                                 <div class="mt-3">
                                                     <p class="text-muted mb-2">Quantity</p>
                                                     <div class="d-inline-flex align-items-center quantity">
-                                                        <!-- <button
-                                                            class="btn btn-outline-secondary btn-sm quantity-decrease"
-                                                            onclick="decreaseQuantity('<%= items.productId.id %>', '<%= index %>')">-</button> -->
-
-                                                            <button class="btn minus1"
+                                                      
+                                                        <button class="btn minus1"
                                                             onclick="decreaseQuantity('<%= items.productId.id %>','<%= index %>')">-</button>
-                                                        <input type="number" class="form-control text-center mx-2 "
+                                                        <input type="text" class="form-control text-center mx-2 "
                                                             id="quantity-count" name="quantityCount"
-                                                            value="<%= items.productCount %>" disabled
-                                                            style="width: 50px;">
+                                                            value="<%= items.productCount %>" style="width: 50px;">
 
-                                                            <button class="btn add1"
-                                                                onclick="increaseQuantity('<%= items.productId.id%>','<%= index %>')">+</button>
+                                                        <button class="btn add1"
+                                                            onclick="increaseQuantity('<%= items.productId.id%>','<%= index %>')">+</button>
 
 
-                                                        <!-- <button
-                                                            class="btn btn-outline-secondary btn-sm quantity-increase"
-                                                            onclick="increaseQuantity('<%= items.productId.id %>', '<%= index %>')">+</button> -->
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            
-                                            
-
-
-
-
-
                                             <div class="col-md-3">
                                                 <div class="mt-3">
                                                     <p class="text-muted mb-2">Total</p>
@@ -233,7 +218,7 @@
                                         <tr>
                                             <td>Shipping Charge</td>
                                             <td>:</td>
-                                            <td class="text-end">&#8377; <%= cart.payableAmount> 3000 ? "FREE" : 50 %>
+                                            <td class="text-end">&#8377; <%= cart.payableAmount> 50 ? "FREE" : 50 %>
                                             </td>
                                         </tr>
                                         <tr class="bg-light">
@@ -286,13 +271,13 @@
 
 
 
-                
+
                     const productQualityInput = document.querySelectorAll('#quantity-count');
                     const productTotal = document.querySelectorAll('.each-product-total')
                     const subTotalPrice = document.getElementById('sub-total-price')
                     const savingsAmount = document.getElementById('savings-price')
                     const totalAmount = document.getElementById('total-price-box')
-                  
+
 
                     function increaseQuantity(productId, index) {
                         if (productQualityInput[index].value >= 10) {
@@ -312,9 +297,9 @@
                                 headers: {
                                     "Content-type": "application/json"
                                 },
-                                body: JSON.stringify({ quantity: productQualityInput[index].value})
+                                body: JSON.stringify({ quantity: productQualityInput[index].value })
 
-                                // body: JSON.stringify({ quantity: parseInt(productQualityInput[index].value) + 1 })
+
                             }).then((res) => {
                                 if (res.ok) {
                                     return res.json()
@@ -341,12 +326,12 @@
 
                     function decreaseQuantity(productId, index) {
 
-                        document.getElementsByName('minus1')[0].disabled = false;
+                        // document.getElementsByClassName('minus1')[0].disabled = false;
 
 
-                        if (productQualityInput[index].value <= 1) {
-                            document.getElementsByClassName('minus1')[0].disabled = true
-                        }
+                        // if (productQualityInput[index].value <= 1) {
+                        //     document.getElementsByClassName('minus1')[0].disabled = true
+                        // }
 
                         if (productQualityInput[index].value > 1) {
                             const URL = `/user/decrement-product/${productId}`
@@ -356,8 +341,7 @@
                                 headers: {
                                     "Content-type": "application/json"
                                 },
-                                body: JSON.stringify({quantity: productQualityInput[index].value })
-                                // body: JSON.stringify({ quantity: parseInt(productQualityInput[index].value) - 1 })
+                                body: JSON.stringify({ quantity: productQualityInput[index].value })
 
                             }).then((res) => {
                                 if (res.ok) {
@@ -379,56 +363,10 @@
                     }
 
 
-                    
 
 
 
-                    // product quantity and productID on onChange function
-                    function updateProductCount(productId, value) {
 
-                        // url for the fetch request 
-                        const URL = `/user/cart-count/${productId}/?productCount=${value}`;
-
-                        // fetch request for updating product count in cart
-                        fetch(URL, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        }).then((Response) => {
-
-                            // if the product updated without any error then an alert with success is fired
-                            if (Response.ok) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Count Updated",
-                                    showConfirmButton: false,
-                                    timer: 800,
-                                });
-                                // after the timer from sweet alert then reload the page
-                                setTimeout(() => {
-                                    // window.location.reload()
-                                }, 800)
-
-                            } else {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Error",
-                                    text: "Unexpected error occurred please try again later",
-                                });
-                            }
-                            return Response.json();
-                        }).then((data) => {
-                            console.log(data);
-                            if (data.error) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: `${data.message} Product is remaining`,
-                                    text: data.error,
-                                });
-                            }
-                        })
-                    }
 
 
 

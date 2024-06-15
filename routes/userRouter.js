@@ -10,6 +10,7 @@
  const profileController=require("../controller/userController/profileController")
  const cartController=require("../controller/userController/cartController")
  const checkoutController=require("../controller/userController/checkoutController")
+ const orderController=require("../controller/userController/orderController")
  
 
  const user = express.Router()
@@ -91,9 +92,9 @@ user.get('/cart',checkUserSession,cartController.cart)
 user.post('/add-to-cart/:id',checkUserSession,cartController.addToCartPost)
 
 user.delete('/remove-cart-product/:id',checkUserSession,cartController.removeCartItem)
-user.post('/cart-count/:id',checkUserSession,cartController.cartCountFetch)
-user.put('/increment-product/:id',checkUserSession,cartController.incrementProduct)
-user.put('/decrement-product/:id',checkUserSession,cartController.decrementProduct)
+
+user.put('/increment-product/:productId',checkUserSession,cartController.incrementProduct)
+user.put('/decrement-product/:productId',checkUserSession,cartController.decrementProduct)
 
 
 
@@ -101,6 +102,22 @@ user.put('/decrement-product/:id',checkUserSession,cartController.decrementProdu
 
 user.get('/checkout',checkUserSession,checkoutController.checkout)
 
+
+user.post('/add-checkout-address',checkUserSession,checkoutController.addcheckoutAddress)
+user.get('/delete-checkout-address/:id',checkUserSession,checkoutController.deletecheckoutAddress)
+
+user.post('/checkout-submit',checkUserSession,checkoutController.OrderPlaced)
+
+user.get('/order-confirm',checkUserSession,checkoutController.orderConfirm)
+
+
+
+//order
+
+user.get('/order',checkUserSession,orderController.order)
+user.get('/cancelled-orders',checkUserSession,orderController.cancelOrder)
+
+user.post('/cancel-order/:orderId',checkUserSession,orderController.cancellOrderPost)
 
 user.get('/logout',userController.logout)
 

@@ -331,7 +331,7 @@
                 isValid = false;
             }
 
-            if (isNaN(productQuantity.value) || parseInt(productQuantity.value) <= 0) {
+            if (isNaN(productQuantity.value) || parseInt(productQuantity.value) < 0) {
                 errorMessage = 'Product quality should be a number and it must be greater than zero'
                 isValid = false;
             }
