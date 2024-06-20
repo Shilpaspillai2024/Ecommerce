@@ -169,6 +169,8 @@ const OrderPlaced=async(req,res)=>{
         // res.status(200).json(order);
 
         res.redirect("/user/orderConfirm")
+        
+       
     
         } catch (error) {
             console.log(`error from checkoutproceed ${error}`)

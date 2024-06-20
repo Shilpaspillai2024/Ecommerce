@@ -1,13 +1,46 @@
-
+<style>
+body {
+    background-color:black;
+    font-family: Arial, sans-serif;
+}
+.container-fluid {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.confirmation-container {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+    font-size: 36px;
+    color:rgb(162, 218, 33);
+    margin-bottom: 20px;
+}
+p {
+    font-size: 18px;
+    color:#fff;
+    margin-bottom: 10px;
+}
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+</style>
 
     <div class="container-fluid">
         <div class="container text-center">
          
             <h1>Thank you.</h1>
             <p class="lead w-lg-50 mx-auto">Your order has been placed successfully.</p>
-            <p class="w-lg-50 mx-auto">Your order number is <a href="#">9237427634826</a>. We will immediatelly process
-                your and it will be delivered in 2 - 5 business days.</p>
-
+            <p class="w-lg-50 mx-auto">We will immediatelly process
+                your order and it will be delivered in 2 - 5 business days.</p>
+                
           
         </div>
     </div>
@@ -16,6 +49,6 @@
     <script>
          setTimeout(() => {
         window.location.href = '/user/home';
-    }, 1000); // 1000 milliseconds = 1 seconds
+    }, 2000); // 1000 milliseconds = 1 seconds
     </script>
     

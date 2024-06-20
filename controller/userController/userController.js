@@ -1,4 +1,5 @@
 const userSchema = require('../../model/userSchema')
+const wishlistSchema=require('../../model/wishlistSchema')
 
 const bcrypt=require('bcrypt')
 
@@ -227,16 +228,28 @@ const otpResend = (req,res)=>{
     
 const home= async (req,res)=>{
     try {
-        const selectCategory=req.query.category || ''
+        const selectCategory=req.query.category || 'All'
         let product;
-        if(selectCategory ===''){
+        if(selectCategory ==='All'){
             product= await productSchema.find({isActive:true})
         }else{
             product= await productSchema.find({productCategory:selectCategory,isActive:true})
         }
         const category=await categorySchema.find({isactive:true})
 
+
+        if(req.session.user){
+            const userId=req.session.user
+
+            const wishlist=await wishlistSchema.findOne({userId:userId}) 
+
+
+            res.render('user/home',{title:"user Home",product,category,wishlist,alertMessage:req.flash('errorMessage'),user:req.session.user})
+        }
+        else{
+
         res.render('user/home',{title:"user Home",product,category,alertMessage:req.flash('errorMessage'),user:req.session.user})
+        }
     } catch (err) {
 
         console.log(`error in home page rendering ${err}`)
@@ -245,6 +258,12 @@ const home= async (req,res)=>{
 }
 
 
+
+// const home = async (req,res)=>{
+//     const category=await categorySchema.find( {isActive:true} )
+
+    
+// }
 
 
 

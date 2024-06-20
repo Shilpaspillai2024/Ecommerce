@@ -73,9 +73,9 @@ const addToCartPost = async (req, res) => {
 
         // Find the product from the collection
         const actualProductDetails = await productSchema.findById(productId);
+  
 
-
-        if (actualProductDetails.productQuantity === 0) {
+        if (actualProductDetails.productQuantity <=0) {
             return res.status(404).json({ error: "Product is out of stock" })
         }
 

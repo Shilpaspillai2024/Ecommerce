@@ -8,7 +8,7 @@ const order=async(req,res)=>{
     try {
 
 
-        const order=await orderSchema.find({userId:req.session.user,isCancelled: false}).populate('products.productId')
+        const order=await orderSchema.find({userId:req.session.user,isCancelled: false}).populate('products.productId').sort({createdAt:-1})
 
         
 

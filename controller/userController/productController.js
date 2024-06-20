@@ -1,4 +1,5 @@
 const productSchema=require('../../model/productSchema')
+const wishlistSchema=require('../../model/wishlistSchema')
 
 const userSchema = require('../../model/userSchema')
 const categorySchema = require("../../model/categorySchema");
@@ -72,7 +73,21 @@ const productSeemore = async(req,res)=>{
         // const category=await categorySchema.find()
 
         const product= await productSchema.find()
-       res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),user:req.session.user})
+
+
+        if(req.session.user){
+            const userId=req.session.user
+
+            const wishlist=await wishlistSchema.findOne({userId:userId}) 
+
+      
+      
+            res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),wishlist,user:req.session.user})
+
+        }
+        else{
+            res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),user:req.session.user})
+        }
     } catch (err) {
         console.log(`Error during product detail page ${err}`);
     }   

@@ -11,6 +11,7 @@ const profileController = require("../controller/userController/profileControlle
 const cartController = require("../controller/userController/cartController")
 const checkoutController = require("../controller/userController/checkoutController")
 const orderController = require("../controller/userController/orderController")
+const wishlistController=require("../controller/userController/wishlistController")
 
 
 const user = express.Router()
@@ -118,6 +119,14 @@ user.get('/order', checkUserSession, orderController.order)
 user.get('/cancelled-orders', checkUserSession, orderController.cancelOrder)
 
 user.post('/cancel-order/:orderId', checkUserSession, orderController.cancellOrderPost)
+
+
+// wishlist
+
+user.get('/wishlist',checkUserSession,wishlistController.wishList)
+user.post('/addtowishlist',checkUserSession,wishlistController.addToWishlist)
+
+user.get('/remove-wishlist/:id',checkUserSession,wishlistController.removeWishlist)
 
 user.get('/logout', userController.logout)
 
