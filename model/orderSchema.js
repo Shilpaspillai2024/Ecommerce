@@ -43,8 +43,13 @@ const schema=new mongoose.Schema({
         default: false
     },
 
+    razorpayOrderId:{
+        type:String,
+
+    },
+
      status:{ type:String,
-        enum:['processing','confirmed','shipped','cancelled','delivered','returned']
+        enum:['processing','confirmed','pending','shipped','cancelled','delivered','returned']
 
      }
 

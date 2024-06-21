@@ -64,6 +64,37 @@ const cancellOrderPost= async(req,res)=>{
 }
 
 
+
+const returnOrder=async(req,res)=>{
+    try {
+
+        const{orderId}=req.body
+
+        console.log('Received orderId:', orderId);
+        const order= await orderSchema.findById(orderId)
+
+        if(!order){
+            return res.status(404).send('Order not found');
+        }
+        
+        order.status='returned'
+        await order.save()
+
+        res.status(200).send('Return order request submitted successfully');
+
+
+
+    } catch (err) {
+        console.log(`Error: ${err}`);
+        res.status(500).send('Failed to submit return order request');
+        
+    }
+}
+
+
+
+
+
 const orderDetail= async(req,res)=>{
     try {
 
@@ -85,5 +116,6 @@ module.exports={
     order,
     cancelOrder,
     cancellOrderPost,
+    returnOrder,
     orderDetail
 }

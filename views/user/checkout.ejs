@@ -695,7 +695,41 @@ function validateCheckoutForm(data) {
 
             // submitting order
 
-            async function checkoutSubmit(event) {
+        //     async function checkoutSubmit(event) {
+        //         try {
+        //             event.preventDefault();
+
+        //             const form = document.getElementById('checkout-form');
+        //             const formData = new FormData(form);
+        //             const data = Object.fromEntries(formData.entries());
+
+        //             if (!validateCheckoutForm(data)) {
+        //     return;
+        // }
+
+        //             const res = await fetch('/user/checkout-submit', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json'
+        //                 },
+        //                 body: JSON.stringify(data)
+        //             });
+
+        //             if (res.ok) {
+        //                 window.location.href = '/user/order-confirm';
+        //             } else {
+        //                 const error = await res.text();
+        //                 showError(error);
+        //             }
+        //         } catch (error) {
+        //             console.log(`Error in order placing: ${error}`);
+        //         }
+        //     }
+
+
+
+
+        async function checkoutSubmit(event) {
                 try {
                     event.preventDefault();
 
@@ -716,7 +750,13 @@ function validateCheckoutForm(data) {
                     });
 
                     if (res.ok) {
+                       const result=await res.json()
+
+                       if(data.paymentMethod==='razorpay'){
+                        initiateRazorpayPayment(result.orderId,result.amount,result.order)
+                       } else if (data.paymentMethod === 'COD') {
                         window.location.href = '/user/order-confirm';
+                      }
                     } else {
                         const error = await res.text();
                         showError(error);
@@ -725,8 +765,37 @@ function validateCheckoutForm(data) {
                     console.log(`Error in order placing: ${error}`);
                 }
             }
+            function initiateRazorpayPayment(orderId, amount, orderData) {
+        var options = {
+            "key": "rzp_test_CgfUBYSTSF2QIh", // Your Razorpay API key
+            "amount": amount, // Amount in paise
+            "currency": "INR",
+            "name": "WordPlayBooks",
+            "description": "Product or Service Description",
+            "image": "https://wordplaybooks.com/your_logo.png", // Your company logo URL
+            "order_id": orderId, // Order ID from your backend
+            
+            "handler": function (response) {
+                // Handle successful payment here
+                window.location.href = '/user/order-confirm'
+                
+            },
+            "prefill": {
+                "name": orderData.contactInfo.name,
+                "email": orderData.contactInfo.email,
+                "contact": orderData.contactInfo.number,
+            },
+            "theme": {
+                "color": "#3399cc" // Customize the color of the Razorpay window
+            }
+        };
 
+        var razorpayWindow = new Razorpay(options);
+        razorpayWindow.open();
+    }
 
+    
+    
        
 
 
@@ -807,43 +876,7 @@ function validateCheckoutForm(data) {
     });
 
 
-    //  // Function to handle the Razorpay payment
-    //  function initiateRazorpayPayment() {
-    //     // Create an object with your Razorpay API key and other required details
-    //     var options = {
-    //         "key": "rzp_test_CgfUBYSTSF2QIh",
-    //         "amount": 1000, // Amount in paise or smallest currency unit
-    //         "currency": "INR", // Currency code
-    //         "name": "WordPlayBooks",
-    //         "description": "Product or Service Description",
-    //         "image": "https://example.com/your_logo.png", // URL of your company logo
-    //         "handler": function (response){
-    //             // Handle the successful payment response
-    //             alert("Payment successful. Payment ID: " + response.razorpay_payment_id);
-    //         },
-    //         "prefill": {
-    //             "name": "Customer Name",
-    //             "email": "customer@example.com",
-    //             "contact": "9999999999"
-    //         },
-    //         "theme": {
-    //             "color": "#3399cc" // Customize the color of the Razorpay window
-    //         }
-    //     };
-
-    //     // Open the Razorpay payment window
-    //     var razorpayWindow = new Razorpay(options);
-    //     razorpayWindow.open();
-    // }
-
-    // // Attach an event listener to the Razorpay radio button
-    // document.getElementById("pay-methodoption2").addEventListener("change", function () {
-    //     // Check if the Razorpay radio button is checked
-    //     if (this.checked) {
-    //         // Call the function to initiate Razorpay payment
-    //         initiateRazorpayPayment();
-    //     }
-    // });
+   
 
 
 

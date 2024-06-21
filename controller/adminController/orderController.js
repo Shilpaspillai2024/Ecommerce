@@ -39,7 +39,7 @@ const editOrderStatus = async (req, res) => {
         const orderId = req.params.orderId;
         const orderStatus = req.body.orderStatus;
 
-        const productDeliveryStatusEnum = ['processing', 'confirmed', 'shipped', 'cancelled', 'delivered', 'returned'];
+        const productDeliveryStatusEnum = ['processing', 'confirmed', 'pending','shipped', 'cancelled', 'delivered', 'returned'];
 
         if (!productDeliveryStatusEnum.includes(orderStatus)) {
             throw new Error('Invalid order status');

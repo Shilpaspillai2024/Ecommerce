@@ -5,6 +5,9 @@ const addressSchema = require('../../model/addressSchema')
 const orderSchema = require('../../model/orderSchema')
 const Razorpay = require('razorpay')
 const mongoose = require('mongoose')
+const dotenv=require('dotenv').config()
+
+
 
 
 
@@ -104,6 +107,90 @@ const deletecheckoutAddress = async (req, res) => {
 }
 
 
+// order placement withou razorpay
+
+
+
+// const OrderPlaced = async (req, res) => {
+//     try {
+//         const userId = req.session.user
+
+//         let { name, email, phone, address, paymentMethod } = req.body
+
+//         const cart = await cartSchema.findOne({ userId }).populate('items.productId');
+
+//         if (!cart || cart.items.length === 0) {
+//             return res.status(404).send('Cart is empty or not found ')
+//         }
+//         let totalPrice = 0;
+//         const orderProducts = cart.items.map(product => {
+//             const price = product.productPrice;
+//             totalPrice += price * product.productCount
+//             return {
+//                 productId: product.productId._id,
+//                 quantity: product.productCount,
+//                 price: price
+//             }
+//         })
+
+
+//         // in addressSchema i refer userschema,and in orderschema the address stored as a string(it contain objectid ) ,it take as a object need this for address
+
+//         let addressObj = {}
+
+//         let patterns = {
+//             contactName: /contactName: '([^']+)'/,
+//             doorNo: /doorNo: (\d+)/,
+//             Address: /Address: '([^']+)'/,
+//             areaAddress: /areaAddress: '([^']+)'/,
+//             pincode: /pincode: (\d+)/,
+//             landmark: /landmark: '([^']+)'/,
+//             phone: /phone: (\d+)/,
+//             addressType: /addressType: '([^']+)'/
+//         };
+
+//         for (let key in patterns) {
+//             let match = address.match(patterns[key]);
+//             if (match) {
+//                 addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
+//             }
+//         }
+
+
+
+//         const order = new orderSchema({
+//             userId,
+//             contactInfo: { name, email, phone },
+//             address: addressObj,
+//             products: orderProducts,
+//             totalPrice,
+//             paymentMethod: paymentMethod,
+//             status: 'processing',
+//         })
+
+
+//         await order.save();
+
+//         for (let product of orderProducts) {
+//             await productSchema.findByIdAndUpdate(product.productId, {
+//                 $inc: { productQuantity: -product.quantity }
+//             })
+//         }
+
+//         cart.items = [];
+//         await cart.save();
+//         res.redirect("/user/orderConfirm")
+//     } catch (error) {
+//         console.log(`error from checkoutproceed ${error}`)
+//         res.status(404).send('cannot procceed checkout')
+//     }
+
+
+    
+// }
+
+
+
 
 const OrderPlaced = async (req, res) => {
     try {
@@ -118,7 +205,9 @@ const OrderPlaced = async (req, res) => {
         }
         let totalPrice = 0;
         const orderProducts = cart.items.map(product => {
-            const price = product.productPrice;
+           
+            const price = product.productId.productDiscountPrice;
+                 
             totalPrice += price * product.productCount
             return {
                 productId: product.productId._id,
@@ -126,7 +215,7 @@ const OrderPlaced = async (req, res) => {
                 price: price
             }
         })
-
+    
 
         // in addressSchema i refer userschema,and in orderschema the address stored as a string(it contain objectid ) ,it take as a object need this for address
 
@@ -151,7 +240,7 @@ const OrderPlaced = async (req, res) => {
         }
 
 
-
+       if(paymentMethod==='COD'){
         const order = new orderSchema({
             userId,
             contactInfo: { name, email, phone },
@@ -173,7 +262,61 @@ const OrderPlaced = async (req, res) => {
 
         cart.items = [];
         await cart.save();
-        res.redirect("/user/orderConfirm")
+
+       
+
+        res.json({ success: true });
+    }
+
+
+  
+
+ else if (paymentMethod === 'razorpay') {
+            const razorpayInstance = new Razorpay({
+                key_id: process.env.RAZORPAY_KEY_ID,
+                key_secret: process.env.RAZORPAY_KEY_SECRET
+            });
+
+            const options = {
+                amount: totalPrice * 100, // Amount in paise
+                currency: 'INR',
+                receipt: `order_rcptid_${new mongoose.Types.ObjectId()}`
+                
+            };
+
+            try {
+                const razorpayOrder = await razorpayInstance.orders.create(options);
+
+                const order = new orderSchema({
+                    userId,
+                    contactInfo: { name, email, phone },
+                    address: addressObj,
+                    products: orderProducts,
+                    totalPrice,
+                    paymentMethod: paymentMethod,
+                    razorpayOrderId: razorpayOrder.id,  // Save the Razorpay order ID
+                    status: 'processing',
+                });
+
+                await order.save();
+
+                for (let product of orderProducts) {
+                    await productSchema.findByIdAndUpdate(product.productId, {
+                        $inc: { productQuantity: -product.quantity }
+                    });
+                }
+
+                cart.items = [];
+                await cart.save();
+
+                res.json({ orderId: razorpayOrder.id, amount: options.amount, order: order });
+            } catch (err) {
+                console.error(`Error creating Razorpay order: ${JSON.stringify(err)}`);
+                res.status(500).send('Error creating Razorpay order');
+            }
+        }
+
+        
     } catch (error) {
         console.log(`error from checkoutproceed ${error}`)
         res.status(404).send('cannot procceed checkout')
@@ -181,7 +324,10 @@ const OrderPlaced = async (req, res) => {
 
 
     
-}
+ }
+
+
+
 
 
 
@@ -206,6 +352,6 @@ const orderConfirm = async (req, res) => {
 
 
 module.exports = {
-    checkout, addcheckoutAddress, deletecheckoutAddress, OrderPlaced, orderConfirm
+    checkout, addcheckoutAddress, deletecheckoutAddress, OrderPlaced, orderConfirm,
 
 }
