@@ -63,8 +63,27 @@ const cancellOrderPost= async(req,res)=>{
     }
 }
 
+
+const orderDetail= async(req,res)=>{
+    try {
+
+         res.render('user/orderDetail', { user: req.session.user, title: "OrderDetail", alertMessage: req.flash('errorMessage') })
+        
+    } catch (err) {
+
+        console.log(`error in rendering orderDetailPage`)
+        
+    }
+
+  
+}
+
+
+
+
 module.exports={
     order,
     cancelOrder,
-    cancellOrderPost
+    cancellOrderPost,
+    orderDetail
 }

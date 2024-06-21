@@ -1,0 +1,164 @@
+<style>
+    body{
+    background:#eee;
+}
+.card {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: 1rem;
+}
+.text-reset {
+    --bs-text-opacity: 1;
+    color: inherit!important;
+}
+a {
+    color: #5465ff;
+    text-decoration: none;
+}
+</style>
+
+
+
+<%-include('navbar')%>
+<div class="container-fluid">
+
+    <div class="container">
+      <!-- Title -->
+      <div class="d-flex justify-content-between align-items-center py-3">
+        <h2 class="h5 mb-0 text-white"><a href="#" class="text-muted"></a> Order #<%=order._id%></h2>
+
+        
+      </div>
+    
+      <!-- Main content -->
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Details -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="mb-3 d-flex justify-content-between">
+                <div>
+
+                 
+                  <span class="me-3"><%= order.createdAt.toDateString() %></span>
+                  <!-- <span class="me-3">order._id</span>
+                  <span class="me-3">product.paymentMethod</span> -->
+                  <!-- <span class="badge rounded-pill bg-info">SHIPPING</span> -->
+                </div>
+               
+              </div>
+              <table class="table table-borderless">
+                <tbody>
+                    <% order.products.forEach((product)=>{ %>
+                  <tr>
+                    <td>
+                      <div class="d-flex mb-2">
+                        <div class="flex-shrink-0">
+                          <img src="../../<%= product.productId.productImage[0]%>" alt="" width="35" class="img-fluid">
+                        </div>
+                        <div class="flex-lg-grow-1 ms-3">
+                          <h6 ><%= product.productId.productName%></h6>
+                          
+                        </div>
+                      </div>
+                    </td>
+                    <td><%= product.quantity %></td>
+                    <td class="text-end"><%= product.price %></td>
+                  </tr>
+                  <% }) %>
+                  
+                </tbody>
+                <tfoot>
+                 
+                  <tr class="fw-bold">
+                    <td colspan="2">TOTAL</td>
+                    <td> <%= order.totalQuantity %></td>
+                    <td class="text-end"><%=order.totalPrice %></td>
+                  
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+          <!-- Payment -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-6">
+                  <h3 class="h6">Payment Method</h3>
+                  <p><%= order.paymentMethod %><br>
+                  <!-- Total: $169,98 <span class="badge bg-success rounded-pill">PAID</span></p> -->
+                </div>
+                <div class="col-lg-6">
+                  <h3 class="h6">shipping address</h3>
+                  <address>
+                    <strong><%= order.address.contactName %></strong><br>
+                    <%= order.address.addressType %><br>
+                    <%= order.address.doorNo %><br>
+                    <%= order.address.Address %><br>
+                    <%= order.address.areaAddress %><br>
+                    <%= order.address.landmark %><br>
+                    <%= order.address.pincode %><br>
+                    
+                    
+                    <abbr title="Phone">P:</abbr>  <%= order.address.phone %>
+                  </address>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+        <div class="col-lg-4">
+         
+          <div class="card mb-4">
+            <!-- Shipping information -->
+            <div class="card-body">
+              <h3 class="h6">Billing Information</h3>
+             
+              <h3 class="h6">Address</h3>
+              <address>
+                <strong><%= order.address.contactName %></strong><br>
+                <%= order.address.addressType %><br>
+                <%= order.address.doorNo %><br>
+                <%= order.address.Address %><br>
+                <%= order.address.areaAddress %><br>
+                <%= order.address.landmark %><br>
+                <%= order.address.pincode %><br>
+                
+               
+                <abbr title="Phone">P:</abbr> <%= order.address.phone %>
+              </address>
+            </div>
+          </div>
+          <div class="card mb-4">
+            <form action="" method="post" id="edit-order-status-form">
+            <div class="card-body">
+               
+                <a href="/user/order" class="btn btn-secondary me-5 ms-2">Go Back</a>
+               
+            </div>
+            </form>
+        </div>
+        </div>
+      </div>
+      
+    </div>
+   
+      </div>
+
+      <%-include('footer')%>
+
+
+      <script>
+       
+      </script>

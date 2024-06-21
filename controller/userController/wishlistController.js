@@ -37,12 +37,16 @@ const addToWishlist=async(req,res)=>{
     try {
         const userId=req.session.user
         const {productId}=req.body
-     
-        const product=await productSchema.findById(productId)
-        if(!product || product.productQuantity<=0){
-            return res.status(400).json({ error: 'Product is out of stock ' });
+
         
-        }
+     
+        // const product=await productSchema.findById(productId)
+        // if(!product || product.productQuantity<=0){
+        //     return res.status(400).json({ error: 'Product is out of stock ' });
+        
+        // }
+
+
 
         let wishlist=await wishlistSchema.findOne({userId})
 

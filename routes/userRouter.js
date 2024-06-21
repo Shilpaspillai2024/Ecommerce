@@ -120,6 +120,8 @@ user.get('/cancelled-orders', checkUserSession, orderController.cancelOrder)
 
 user.post('/cancel-order/:orderId', checkUserSession, orderController.cancellOrderPost)
 
+// user.get('/orderdetail',checkUserSession,orderController.orderDetail)
+
 
 // wishlist
 
