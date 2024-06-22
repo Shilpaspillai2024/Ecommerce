@@ -6,6 +6,7 @@ const dashboardController = require('../controller/adminController/dashboardCont
 const productController = require('../controller/adminController/productController')
 const userController = require('../controller/adminController/userController')
 const orderController = require('../controller/adminController/orderController')
+const couponController=require('../controller/adminController/couponController')
 const multer = require('../middleware/multer')
 
 
@@ -78,6 +79,18 @@ admin.get('/unblock-user/:id', checkAdminSession, userController.unBlockUser)
 admin.get('/order', checkAdminSession, orderController.order)
 admin.get('/order-view/:orderId', checkAdminSession, orderController.orderView)
 admin.post('/edit-order-status/:orderId', checkAdminSession, orderController.editOrderStatus)
+
+
+
+
+// coupon routes
+
+admin.get('/coupons',checkAdminSession,couponController.coupon)
+admin.post('/add-coupon',checkAdminSession,couponController.addCoupon)
+admin.post('/edit-coupon/:id',checkAdminSession,couponController.editCoupon)
+admin.delete('/delete-coupon/:id',checkAdminSession,couponController.deleteCoupon)
+admin.put('/block-coupon/:id',checkAdminSession,couponController.blockCoupon)
+admin.put('/unblock-coupon/:id',checkAdminSession,couponController.unblockCoupon)
 
 
 

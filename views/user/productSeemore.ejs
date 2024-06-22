@@ -219,6 +219,55 @@
         color: white;
     }
 
+
+    .filter-sort-container {
+    padding: 20px 0;
+    background-color: #070707;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #e6e1e1;
+}
+
+/* Label Styling */
+.filter-sort-container .form-label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Select Styling */
+.filter-sort-container .form-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #e6dfdf;
+    transition: border-color 0.2s ease-in-out;
+}
+
+/* Select Hover and Focus Effects */
+.filter-sort-container .form-select:hover,
+.filter-sort-container .form-select:focus {
+    border-color: #80bdff;
+    outline: none;
+}
+
+/* Row Styling */
+.filter-sort-container .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Column Styling */
+.filter-sort-container .col-md-6 {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+
     /* Responsive adjustments */
     @media (max-width: 576px) {
         .product-container h2 {
@@ -246,6 +295,14 @@
             font-size: 0.8rem;
         }
     }
+    @media (max-width: 768px) {
+    .filter-sort-container .row {
+        flex-direction: column;
+    }
+    .filter-sort-container .col-md-6 {
+        width: 100%;
+    }
+}
 </style>
 <%-include ('navbar') %>
 
@@ -263,6 +320,32 @@
 
         <h2 class="product-book">BOOKS</h2>
 
+
+        <div class="filter-sort-container container">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="filter-stock" class="form-label">Show:</label>
+                    <select id="filter-stock" class="form-select" onchange="filterAndSortProducts()">
+                        <option value="all">All Products</option>
+                        <option value="in-stock">In Stock Only</option>
+                        <option value="out-of-stock">Out of Stock Only</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="sort-products" class="form-label">Sort By:</label>
+                    <select id="sort-products" class="form-select" onchange="filterAndSortProducts()">
+                        <option value="popularity">Popularity</option>
+                        <option value="price-low-high">Price: Low to High</option>
+                        <option value="price-high-low">Price: High to Low</option>
+                        <option value="average-ratings">Average Ratings</option>
+                        <option value="featured">Featured</option>
+                        <option value="new-arrivals">New Arrivals</option>
+                        <option value="a-z">A - Z</option>
+                        <option value="z-a">Z - A</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
 
         <div class="product-list-box container">
@@ -288,7 +371,7 @@
                                 <% } %>
 
 
-                                    <div class="product-image-box">
+                                    <div class="product-image-box" >
                                         <img src="/<%=product.productImage[0] %>" alt="">
                                     </div>
 
@@ -477,6 +560,94 @@
 
         }
     }
+
+
+
+
+    // filer and sort
+
+//     async function filterAndSortProducts(){
+//         const filter=document.getElementById('filter-stock').value
+//         const sort=document.getElementById('sort-products').value
+
+//         try {
+
+//             const response=await fetch(`/user/productSeemore?filter=${filter}&sort=${sort}`,{
+//                 method:'GET',
+//                 headers:{
+//                     'Content-Type':'application/json'
+//                 }
+//             })
+
+//             if(response.ok){
+
+//                 const products=await response.json()
+//                 updateProductList(products)
+//             }else{
+//                 console.log('failed to fetch products')
+//             }
+            
+//         } catch (err) {
+//             console.log('error :',err)
+            
+//         }
+//     }
+
+//     function updateProductList(products) {
+//     const productListBox = document.querySelector('.product-list-box');
+
+//     // Clear the existing product list
+//     productListBox.innerHTML = '';
+
+//     // If there are products, populate the list
+//     if (products.length > 0) {
+//         products.forEach(product => {
+//             const productBox = document.createElement('div');
+//             productBox.classList.add('product-box');
+
+//             // Determine if the product has a discount or is a new arrival
+//             let discountOrNewArrival = '';
+//             if (product.productDiscount != 0) {
+//                 discountOrNewArrival = `<div class="product-discount-box">
+//                     <h6>${product.productDiscount}% OFF</h6>
+//                 </div>`;
+//             } else if (new Date(product.addedOn).getTime() > (Date.now() - (1 * 24 * 60 * 60 * 1000))) {
+//                 discountOrNewArrival = `<div class="product-newarrival-box">
+//                     <h6>New Arrival</h6>
+//                 </div>`;
+//             }
+
+//             // Construct the product box HTML
+//             productBox.innerHTML = `
+//                 ${discountOrNewArrival}
+//                 <div class="product-image-box">
+//                     <img src="/${product.productImage[0]}" alt="">
+//                 </div>
+//                 <div class="product-name-box">
+//                     <a href="/user/product-view/${product.id}" class="product-name-link">
+//                         <h6 class="product-text-row">${product.productName}</h6>
+//                         <p class="product-description product-text-row">${product.productAuthor}</p>
+//                         <h5 class="product-price"><i class="fa-solid fa-indian-rupee-sign product-text-row"></i>${product.productPrice.toLocaleString()}</h5>
+//                     </a>
+//                 </div>
+//                 <div class="d-flex flex-row-reverse gap-3">
+//                     ${product.productQuantity <= 0 ? '<h6 class="product-availability">Product Out of stock</h6>' : ''}
+//                     <a onclick="addToCart('${product.id}', '${product.productPrice}', '${user}')" class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
+//                     <a class="wishlist-icon" id="wishlist-heart" onclick="addToWishlist('${product.id}', '${user}', this)">
+//                         <i class="fas fa-heart ${wishlist.products.some(item => item.productId.equals(product.id)) ? 'heart-fill' : 'heart'}"></i>
+//                     </a>
+//                 </div>
+//             `;
+
+//             // Append the product box to the product list container
+//             productListBox.appendChild(productBox);
+//         });
+//     } else {
+//         // If there are no products, display a message
+//         productListBox.innerHTML = '<div class="no-product-banner">No products found.</div>';
+//     }
+// }
+
 
     </script>
 

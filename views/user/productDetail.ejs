@@ -366,12 +366,9 @@
                                 <!-- If the product is already in the cart, show "Go to Cart" button -->
                                 <a href="/user/cart" class="btn btn-danger go-to-cart">Go to Cart <i class="fa-solid fa-cart-shopping"></i></a>
                             <% } else { %>
-                                <!-- Form for adding the product to the cart -->
-                                <!-- <form action="/user/add-to-cart/<%= product.id %>/?price=<%= product.productPrice %>" method="post" id="product-add-to-cart-form">
-                                    <button type="submit" class="btn btn-warning" id="add-to-cart-btn">Add to Cart</button>
-                                </form> -->
+                                
 
-                                <button onclick="addToCart('<%= product.id %>','<%= product.productPrice %>')" class="btn btn-warning" id="add-to-cart-btn">Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
+                                <button onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%=user%>')" class="btn btn-warning" id="add-to-cart-btn">Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
                             <% } %>
                         <% } else { %>
                             <div class="product-out-offstock">
@@ -473,10 +470,11 @@
 
 // add to cart
  // Improved addToCart function
-async function addToCart(productId, price) {
+async function addToCart(productId, price,user) {
     const URL = `/user/add-to-cart/${productId}/?price=${price}`;
 
     try {
+        if(user){
         const response = await fetch(URL, {
             method: "GET",
             headers: {
@@ -498,6 +496,15 @@ async function addToCart(productId, price) {
             const errorData = await response.json();
             throw new Error(errorData.error || "Failed to add product to cart");
         }
+    }
+
+    else {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Not logged in",
+                    text: "Please log in to add products to cart"
+                });
+            }
     } catch (err) {
         Swal.fire({
             icon: "error",

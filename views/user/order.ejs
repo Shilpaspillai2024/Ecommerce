@@ -85,8 +85,10 @@
                 <div class="tab-content" id="order-content">
                     <div class="tab-pane fade show active" id="order-status" role="tabpanel"
                         aria-labelledby="order-status-tab">
-                        <% if(order.length>0){ %>
+                        <% if(order.length>0 ){ %>
                             <% order.forEach((order)=> { %>
+                                <% if(order.status !== 'returned') {%>
+                                
                                 <div class="card border shadow-none mb-4">
 
 
@@ -192,6 +194,7 @@
                                         <!-- End of order details -->
                                     </div>
                                 </div>
+                                <% } %>
                                 <% }) %>
 
                                     <% }else{ %>
@@ -555,5 +558,8 @@
                     console.error(`Error: ${err}`);
                 }
             }
+
+            
+
 
         </script>
