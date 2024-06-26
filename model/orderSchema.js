@@ -29,6 +29,10 @@ const schema=new mongoose.Schema({
 
     }],
 
+    orderID:{
+        type:String
+    },
+
     
     totalPrice:{type:Number},
     address:{
@@ -41,6 +45,10 @@ const schema=new mongoose.Schema({
      isCancelled: {
         type: Boolean,
         default: false
+    },
+
+    couponDiscount:{
+        type:Number
     },
 
     razorpayOrderId:{

@@ -1,6 +1,7 @@
 const cartSchema = require('../../model/cartSchema')
 const productSchema = require('../../model/productSchema')
 
+
 const cart = async (req, res) => {
     try {
         const cart = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId')
@@ -8,8 +9,6 @@ const cart = async (req, res) => {
         var totalPrice = 0;
         var totalPriceWithOutDiscount = 0;
         var cartItemCount = 0;
-
-
         if (cart) {
             // find the total price of cart items
 
@@ -28,10 +27,6 @@ const cart = async (req, res) => {
                 }
                 cartItemCount += ele.productCount
             })
-
-
-
-
             // if the totalPrice and payable amount in the cart and the calculated total price is different then update the collection with the new values
 
             if (cart.payableAmount != totalPrice || cart.totalPrice != totalPriceWithOutDiscount) {
@@ -41,8 +36,7 @@ const cart = async (req, res) => {
             }
             await cart.save();
 
-            res.render('user/cart', { title: "cart", cart, totalPrice, cartItemCount, totalPriceWithOutDiscount, alertMessage: req.flash('errorMessage'), user: req.session.user })
-
+           
         }
         // else {
         //     res.render('user/cart', { title: "cart", cart: [], totalPrice, cartItemCount:0, totalPriceWithOutDiscount, alertMessage: req.flash('errorMessage'), user: req.session.user })
@@ -50,6 +44,7 @@ const cart = async (req, res) => {
 
 
         // }
+        res.render('user/cart', { title: "cart", cart, totalPrice, cartItemCount, totalPriceWithOutDiscount, alertMessage: req.flash('errorMessage'), user: req.session.user })
 
     } catch (err) {
 
@@ -87,7 +82,10 @@ const addToCartPost = async (req, res) => {
 
             // Check if the product already exists in the cart
             checkUserCart.items.forEach((ele) => {
-                if (ele.productId.id === productId) {
+
+                // if (ele.productId.id === productId) {
+
+                    if (ele.productId && ele.productId.id === productId){
                     productExist = true;
 
                     // ele.productCount += 1; 

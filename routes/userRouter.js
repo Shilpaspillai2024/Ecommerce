@@ -12,6 +12,7 @@ const cartController = require("../controller/userController/cartController")
 const checkoutController = require("../controller/userController/checkoutController")
 const orderController = require("../controller/userController/orderController")
 const wishlistController=require("../controller/userController/wishlistController")
+const walletController=require("../controller/userController/walletController")
 
 
 const user = express.Router()
@@ -111,6 +112,8 @@ user.post('/checkout-submit', checkUserSession, checkoutController.OrderPlaced)
 
 user.get('/order-confirm', checkUserSession, checkoutController.orderConfirm)
 
+user.post('/applycoupon',checkUserSession,checkoutController.applycoupon)
+
 
 
 
@@ -124,7 +127,11 @@ user.post('/cancel-order/:orderId', checkUserSession, orderController.cancellOrd
 
 user.post('/return-order',checkUserSession,orderController.returnOrder)
 
-// user.get('/orderdetail',checkUserSession,orderController.orderDetail)
+user.get('/orderdetail/:orderId',checkUserSession,orderController.orderDetail)
+
+//wallet
+
+user.get('/wallet',checkUserSession,walletController.wallet)
 
 
 // wishlist

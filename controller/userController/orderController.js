@@ -1,4 +1,6 @@
 const orderSchema=require('../../model/orderSchema')
+const walletSchema=require('../../model/walletSchema')
+const productSchema=require('../../model/productSchema')
 const userSchema=require('../../model/userSchema')
 
 
@@ -27,9 +29,12 @@ const cancelOrder=async(req,res)=>{
 
     try {
 
+       
+
         const order=await orderSchema.find({userId:req.session.user,isCancelled: true}).populate('products.productId').sort({ createdAt: -1 })
 
-  
+
+       
 
         res.render('user/cancelOrder',{title:"cancelOrder-page",user:req.session.user,alertMessage:req.flash("errorMessage"),order})
         
@@ -45,7 +50,49 @@ const cancellOrderPost= async(req,res)=>{
     try {
         const orderId=req.params.orderId
 
+        const userId=req.session.user
+
         const order=await orderSchema.findByIdAndUpdate(orderId,{status:"cancelled",isCancelled: true})
+        let balance=(order.totalPrice-(order.couponDiscount || 0 ))
+
+        if(order.paymentMethod !=='COD'){
+            
+            const wallet = await walletSchema.findOne({userId})
+            
+            if (wallet) {
+                wallet.balance += balance;
+                wallet.transaction.push({
+                    typeOfPayment: 'credit',
+                    amount: balance,
+                    date: Date.now(),
+                    orderId: order.orderID
+                });
+
+                await wallet.save();
+    
+            } else {
+    
+                const walletNew = new walletSchema({
+                    userId,
+                    balance,
+                    transaction: [{
+                        typeOfPayment: 'credit',
+                        amount: balance,
+                        date: Date.now(),
+                        orderId: order.orderID,
+                    }],
+                });
+
+                await walletNew.save();
+    
+            }
+        }
+        for(product of order.products) {
+            
+            await productSchema.findByIdAndUpdate(product.productId,{$inc :{productQuantity : product.quantity}})
+
+        }
+
 
         if (order) {
             req.flash('errorMessage', 'Your order has been successfully cancelled.If you need any further assistence you can Contact out customer support...!')
@@ -70,6 +117,8 @@ const returnOrder=async(req,res)=>{
 
         const{orderId}=req.body
 
+        const userId=req.session.user
+
     
         const order= await orderSchema.findById(orderId)
 
@@ -79,6 +128,45 @@ const returnOrder=async(req,res)=>{
         
         order.status='returned'
         await order.save()
+
+
+        const wallet = await walletSchema.findOne({userId})
+
+        let balance = order.totalPrice - (order.couponDiscount || 0)
+
+        if(wallet){
+            wallet.balance += balance;
+            wallet.transaction.push({
+                typeOfPayment: 'credit',
+                amount: balance,
+                date: Date.now(),
+                orderId: order.orderID,
+            });
+
+            await wallet.save();
+
+        }else{
+
+            const walletNew = new walletSchema({
+                userId,
+                balance,
+                transaction: [{
+                    typeOfPayment: 'credit',
+                    amount: balance,
+                    date:Date.now(),
+                    orderId: order.orderID,
+                }],
+            });
+
+            await walletNew.save();
+
+        }
+
+        for(product of order.products) {
+            
+            await productSchema.findByIdAndUpdate(product.productId,{$inc :{productQuantity : product.quantity}})
+
+        }
 
         res.status(200).send('Return order request submitted successfully');
 
@@ -98,7 +186,18 @@ const returnOrder=async(req,res)=>{
 const orderDetail= async(req,res)=>{
     try {
 
-         res.render('user/orderDetail', { user: req.session.user, title: "OrderDetail", alertMessage: req.flash('errorMessage') })
+        const orderId=req.params.orderId
+        console.log(orderId)
+
+        const order=await orderSchema.findById(orderId).populate('products.productId')
+
+        console.log(order)
+        if (!order) {
+            return res.status(404).send('Order not found');
+        }
+
+
+         res.render('user/orderDetail', { user: req.session.user,order, title: "OrderDetail", alertMessage: req.flash('errorMessage') })
         
     } catch (err) {
 

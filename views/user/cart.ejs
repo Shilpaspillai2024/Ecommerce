@@ -76,7 +76,7 @@
     <% if (cart) { %>
         <div class="container">
             <div class="row mt-5">
-                <% if (cart.items.length !=0) { %>
+                <% if (cart.items.length != 0) { %>
                     <% cart.items.forEach((items, index)=> { %>
                         <div class="col-xl-8 cart-item">
                             <div class="card border shadow-none">
@@ -137,6 +137,9 @@
                                                             </span>
                                                             &#8377; <%= items.productId.productDiscountPrice %>
 
+                                                          
+
+
                                                     </h5>
                                                 </div>
                                             </div>
@@ -174,14 +177,14 @@
                             </div>
                             <!-- end card -->
                         </div>
-                        <% }) %>
-                            <% } else { %>
-                                <div class="empty-cart-container">
-                                    <a href="/user/home" class="btn btn-primary">
-                                        <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
-                                    </a>
-                                </div>
-                                <% } %>
+            <% }) %>
+            <% } else { %>
+            <div class="empty-cart-container">
+                <a href="/user/home" class="btn btn-primary">
+                    <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
+                </a>
+            </div>
+            <% } %>
             </div>
 
             <div class="col-xl-4 mt-5">
@@ -209,12 +212,12 @@
                                                         cart.payableAmount).toLocaleString() %>
                                                 </span></td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <td>Coupon Discount</td>
                                             <td>:</td>
                                             <td class="text-end text-success">&#8377; <span
                                                     id="count=discount-savings-price">00</span></td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td>Shipping Charge</td>
                                             <td>:</td>
@@ -304,9 +307,10 @@
                                 if (res.ok) {
                                     return res.json()
                                 } else {
-                                    throw new Error("Cannot update product quantity")
+                                    throw new Error(`Cannot update product quantity `)
                                 }
                             }).then((data) => {
+                                
                                 if (data.productCount) {
                                     productQualityInput[index].value = data.productCount
                                     productTotal[index].innerHTML = data.productTotal
@@ -316,9 +320,18 @@
                                 }
 
                             })
+                            .catch((error) => {
+            console.error(error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.message,
+            });
+        });
                         }
                     }
 
+                    
 
 
                     // decrese quantity

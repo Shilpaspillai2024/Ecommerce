@@ -3,6 +3,8 @@ const productSchema = require('../../model/productSchema')
 const userSchema = require('../../model/userSchema')
 const addressSchema = require('../../model/addressSchema')
 const orderSchema = require('../../model/orderSchema')
+const couponSchema=require('../../model/couponSchema')
+const walletSchema=require('../../model/walletSchema')
 const Razorpay = require('razorpay')
 const mongoose = require('mongoose')
 const dotenv=require('dotenv').config()
@@ -18,17 +20,42 @@ const checkout = async (req, res) => {
 
         const address = await addressSchema.find({ userId: req.session.user }).populate('userId');;
 
+        const cartDetails = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId').populate('userId')
+        const wallet=await walletSchema.findOne({userId:req.session.user})
+        let balance=0;
 
-
-
-
-        const cartDetails = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId')
+        if(!cartDetails){
+            req.flash('errorMessage', "The cart is empty, please go to the shop");
+   
+            return  res.redirect('/user/cart')
+           
+        }
 
         const cartItems = cartDetails.items
 
 
+        if(wallet){
+            balance=wallet.balance
+        }
 
-        res.render('user/checkout', { title: "checkout-page", cartDetails, cartItems, user: req.session.user, alertMessage: req.flash('errorMessage'), address })
+
+        let total = 0;
+        
+        
+    for(product of cartItems){
+
+        let currentProduct = await productSchema.findById(product.productId)
+
+        total += product.productCount * product.productId.productDiscountPrice
+
+        if(currentProduct.productQuantity <= 0){
+            return res.redirect('/user/cart')
+
+        }
+    }
+
+
+        res.render('user/checkout', { title: "checkout-page", cartDetails, cartItems, user: req.session.user, alertMessage: req.flash('errorMessage'), address ,balance,total})
 
     } catch (err) {
 
@@ -196,7 +223,7 @@ const OrderPlaced = async (req, res) => {
     try {
         const userId = req.session.user
 
-        let { name, email, phone, address, paymentMethod } = req.body
+        let { name, email, phone, address, paymentMethod,couponCode } = req.body
 
         const cart = await cartSchema.findOne({ userId }).populate('items.productId');
 
@@ -204,6 +231,7 @@ const OrderPlaced = async (req, res) => {
             return res.status(404).send('Cart is empty or not found ')
         }
         let totalPrice = 0;
+        let couponDiscount=0;
         const orderProducts = cart.items.map(product => {
            
             const price = product.productId.productDiscountPrice;
@@ -216,6 +244,25 @@ const OrderPlaced = async (req, res) => {
             }
         })
     
+
+        if(couponCode){
+
+            const coupon= await couponSchema.findOne({couponName:couponCode})
+
+
+           couponDiscount = coupon.discount
+             totalPrice -= couponDiscount;
+
+
+             // Mark the coupon as used by the user
+          coupon.appliedUsers.push(userId);
+          await coupon.save();
+       
+           
+        }
+
+
+          
 
         // in addressSchema i refer userschema,and in orderschema the address stored as a string(it contain objectid ) ,it take as a object need this for address
 
@@ -240,13 +287,74 @@ const OrderPlaced = async (req, res) => {
         }
 
 
-       if(paymentMethod==='COD'){
+        const orderID=generateRandomOrderId()
+
+     //  payment method is wallet
+
+     if(paymentMethod==='Wallet'){
         const order = new orderSchema({
             userId,
+            orderID,
             contactInfo: { name, email, phone },
             address: addressObj,
             products: orderProducts,
             totalPrice,
+            couponDiscount,
+            paymentMethod: paymentMethod,
+            status: 'processing',
+        })
+
+
+        await order.save();
+
+
+        const wallet= await walletSchema.findOne({userId})
+
+
+        if (wallet){
+            wallet.balance-=totalPrice.toFixed(2);
+            wallet.transaction.push({
+                typeOfPayment:'debit',
+                date:Date.now(),
+                amount:totalPrice.toFixed(2),
+                orderID:orderID
+
+            })
+
+            await wallet.save();
+        }
+
+        for (let product of orderProducts) {
+            await productSchema.findByIdAndUpdate(product.productId, {
+                $inc: { productQuantity: -product.quantity }
+            })
+        }
+
+
+
+
+
+        cart.items = [];
+        await cart.save();
+
+       
+
+        res.json({ success: true });
+    }
+
+
+
+
+
+    else if(paymentMethod==='COD'){
+        const order = new orderSchema({
+            userId,
+            orderID,
+            contactInfo: { name, email, phone },
+            address: addressObj,
+            products: orderProducts,
+            totalPrice,
+            couponDiscount,
             paymentMethod: paymentMethod,
             status: 'processing',
         })
@@ -289,10 +397,12 @@ const OrderPlaced = async (req, res) => {
 
                 const order = new orderSchema({
                     userId,
+                    orderID,
                     contactInfo: { name, email, phone },
                     address: addressObj,
                     products: orderProducts,
                     totalPrice,
+                    couponDiscount,
                     paymentMethod: paymentMethod,
                     razorpayOrderId: razorpayOrder.id,  // Save the Razorpay order ID
                     status: 'processing',
@@ -327,6 +437,65 @@ const OrderPlaced = async (req, res) => {
  }
 
 
+function generateRandomOrderId(){
+    const timestamp = Date.now().toString(36); // Convert current timestamp to base36 string
+    const randomString = Math.random().toString(36).substring(2, 8); // Generate a random string
+    return timestamp + randomString; // Concatenate timestamp and random string
+}
+
+
+
+ const applycoupon=async(req,res)=>{
+    try {
+
+        const couponName=req.body.couponCode
+        const userId=req.session.user
+     
+
+        const coupon=await couponSchema.findOne({couponName})
+        // check the coupon is expired
+
+        if (!coupon.isActive || coupon.expiryDate < new Date()) {
+            return res.status(404).json({ error: "coupon expired" })
+        }
+
+
+        // check the coupon is already used by user
+
+        if (coupon.appliedUsers.includes(userId)) {
+            return res.status(400).json({ error: "Coupon already used" });
+
+       
+         }
+
+        const cart= await cartSchema.findOne({userId})
+
+        let totalPrice = cart.payableAmount
+       
+
+    
+        if (totalPrice < coupon.minAmount) {
+            return res.status(404).json({ error: "Minimum purchase limit not reached. Please add more items to your cart." })
+        }
+
+       // apply the discount
+
+        const couponDiscount = coupon.discount
+        const discountedTotal = totalPrice - couponDiscount;
+   
+
+       
+        res.status(200).json({totalPrice:discountedTotal,couponDiscount})
+        
+
+
+        
+    } catch (err) {
+        console.log(`error in apply coupon ${err}`)
+        
+    }
+ }
+
 
 
 
@@ -352,6 +521,11 @@ const orderConfirm = async (req, res) => {
 
 
 module.exports = {
-    checkout, addcheckoutAddress, deletecheckoutAddress, OrderPlaced, orderConfirm,
+    checkout, 
+    addcheckoutAddress, 
+    deletecheckoutAddress, 
+    OrderPlaced,
+    applycoupon, 
+    orderConfirm,
 
 }

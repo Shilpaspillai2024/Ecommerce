@@ -238,6 +238,13 @@
         font-size: 13px;
         font-weight: 500
     }
+
+   .product-coupons-section{
+
+    margin-left: 1rem;
+    margin-top: 1rem;
+
+    }
 </style>
 
 
@@ -271,7 +278,7 @@
                                                                 <label class="form-label"
                                                                     for="billing-name">Name</label>
                                                                 <input type="text" name="name" class="form-control"
-                                                                    id="billing-name" value="<%= address[0].userId.name %>">
+                                                                    id="billing-name" value="<%= cartDetails.userId.name %>">
                                                             </div>
                                                         </div>
 
@@ -282,7 +289,7 @@
                                                                     for="billing-email-address">Email Address</label>
                                                                 <input type="email" name="email" class="form-control"
                                                                     id="billing-email-address"
-                                                                    value="<%= address[0].userId.email %>">
+                                                                    value="<%= cartDetails.userId.email %>">
                                                             </div>
                                                         </div>
 
@@ -291,7 +298,7 @@
                                                                 <label class="form-label"
                                                                     for="billing-phone">Phone</label>
                                                                 <input type="text" name="phone" class="form-control"
-                                                                    id="billing-phone" value="<%= address[0].userId.number %>">
+                                                                    id="billing-phone" value="<%= cartDetails.userId.number %>">
                                                             </div>
                                                         </div>
 
@@ -378,15 +385,9 @@
                                                                             address.phone %></span>
                                                                 </div>
                                                             </label>
-
-
-
-
                                                         </div>
                                                     </div>
                                                     <% }) %>
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -413,7 +414,7 @@
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="fa-regular fa-credit-card d-block h2 mb-3"></i>
                                                             <!-- <i class="bx bx-credit-card d-block h2 mb-3"></i> -->
-                                                            Credit / Debit Card
+                                                            Wallet (<%=balance %>)
                                                         </span>
                                                     </label>
                                                 </div>
@@ -471,12 +472,26 @@
                 </div> <!-- end row-->
             </div>
 
+
+           
+
             <div class="col-xl-4">
+                
                 <div class="card">
                     <div class="card-header">
                         <h5 class="font-size-16 mb-0">Order Summary</h5>
                     </div>
+
+                  
                     <div class="card-body">
+                        <div class="d-flex gap-2 m-2">
+                            <input type="text" id="couponCode" class="form-control" name="couponCode" placeholder="Enter coupon code">
+                            <button type="button" id="applyCouponBtn" onclick="applyCoupon()" class="btn submit-btn">Apply</button>
+                        </div>
+                        <div id="couponBadge" class="mb-3" style="display: none;">
+                            <span class="badge bg-success">Coupon Applied: <span id="appliedCouponCode"></span></span>
+                            <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeCoupon()">Remove</button>
+                        </div>
                         <div class="table-responsive">
                             <table class="table mb-0">
                                 <thead>
@@ -488,9 +503,8 @@
                                 </thead>
                                 <tbody>
 
-                                    <% let total=0; cartItems.forEach((product,index)=>{
-                                        total += product.productCount * product.productId.productDiscountPrice
-                                        %>
+                                  
+                                        <% cartItems.forEach((product,index)=>{  %>
                                         <tr>
                                             <th>
                                                 <%= product.productId.productName %>
@@ -498,20 +512,27 @@
                                             <th>
                                                 <%= product.productCount %>
                                             </th>
+                                            
                                             <td><i class="bi bi-currency-rupee"></i>
                                                 <%= product.productId.productDiscountPrice * product.productCount %>
                                             </td>
                                         </tr>
-
+                                       
                                         <% } ) %>
+                                        <tr>
+                                            <td>Coupon Discount</td>
+                                            <td></td>
+                                            <td class="text-center text-danger">&#8377; <span id="couponDiscount">0</span></td>
+                                        </tr>
+
 
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <th>Total :</th>
                                         <th></th>
-                                        <td><i class="bi bi-currency-rupee"></i>
-                                            <%= total %>
+                                        <td><i class="bi bi-currency-rupee"></i><span id="totalPriceCheckout"><%= total %></span>
+                                            
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -523,10 +544,7 @@
                                     <i class="bi bi-shield-fill-check h4 me-2"></i>
                                     <div class="flex-grow-1">
                                         Your order is eligible for FREE Delivery.
-
-
-
-                                    </div>
+                                     </div>
                                 </div>
                             </div>
                             <div class="mt-3 text-center">
@@ -733,9 +751,12 @@ function validateCheckoutForm(data) {
                 try {
                     event.preventDefault();
 
+                    const couponCode=document.getElementById('couponCode').value;
+
                     const form = document.getElementById('checkout-form');
                     const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
+                    let data = Object.fromEntries(formData.entries());
+                    data={...data,...{couponCode:couponCode}}
 
                     if (!validateCheckoutForm(data)) {
             return;
@@ -878,6 +899,69 @@ function validateCheckoutForm(data) {
 
    
 
+
+
+      async function applyCoupon(){
+
+        const couponCode=document.getElementById('couponCode').value
+        try {
+            const res=await fetch('/user/applycoupon',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({couponCode})
+
+            })
+            if(!res.ok){
+                const error=await res.text()
+                showError(error)
+
+            }
+            const couponData = await res.json()
+
+             updateTotal(couponData.totalPrice,couponData.couponDiscount);
+            showCouponBadge(couponCode);
+
+
+            
+        } catch (error) {
+            console.log(`apply coupon error ${error}`)
+            
+        }
+
+       
+      }
+
+      function updateTotal(total, discount) {
+    const totalElement = document.getElementById('totalPriceCheckout');
+    const discountElement = document.getElementById('couponDiscount');
+    
+    if (totalElement && discountElement) {
+        totalElement.textContent = total.toFixed(2);
+        discountElement.textContent = discount.toFixed(2);
+    } else {
+        console.error('One or both elements not found:', totalElement, discountElement);
+    }
+
+   
+}
+
+
+
+
+    function showCouponBadge(couponCode) {
+    const couponBadge = document.getElementById('couponBadge');
+    const appliedCouponCode = document.getElementById('appliedCouponCode');
+    couponBadge.style.display = 'block';
+    appliedCouponCode.innerText = couponCode;
+}
+
+function removeCoupon() {
+    document.getElementById('couponCode').value = '';
+    document.getElementById('couponBadge').style.display = 'none';
+    location.reload();
+}
 
 
     

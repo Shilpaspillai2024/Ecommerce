@@ -75,20 +75,20 @@ const login= (req,res)=>{
     const loginAuthRedirect = (req, res, next) => {
     passport.authenticate("google", (err, user, info) => {
       if (err) {
-        console.log(user, "hello auth1.1");
+       
         return next(err);
       }
       if (!user) {
-        console.log(user, "hello auth1");
+       
         return res.redirect("/user/login");
       } // Redirect to login if authentication fails
       req.logIn(user, (err) => {
         if (err) {
-          console.log(user, "hello auth2");
+         
           return next(err);
         }
         
-        // console.log(user, "hello auth");
+      
 
         req.session.user = user.id;
         return res.redirect("/user/home"); // Redirect to profile page if authentication is successful
@@ -244,7 +244,7 @@ const home= async (req,res)=>{
             const wishlist=await wishlistSchema.findOne({userId:userId}) 
 
 
-            res.render('user/home',{title:"user Home",product,category,wishlist,alertMessage:req.flash('errorMessage'),user:req.session.user})
+            res.render('user/home',{title:"user Home",product,category,wishlist:wishlist|| { products: [] },alertMessage:req.flash('errorMessage'),user:req.session.user})
         }
         else{
 

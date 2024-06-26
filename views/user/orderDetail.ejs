@@ -1,6 +1,6 @@
 <style>
     body{
-    background:#eee;
+    background:#070707;
 }
 .card {
     box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
@@ -34,7 +34,7 @@ a {
     <div class="container">
       <!-- Title -->
       <div class="d-flex justify-content-between align-items-center py-3">
-        <h2 class="h5 mb-0 text-white"><a href="#" class="text-muted"></a> Order #<%=order._id%></h2>
+        <h2 class="h5 mb-0 text-white"><a href="#" "></a> Order #<%=order.orderID%></h2>
 
         
       </div>
@@ -50,9 +50,7 @@ a {
 
                  
                   <span class="me-3"><%= order.createdAt.toDateString() %></span>
-                  <!-- <span class="me-3">order._id</span>
-                  <span class="me-3">product.paymentMethod</span> -->
-                  <!-- <span class="badge rounded-pill bg-info">SHIPPING</span> -->
+               
                 </div>
                
               </div>
@@ -71,6 +69,7 @@ a {
                         </div>
                       </div>
                     </td>
+                
                     <td><%= product.quantity %></td>
                     <td class="text-end"><%= product.price %></td>
                   </tr>
@@ -81,6 +80,7 @@ a {
                  
                   <tr class="fw-bold">
                     <td colspan="2">TOTAL</td>
+                   
                     <td> <%= order.totalQuantity %></td>
                     <td class="text-end"><%=order.totalPrice %></td>
                   
@@ -99,31 +99,8 @@ a {
                  
                 </div>
                 <div class="col-lg-6">
-                  <h3 class="h6">shipping address</h3>
-                  <address>
-                    <strong><%= order.address.contactName %></strong><br>
-                    <%= order.address.addressType %><br>
-                    <%= order.address.doorNo %><br>
-                    <%= order.address.Address %><br>
-                    <%= order.address.areaAddress %><br>
-                    <%= order.address.landmark %><br>
-                    <%= order.address.pincode %><br>
-                    
-                    
-                    <abbr title="Phone">P:</abbr>  <%= order.address.phone %>
-                  </address>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-       
-        <div class="col-lg-4">
-         
-          <div class="card mb-4">
-            <!-- Shipping information -->
-            <div class="card-body">
-              <h3 class="h6">Billing Information</h3>
+                  
+                  <h3 class="h6">Billing Information</h3>
              
               <h3 class="h6">Address</h3>
               <address>
@@ -138,6 +115,33 @@ a {
                
                 <abbr title="Phone">P:</abbr> <%= order.address.phone %>
               </address>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+        <div class="col-lg-4">
+         
+          <div class="card mb-4">
+            <!-- Shipping information -->
+            <div class="card-body">
+              
+             
+              <h3 class="h6">shipping address</h3>
+              <address>
+                <strong><%= order.address.contactName %></strong><br>
+                <%= order.address.addressType %><br>
+                <%= order.address.doorNo %><br>
+                <%= order.address.Address %><br>
+                <%= order.address.areaAddress %><br>
+                <%= order.address.landmark %><br>
+                <%= order.address.pincode %><br>
+                
+                
+                <abbr title="Phone">P:</abbr>  <%= order.address.phone %>
+              </address>
+
             </div>
           </div>
           <div class="card mb-4">
