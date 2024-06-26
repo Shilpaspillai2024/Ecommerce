@@ -317,7 +317,7 @@ const OrderPlaced = async (req, res) => {
                 typeOfPayment:'debit',
                 date:Date.now(),
                 amount:totalPrice.toFixed(2),
-                orderID:orderID
+                orderId:order.id
 
             })
 

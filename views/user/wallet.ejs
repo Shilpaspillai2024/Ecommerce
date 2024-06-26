@@ -5,7 +5,7 @@
         background-color: black;
     }
     .card-body {
-        background-color:rgb(190, 186, 186);
+        background-color: #D5D2FF;
     }
     .money {
         font-size: 20px;
@@ -56,7 +56,7 @@
                             <tr>
                                 <td><%= index + 1 %></td>
                                 <td><%= transaction.date.toLocaleString() %></td>
-                                <td><%= transaction.orderID %></td>
+                                <td><%= transaction.orderId %></td>
                                 <td><%= transaction.typeOfPayment %></td>
                                 <td class="text-end">
                                     <p class="<%= transaction.typeOfPayment %>">

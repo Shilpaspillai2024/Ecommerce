@@ -16,10 +16,13 @@ const schema=new mongoose.Schema({
             date: {
                 type: Date,
             },
-            orderID: {
-                
-                type:String
+            orderId: {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'order',
+               
             }
+
+          
         }
     ]
 

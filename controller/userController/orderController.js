@@ -65,7 +65,7 @@ const cancellOrderPost= async(req,res)=>{
                     typeOfPayment: 'credit',
                     amount: balance,
                     date: Date.now(),
-                    orderId: order.orderID
+                    orderId: order._id
                 });
 
                 await wallet.save();
@@ -79,7 +79,7 @@ const cancellOrderPost= async(req,res)=>{
                         typeOfPayment: 'credit',
                         amount: balance,
                         date: Date.now(),
-                        orderId: order.orderID,
+                        orderId: order._id,
                     }],
                 });
 

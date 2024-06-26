@@ -38,12 +38,7 @@ const cart = async (req, res) => {
 
            
         }
-        // else {
-        //     res.render('user/cart', { title: "cart", cart: [], totalPrice, cartItemCount:0, totalPriceWithOutDiscount, alertMessage: req.flash('errorMessage'), user: req.session.user })
-
-
-
-        // }
+       
         res.render('user/cart', { title: "cart", cart, totalPrice, cartItemCount, totalPriceWithOutDiscount, alertMessage: req.flash('errorMessage'), user: req.session.user })
 
     } catch (err) {

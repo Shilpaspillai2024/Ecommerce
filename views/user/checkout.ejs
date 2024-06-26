@@ -409,7 +409,7 @@
                                             <div class="col-lg-3 col-sm-6">
                                                 <div data-bs-toggle="collapse">
                                                     <label class="card-radio-label">
-                                                        <input type="radio" name="paymentMethod" id="pay-methodoption1"
+                                                        <input type="radio" name="paymentMethod" id="pay-methodoption1" value="Wallet"
                                                             class="card-radio-input">
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="fa-regular fa-credit-card d-block h2 mb-3"></i>
@@ -713,36 +713,7 @@ function validateCheckoutForm(data) {
 
             // submitting order
 
-        //     async function checkoutSubmit(event) {
-        //         try {
-        //             event.preventDefault();
-
-        //             const form = document.getElementById('checkout-form');
-        //             const formData = new FormData(form);
-        //             const data = Object.fromEntries(formData.entries());
-
-        //             if (!validateCheckoutForm(data)) {
-        //     return;
-        // }
-
-        //             const res = await fetch('/user/checkout-submit', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json'
-        //                 },
-        //                 body: JSON.stringify(data)
-        //             });
-
-        //             if (res.ok) {
-        //                 window.location.href = '/user/order-confirm';
-        //             } else {
-        //                 const error = await res.text();
-        //                 showError(error);
-        //             }
-        //         } catch (error) {
-        //             console.log(`Error in order placing: ${error}`);
-        //         }
-        //     }
+       
 
 
 
@@ -778,7 +749,15 @@ function validateCheckoutForm(data) {
                        } else if (data.paymentMethod === 'COD') {
                         window.location.href = '/user/order-confirm';
                       }
-                    } else {
+
+                      else if (data.paymentMethod === 'Wallet') {
+                        window.location.href = '/user/order-confirm';
+                      }
+
+                      
+                    }
+                   
+                     else {
                         const error = await res.text();
                         showError(error);
                     }
@@ -926,6 +905,8 @@ function validateCheckoutForm(data) {
 
             
         } catch (error) {
+
+            document.getElementById('couponCode').value = '';
             console.log(`apply coupon error ${error}`)
             
         }
