@@ -7,6 +7,7 @@ const productController = require('../controller/adminController/productControll
 const userController = require('../controller/adminController/userController')
 const orderController = require('../controller/adminController/orderController')
 const couponController=require('../controller/adminController/couponController')
+const offerController=require('../controller/adminController/offerController')
 const multer = require('../middleware/multer')
 
 
@@ -93,6 +94,15 @@ admin.put('/block-coupon/:id',checkAdminSession,couponController.blockCoupon)
 admin.put('/unblock-coupon/:id',checkAdminSession,couponController.unblockCoupon)
 
 
+// offer management
+
+admin.get('/offer',checkAdminSession,offerController.OfferRender)
+admin.post('/add-offer',checkAdminSession,offerController.addOfferPost)
+admin.delete('/delete-offer/:offerID',checkAdminSession,offerController.deleteOffer)
+admin.post('/check-category-offer/:categoryID',checkAdminSession,offerController.offerCheckCategory)
+admin.post('/check-product-offer/:productID',checkAdminSession,offerController.offerCheckProduct)
+admin.post('/getOffer-details/:offerID',checkAdminSession,offerController.getOfferDetails)
+admin.post('/edit-offer/:offerID',checkAdminSession,offerController.editOffer)
 
 
 // logout of admin

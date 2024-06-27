@@ -1,0 +1,39 @@
+<style>
+     .card-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        gap: 20px;
+    }
+    .card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        text-align: center;
+        width: 320px;
+    }
+    .card h2 {
+        margin-bottom: 20px;
+        font-family: Arial, sans-serif;
+    }
+</style>
+
+
+
+<div class="card-container">
+    <div class="card">
+      
+        <h2>Order Payment failed</h2>
+      <p>This page will be redirected to order page shortly</p>
+      <a href="/user/home" class="btn submit-btn">Go Home</a>
+
+    </div>
+</div>
+
+<script>
+    setTimeout(()=>{
+        window.location.href = '/user/orders'
+    },3000)
+</script>

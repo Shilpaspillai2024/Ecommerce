@@ -112,6 +112,9 @@ user.post('/checkout-submit', checkUserSession, checkoutController.OrderPlaced)
 
 user.get('/order-confirm', checkUserSession, checkoutController.orderConfirm)
 
+
+user.post('/paymentfailrazorpay',checkUserSession,checkoutController.paymentFailRazorpay)
+
 user.post('/applycoupon',checkUserSession,checkoutController.applycoupon)
 
 
@@ -128,6 +131,10 @@ user.post('/cancel-order/:orderId', checkUserSession, orderController.cancellOrd
 user.post('/return-order',checkUserSession,orderController.returnOrder)
 
 user.get('/orderdetail/:orderId',checkUserSession,orderController.orderDetail)
+
+
+user.get('/orderFailure',checkUserSession,orderController.orderFailure)
+
 
 //wallet
 

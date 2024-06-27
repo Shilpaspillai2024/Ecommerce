@@ -66,17 +66,15 @@
     .cart-item {
         width: 95%;
     }
-    .empty-cart-container img{
-         width: 50%;
-         margin-left: 15rem;
-         margin-top: 2rem;
-         display: flex;
-         align-items: center;
+
+    .empty-cart-container img {
+        width: 50%;
+        margin-left: 15rem;
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
 
     }
-   
-
-    
 </style>
 
 
@@ -87,7 +85,7 @@
     <% if (cart) { %>
         <div class="container">
             <div class="row mt-5">
-                <% if (cart.items.length != 0) { %>
+                <% if (cart.items.length !=0) { %>
                     <% cart.items.forEach((items, index)=> { %>
                         <div class="col-xl-8 cart-item">
                             <div class="card border shadow-none">
@@ -112,9 +110,20 @@
                                                     <i class="bx bxs-star text-warning"></i>
                                                     <i class="bx bxs-star-half text-warning"></i>
                                                 </p>
-                                                <p class="mb-0 mt-1 badge badge-success">
+                                                <!-- <p class="mb-0 mt-1 badge badge-success">
                                                     <%= items.productId.productDiscount %>&percnt; OFF
-                                                </p>
+                                                </p> -->
+                                                <% if(items.productId.productDiscount>0){ %>
+                                                    <p class="mb-0 mt-1 badge bg-danger">
+                                                        <%= items.productId.productDiscount %>&percnt; OFF
+                                                    </p>
+                                                    <% }%>
+
+                                                        <% if(items.productId.productQuantity<10){ %>
+                                                            <b class="mb-0 mt-1 ms-3 text-danger">
+                                                                Only <%= items.productId.productQuantity %> stock left
+                                                            </b>
+                                                            <% }%>
                                             </div>
                                         </div>
                                         <div class="flex-shrink-0 ms-2">
@@ -139,17 +148,19 @@
                                                 <div class="mt-3">
                                                     <p class="text-muted mb-2">Price</p>
                                                     <h5 class="mb-0 mt-2">
+
+
                                                         <% if (items.productId.productDiscount !=0) { %>
                                                             <span class="text-muted me-2">
                                                                 <del class="font-size-16 fw-normal">&#8377; <%=
                                                                         items.productId.productPrice.toLocaleString() %>
-                                                                        <% }%>
-                                                                </del>
+                                                                        </del>
                                                             </span>
-                                                            &#8377; <%= items.productId.productDiscountPrice %>
-
-                                                          
-
+                                                            <% } %>
+                                                                &#8377; <%= (items.productId.productPrice * (1 -
+                                                                    items.productId.productDiscount / 100) *
+                                                                    items.productCount).toLocaleString() %>
+                                                    </h5>
 
                                                     </h5>
                                                 </div>
@@ -158,7 +169,7 @@
                                                 <div class="mt-3">
                                                     <p class="text-muted mb-2">Quantity</p>
                                                     <div class="d-inline-flex align-items-center quantity">
-                                                      
+
                                                         <button class="btn minus1"
                                                             onclick="decreaseQuantity('<%= items.productId.id %>','<%= index %>')">-</button>
                                                         <input type="text" class="form-control text-center mx-2 "
@@ -177,7 +188,12 @@
                                                     <p class="text-muted mb-2">Total</p>
                                                     <h5>&#8377; <span class="each-product-total"
                                                             data-product-id="<%= items.productId._id %>">
-                                                            <%=items.productId.productDiscountPrice*items.productCount%>
+
+
+                                                            <%=(items.productId.productPrice * (1 -
+                                                                items.productId.productDiscount / 100) *
+                                                                items.productCount).toLocaleString()%>
+
                                                         </span>
                                                     </h5>
                                                 </div>
@@ -188,14 +204,14 @@
                             </div>
                             <!-- end card -->
                         </div>
-            <% }) %>
-            <% } else { %>
-            <div class="empty-cart-container">
-                <a href="/user/home" class="btn btn-primary">
-                    <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
-                </a>
-            </div>
-            <% } %>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="empty-cart-container">
+                                    <a href="/user/home" class="btn btn-primary">
+                                        <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
+                                    </a>
+                                </div>
+                                <% } %>
             </div>
 
             <div class="col-xl-4 mt-5">
@@ -223,7 +239,7 @@
                                                         cart.payableAmount).toLocaleString() %>
                                                 </span></td>
                                         </tr>
-                                    
+
                                         <tr>
                                             <td>Shipping Charge</td>
                                             <td>:</td>
@@ -268,14 +284,14 @@
         </div>
         <% } else { %>
             <div class="empty-cart-container">
-              
+
 
                 <img src="/image/cart-empty.jpg" alt="">
 
                 <a href="/user/home" class="btn btn-primary">
-                 Continue Shopping
+                    Continue Shopping
                 </a>
-                
+
             </div>
             <% } %>
 
@@ -321,7 +337,7 @@
                                     throw new Error(`Cannot update product quantity `)
                                 }
                             }).then((data) => {
-                                
+
                                 if (data.productCount) {
                                     productQualityInput[index].value = data.productCount
                                     productTotal[index].innerHTML = data.productTotal
@@ -331,18 +347,18 @@
                                 }
 
                             })
-                            .catch((error) => {
-            console.error(error);
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: error.message,
-            });
-        });
+                                .catch((error) => {
+                                    console.error(error);
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Error",
+                                        text: error.message,
+                                    });
+                                });
                         }
                     }
 
-                    
+
 
 
                     // decrese quantity
@@ -350,12 +366,7 @@
 
                     function decreaseQuantity(productId, index) {
 
-                        // document.getElementsByClassName('minus1')[0].disabled = false;
 
-
-                        // if (productQualityInput[index].value <= 1) {
-                        //     document.getElementsByClassName('minus1')[0].disabled = true
-                        // }
 
                         if (productQualityInput[index].value > 1) {
                             const URL = `/user/decrement-product/${productId}`
@@ -387,10 +398,7 @@
                     }
 
 
-
-
-
-
+                  
 
 
 

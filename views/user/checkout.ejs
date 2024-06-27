@@ -239,10 +239,10 @@
         font-weight: 500
     }
 
-   .product-coupons-section{
+    .product-coupons-section {
 
-    margin-left: 1rem;
-    margin-top: 1rem;
+        margin-left: 1rem;
+        margin-top: 1rem;
 
     }
 </style>
@@ -278,7 +278,8 @@
                                                                 <label class="form-label"
                                                                     for="billing-name">Name</label>
                                                                 <input type="text" name="name" class="form-control"
-                                                                    id="billing-name" value="<%= cartDetails.userId.name %>">
+                                                                    id="billing-name"
+                                                                    value="<%= cartDetails.userId.name %>">
                                                             </div>
                                                         </div>
 
@@ -298,7 +299,8 @@
                                                                 <label class="form-label"
                                                                     for="billing-phone">Phone</label>
                                                                 <input type="text" name="phone" class="form-control"
-                                                                    id="billing-phone" value="<%= cartDetails.userId.number %>">
+                                                                    id="billing-phone"
+                                                                    value="<%= cartDetails.userId.number %>">
                                                             </div>
                                                         </div>
 
@@ -342,9 +344,7 @@
                                                                 <input type="radio" name="address"
                                                                     value="<%= address %>"
                                                                     id="info-address<%= index + 1 %>"
-                                                                   
-                                                                  
-                                                                    class="card-radio-input" >
+                                                                    class="card-radio-input">
                                                                 <div class="card-radio text-truncate p-3">
                                                                     <div
                                                                         class="d-flex justify-content-between align-items-end">
@@ -409,8 +409,8 @@
                                             <div class="col-lg-3 col-sm-6">
                                                 <div data-bs-toggle="collapse">
                                                     <label class="card-radio-label">
-                                                        <input type="radio" name="paymentMethod" id="pay-methodoption1" value="Wallet"
-                                                            class="card-radio-input">
+                                                        <input type="radio" name="paymentMethod" id="pay-methodoption1"
+                                                            value="Wallet" class="card-radio-input">
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="fa-regular fa-credit-card d-block h2 mb-3"></i>
                                                             <!-- <i class="bx bx-credit-card d-block h2 mb-3"></i> -->
@@ -423,20 +423,22 @@
                                             <div class="col-lg-3 col-sm-6">
                                                 <div>
                                                     <label class="card-radio-label">
-                                                        <input type="radio" name="paymentMethod" id="pay-methodoption2" value="razorpay"
-                                                            class="card-radio-input">
+                                                        <input type="radio" name="paymentMethod" id="pay-methodoption2"
+                                                            value="razorpay" class="card-radio-input">
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <!-- <i class="fa-brands fa-paypal d-block h2 mb-3"></i> -->
-                                                       
 
-                                                            <svg class="d-block h2 mb-3"" fill="#072654" height="40" viewBox=".8 .48 1894.74 400.27" width="100"
-                                                            xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="m122.63 105.7-15.75 57.97 90.15-58.3-58.96 219.98 59.88.05 87.1-324.92"
-                                                                fill="#3395ff" />
-                                                            <path
-                                                                d="m25.6 232.92-24.8 92.48h122.73l50.22-188.13zm426.32-81.42c-3 11.15-8.78 19.34-17.4 24.57-8.6 5.22-20.67 7.84-36.25 7.84h-49.5l17.38-64.8h49.5c15.56 0 26.25 2.6 32.05 7.9s7.2 13.4 4.22 24.6m51.25-1.4c6.3-23.4 3.7-41.4-7.82-54-11.5-12.5-31.68-18.8-60.48-18.8h-110.47l-66.5 248.1h53.67l26.8-100h35.2c7.9 0 14.12 1.3 18.66 3.8 4.55 2.6 7.22 7.1 8.04 13.6l9.58 82.6h57.5l-9.32-77c-1.9-17.2-9.77-27.3-23.6-30.3 17.63-5.1 32.4-13.6 44.3-25.4a92.6 92.6 0 0 0 24.44-42.5m130.46 86.4c-4.5 16.8-11.4 29.5-20.73 38.4-9.34 8.9-20.5 13.3-33.52 13.3-13.26 0-22.25-4.3-27-13-4.76-8.7-4.92-21.3-.5-37.8s11.47-29.4 21.17-38.7 21.04-13.95 34.06-13.95c13 0 21.9 4.5 26.4 13.43 4.6 8.97 4.7 21.8.2 38.5zm23.52-87.8-6.72 25.1c-2.9-9-8.53-16.2-16.85-21.6-8.34-5.3-18.66-8-30.97-8-15.1 0-29.6 3.9-43.5 11.7s-26.1 18.8-36.5 33-18 30.3-22.9 48.4c-4.8 18.2-5.8 34.1-2.9 47.9 3 13.9 9.3 24.5 19 31.9 9.8 7.5 22.3 11.2 37.6 11.2a82.4 82.4 0 0 0 35.2-7.7 82.11 82.11 0 0 0 28.4-21.2l-7 26.16h51.9l47.39-176.77h-52zm238.65 0h-150.93l-10.55 39.4h87.82l-116.1 100.3-9.92 37h155.8l10.55-39.4h-94.1l117.88-101.8m142.4 52c-4.67 17.4-11.6 30.48-20.75 39-9.15 8.6-20.23 12.9-33.24 12.9-27.2 0-36.14-17.3-26.86-51.9 4.6-17.2 11.56-30.13 20.86-38.84 9.3-8.74 20.57-13.1 33.82-13.1 13 0 21.78 4.33 26.3 13.05 4.52 8.7 4.48 21.67-.13 38.87m30.38-80.83c-11.95-7.44-27.2-11.16-45.8-11.16-18.83 0-36.26 3.7-52.3 11.1a113.09 113.09 0 0 0 -41 32.06c-11.3 13.9-19.43 30.2-24.42 48.8-4.9 18.53-5.5 34.8-1.7 48.73 3.8 13.9 11.8 24.6 23.8 32 12.1 7.46 27.5 11.17 46.4 11.17 18.6 0 35.9-3.74 51.8-11.18 15.9-7.48 29.5-18.1 40.8-32.1 11.3-13.94 19.4-30.2 24.4-48.8s5.6-34.84 1.8-48.8c-3.8-13.9-11.7-24.6-23.6-32.05m185.1 40.8 13.3-48.1c-4.5-2.3-10.4-3.5-17.8-3.5-11.9 0-23.3 2.94-34.3 8.9-9.46 5.06-17.5 12.2-24.3 21.14l6.9-25.9-15.07.06h-37l-47.7 176.7h52.63l24.75-92.37c3.6-13.43 10.08-24 19.43-31.5 9.3-7.53 20.9-11.3 34.9-11.3 8.6 0 16.6 1.97 24.2 5.9m146.5 41.1c-4.5 16.5-11.3 29.1-20.6 37.8-9.3 8.74-20.5 13.1-33.5 13.1s-21.9-4.4-26.6-13.2c-4.8-8.85-4.9-21.6-.4-38.36 4.5-16.75 11.4-29.6 20.9-38.5 9.5-8.97 20.7-13.45 33.7-13.45 12.8 0 21.4 4.6 26 13.9s4.7 22.2.28 38.7m36.8-81.4c-9.75-7.8-22.2-11.7-37.3-11.7-13.23 0-25.84 3-37.8 9.06-11.95 6.05-21.65 14.3-29.1 24.74l.18-1.2 8.83-28.1h-51.4l-13.1 48.9-.4 1.7-54 201.44h52.7l27.2-101.4c2.7 9.02 8.2 16.1 16.6 21.22 8.4 5.1 18.77 7.63 31.1 7.63 15.3 0 29.9-3.7 43.75-11.1 13.9-7.42 25.9-18.1 36.1-31.9s17.77-29.8 22.6-47.9c4.9-18.13 5.9-34.3 3.1-48.45-2.85-14.17-9.16-25.14-18.9-32.9m174.65 80.65c-4.5 16.7-11.4 29.5-20.7 38.3-9.3 8.86-20.5 13.27-33.5 13.27-13.3 0-22.3-4.3-27-13-4.8-8.7-4.9-21.3-.5-37.8s11.42-29.4 21.12-38.7 21.05-13.94 34.07-13.94c13 0 21.8 4.5 26.4 13.4 4.6 8.93 4.63 21.76.15 38.5zm23.5-87.85-6.73 25.1c-2.9-9.05-8.5-16.25-16.8-21.6-8.4-5.34-18.7-8-31-8-15.1 0-29.68 3.9-43.6 11.7-13.9 7.8-26.1 18.74-36.5 32.9s-18 30.3-22.9 48.4c-4.85 18.17-5.8 34.1-2.9 47.96 2.93 13.8 9.24 24.46 19 31.9 9.74 7.4 22.3 11.14 37.6 11.14 12.3 0 24.05-2.56 35.2-7.7a82.3 82.3 0 0 0 28.33-21.23l-7 26.18h51.9l47.38-176.7h-51.9zm269.87.06.03-.05h-31.9c-1.02 0-1.92.05-2.85.07h-16.55l-8.5 11.8-2.1 2.8-.9 1.4-67.25 93.68-13.9-109.7h-55.08l27.9 166.7-61.6 85.3h54.9l14.9-21.13c.42-.62.8-1.14 1.3-1.8l17.4-24.7.5-.7 77.93-110.5 65.7-93 .1-.06h-.03z" />
-                                                        </svg>
-                                                          Razorpay
+
+                                                            <svg class="d-block h2 mb-3"" fill=" #072654" height="40"
+                                                                viewBox=".8 .48 1894.74 400.27" width="100"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                    d="m122.63 105.7-15.75 57.97 90.15-58.3-58.96 219.98 59.88.05 87.1-324.92"
+                                                                    fill="#3395ff" />
+                                                                <path
+                                                                    d="m25.6 232.92-24.8 92.48h122.73l50.22-188.13zm426.32-81.42c-3 11.15-8.78 19.34-17.4 24.57-8.6 5.22-20.67 7.84-36.25 7.84h-49.5l17.38-64.8h49.5c15.56 0 26.25 2.6 32.05 7.9s7.2 13.4 4.22 24.6m51.25-1.4c6.3-23.4 3.7-41.4-7.82-54-11.5-12.5-31.68-18.8-60.48-18.8h-110.47l-66.5 248.1h53.67l26.8-100h35.2c7.9 0 14.12 1.3 18.66 3.8 4.55 2.6 7.22 7.1 8.04 13.6l9.58 82.6h57.5l-9.32-77c-1.9-17.2-9.77-27.3-23.6-30.3 17.63-5.1 32.4-13.6 44.3-25.4a92.6 92.6 0 0 0 24.44-42.5m130.46 86.4c-4.5 16.8-11.4 29.5-20.73 38.4-9.34 8.9-20.5 13.3-33.52 13.3-13.26 0-22.25-4.3-27-13-4.76-8.7-4.92-21.3-.5-37.8s11.47-29.4 21.17-38.7 21.04-13.95 34.06-13.95c13 0 21.9 4.5 26.4 13.43 4.6 8.97 4.7 21.8.2 38.5zm23.52-87.8-6.72 25.1c-2.9-9-8.53-16.2-16.85-21.6-8.34-5.3-18.66-8-30.97-8-15.1 0-29.6 3.9-43.5 11.7s-26.1 18.8-36.5 33-18 30.3-22.9 48.4c-4.8 18.2-5.8 34.1-2.9 47.9 3 13.9 9.3 24.5 19 31.9 9.8 7.5 22.3 11.2 37.6 11.2a82.4 82.4 0 0 0 35.2-7.7 82.11 82.11 0 0 0 28.4-21.2l-7 26.16h51.9l47.39-176.77h-52zm238.65 0h-150.93l-10.55 39.4h87.82l-116.1 100.3-9.92 37h155.8l10.55-39.4h-94.1l117.88-101.8m142.4 52c-4.67 17.4-11.6 30.48-20.75 39-9.15 8.6-20.23 12.9-33.24 12.9-27.2 0-36.14-17.3-26.86-51.9 4.6-17.2 11.56-30.13 20.86-38.84 9.3-8.74 20.57-13.1 33.82-13.1 13 0 21.78 4.33 26.3 13.05 4.52 8.7 4.48 21.67-.13 38.87m30.38-80.83c-11.95-7.44-27.2-11.16-45.8-11.16-18.83 0-36.26 3.7-52.3 11.1a113.09 113.09 0 0 0 -41 32.06c-11.3 13.9-19.43 30.2-24.42 48.8-4.9 18.53-5.5 34.8-1.7 48.73 3.8 13.9 11.8 24.6 23.8 32 12.1 7.46 27.5 11.17 46.4 11.17 18.6 0 35.9-3.74 51.8-11.18 15.9-7.48 29.5-18.1 40.8-32.1 11.3-13.94 19.4-30.2 24.4-48.8s5.6-34.84 1.8-48.8c-3.8-13.9-11.7-24.6-23.6-32.05m185.1 40.8 13.3-48.1c-4.5-2.3-10.4-3.5-17.8-3.5-11.9 0-23.3 2.94-34.3 8.9-9.46 5.06-17.5 12.2-24.3 21.14l6.9-25.9-15.07.06h-37l-47.7 176.7h52.63l24.75-92.37c3.6-13.43 10.08-24 19.43-31.5 9.3-7.53 20.9-11.3 34.9-11.3 8.6 0 16.6 1.97 24.2 5.9m146.5 41.1c-4.5 16.5-11.3 29.1-20.6 37.8-9.3 8.74-20.5 13.1-33.5 13.1s-21.9-4.4-26.6-13.2c-4.8-8.85-4.9-21.6-.4-38.36 4.5-16.75 11.4-29.6 20.9-38.5 9.5-8.97 20.7-13.45 33.7-13.45 12.8 0 21.4 4.6 26 13.9s4.7 22.2.28 38.7m36.8-81.4c-9.75-7.8-22.2-11.7-37.3-11.7-13.23 0-25.84 3-37.8 9.06-11.95 6.05-21.65 14.3-29.1 24.74l.18-1.2 8.83-28.1h-51.4l-13.1 48.9-.4 1.7-54 201.44h52.7l27.2-101.4c2.7 9.02 8.2 16.1 16.6 21.22 8.4 5.1 18.77 7.63 31.1 7.63 15.3 0 29.9-3.7 43.75-11.1 13.9-7.42 25.9-18.1 36.1-31.9s17.77-29.8 22.6-47.9c4.9-18.13 5.9-34.3 3.1-48.45-2.85-14.17-9.16-25.14-18.9-32.9m174.65 80.65c-4.5 16.7-11.4 29.5-20.7 38.3-9.3 8.86-20.5 13.27-33.5 13.27-13.3 0-22.3-4.3-27-13-4.8-8.7-4.9-21.3-.5-37.8s11.42-29.4 21.12-38.7 21.05-13.94 34.07-13.94c13 0 21.8 4.5 26.4 13.4 4.6 8.93 4.63 21.76.15 38.5zm23.5-87.85-6.73 25.1c-2.9-9.05-8.5-16.25-16.8-21.6-8.4-5.34-18.7-8-31-8-15.1 0-29.68 3.9-43.6 11.7-13.9 7.8-26.1 18.74-36.5 32.9s-18 30.3-22.9 48.4c-4.85 18.17-5.8 34.1-2.9 47.96 2.93 13.8 9.24 24.46 19 31.9 9.74 7.4 22.3 11.14 37.6 11.14 12.3 0 24.05-2.56 35.2-7.7a82.3 82.3 0 0 0 28.33-21.23l-7 26.18h51.9l47.38-176.7h-51.9zm269.87.06.03-.05h-31.9c-1.02 0-1.92.05-2.85.07h-16.55l-8.5 11.8-2.1 2.8-.9 1.4-67.25 93.68-13.9-109.7h-55.08l27.9 166.7-61.6 85.3h54.9l14.9-21.13c.42-.62.8-1.14 1.3-1.8l17.4-24.7.5-.7 77.93-110.5 65.7-93 .1-.06h-.03z" />
+                                                            </svg>
+                                                            Razorpay
                                                         </span>
                                                     </label>
                                                 </div>
@@ -473,24 +475,27 @@
             </div>
 
 
-           
+
 
             <div class="col-xl-4">
-                
+
                 <div class="card">
                     <div class="card-header">
                         <h5 class="font-size-16 mb-0">Order Summary</h5>
                     </div>
 
-                  
+
                     <div class="card-body">
                         <div class="d-flex gap-2 m-2">
-                            <input type="text" id="couponCode" class="form-control" name="couponCode" placeholder="Enter coupon code">
-                            <button type="button" id="applyCouponBtn" onclick="applyCoupon()" class="btn submit-btn">Apply</button>
+                            <input type="text" id="couponCode" class="form-control" name="couponCode"
+                                placeholder="Enter coupon code">
+                            <button type="button" id="applyCouponBtn" onclick="applyCoupon()"
+                                class="btn submit-btn">Apply</button>
                         </div>
                         <div id="couponBadge" class="mb-3" style="display: none;">
                             <span class="badge bg-success">Coupon Applied: <span id="appliedCouponCode"></span></span>
-                            <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeCoupon()">Remove</button>
+                            <button type="button" class="btn btn-danger btn-sm ms-2"
+                                onclick="removeCoupon()">Remove</button>
                         </div>
                         <div class="table-responsive">
                             <table class="table mb-0">
@@ -503,8 +508,8 @@
                                 </thead>
                                 <tbody>
 
-                                  
-                                        <% cartItems.forEach((product,index)=>{  %>
+
+                                    <% cartItems.forEach((product,index)=>{ %>
                                         <tr>
                                             <th>
                                                 <%= product.productId.productName %>
@@ -512,18 +517,38 @@
                                             <th>
                                                 <%= product.productCount %>
                                             </th>
-                                            
-                                            <td><i class="bi bi-currency-rupee"></i>
+
+                                            <!-- <td><i class="bi bi-currency-rupee"></i>
                                                 <%= product.productId.productDiscountPrice * product.productCount %>
-                                            </td>
+                                            </td> -->
+
+
+                                            <% if(product.productId.productDiscount===0){ %>
+                                                <td>&#8377;
+                                                    <%= product.productId.productPrice*product.productCount %>
+                                                </td>
+                                                <% }else { %>
+                                                    <td>&#8377;
+                                                        <!-- <%= Math.round(product.productId.productPrice-((product.productId.productDiscount/100)*product.productId.productPrice))
+                                                            %> -->
+                                                            <%= Math.round(
+                                                                product.productId.productPrice * (1 - product.productId.productDiscount / 100) * 
+                                                                product.productCount).toLocaleString() %>
+
+                                                            
+
+                                                          
+                                                    </td>
+                                                    <% }%>
                                         </tr>
-                                       
+
                                         <% } ) %>
-                                        <tr>
-                                            <td>Coupon Discount</td>
-                                            <td></td>
-                                            <td class="text-center text-danger">&#8377; <span id="couponDiscount">0</span></td>
-                                        </tr>
+                                            <tr>
+                                                <td>Coupon Discount</td>
+                                                <td></td>
+                                                <td class="text-center text-danger">&#8377; <span
+                                                        id="couponDiscount">0</span></td>
+                                            </tr>
 
 
                                 </tbody>
@@ -531,8 +556,12 @@
                                     <tr>
                                         <th>Total :</th>
                                         <th></th>
-                                        <td><i class="bi bi-currency-rupee"></i><span id="totalPriceCheckout"><%= total %></span>
-                                            
+                                        <td><i class="bi bi-currency-rupee"></i><span id="totalPriceCheckout">
+                                                <!-- <%= total %> -->
+
+                                                <%= (cartDetails.payableAmount).toLocaleString() %>
+                                            </span>
+
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -544,15 +573,15 @@
                                     <i class="bi bi-shield-fill-check h4 me-2"></i>
                                     <div class="flex-grow-1">
                                         Your order is eligible for FREE Delivery.
-                                     </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mt-3 text-center">
                                 <button class="btn btn-dark" id="cancelButton">Cancel</button>
                                 <a href="/user/orderConfirm">
-                                    <button type="submit" class="btn btn-success" form="checkout-form"  id="checkoutButton"  
-                                onclick="checkoutSubmit(event)">Complete
-                            Order</button>
+                                    <button type="submit" class="btn btn-success" form="checkout-form"
+                                        id="checkoutButton" onclick="checkoutSubmit(event)">Complete
+                                        Order</button>
                                 </a>
                             </div>
                         </div>
@@ -683,55 +712,49 @@
                 })
             }
 
-//validating checkout form
-function validateCheckoutForm(data) {
-    if (!data.name.trim() || /\d/.test(data.name)) {
-            showError("A valid name is required (no numbers)");
-            return false;
-    }
-     
-        if (!data.email.trim() || !/^\S+@\S+\.\S+$/.test(data.email)) {
-            showError("A valid email address is required");
-            return false;
-        }
-        if (!data.phone.trim() || !/^\d{10}$/.test(data.phone)) {
-            showError("A valid 10-digit phone number is required");
-            return false;
-        }
-        if (!data.address) {
-            showError("Shipping address is required");
-            return false;
-        }
-        if (!data['paymentMethod']) {
-            showError("Payment method is required");
-            return false;
-        }
-        return true;
-    }
+            //validating checkout form
+            function validateCheckoutForm(data) {
+                if (!data.name.trim() || /\d/.test(data.name)) {
+                    showError("A valid name is required (no numbers)");
+                    return false;
+                }
+
+                if (!data.email.trim() || !/^\S+@\S+\.\S+$/.test(data.email)) {
+                    showError("A valid email address is required");
+                    return false;
+                }
+                if (!data.phone.trim() || !/^\d{10}$/.test(data.phone)) {
+                    showError("A valid 10-digit phone number is required");
+                    return false;
+                }
+                if (!data.address) {
+                    showError("Shipping address is required");
+                    return false;
+                }
+                if (!data['paymentMethod']) {
+                    showError("Payment method is required");
+                    return false;
+                }
+                return true;
+            }
 
 
 
             // submitting order
-
-       
-
-
-
-
-        async function checkoutSubmit(event) {
+            async function checkoutSubmit(event) {
                 try {
                     event.preventDefault();
 
-                    const couponCode=document.getElementById('couponCode').value;
+                    const couponCode = document.getElementById('couponCode').value;
 
                     const form = document.getElementById('checkout-form');
                     const formData = new FormData(form);
                     let data = Object.fromEntries(formData.entries());
-                    data={...data,...{couponCode:couponCode}}
+                    data = { ...data, ...{ couponCode: couponCode } }
 
                     if (!validateCheckoutForm(data)) {
-            return;
-        }
+                        return;
+                    }
 
                     const res = await fetch('/user/checkout-submit', {
                         method: 'POST',
@@ -742,22 +765,17 @@ function validateCheckoutForm(data) {
                     });
 
                     if (res.ok) {
-                       const result=await res.json()
+                        const result = await res.json()
 
-                       if(data.paymentMethod==='razorpay'){
-                        initiateRazorpayPayment(result.orderId,result.amount,result.order)
-                       } else if (data.paymentMethod === 'COD') {
-                        window.location.href = '/user/order-confirm';
-                      }
+                        if (data.paymentMethod === 'razorpay') {
+                            initiateRazorpayPayment(result.orderId, result.amount, result.order)
+                        } else if (data.paymentMethod === 'COD' || data.paymentMethod === 'Wallet') {
+                            window.location.href = '/user/order-confirm';
+                        }
 
-                      else if (data.paymentMethod === 'Wallet') {
-                        window.location.href = '/user/order-confirm';
-                      }
-
-                      
                     }
-                   
-                     else {
+
+                    else {
                         const error = await res.text();
                         showError(error);
                     }
@@ -766,37 +784,68 @@ function validateCheckoutForm(data) {
                 }
             }
             function initiateRazorpayPayment(orderId, amount, orderData) {
-        var options = {
-            "key": "rzp_test_CgfUBYSTSF2QIh", // Your Razorpay API key
-            "amount": amount, // Amount in paise
-            "currency": "INR",
-            "name": "WordPlayBooks",
-            "description": "Product or Service Description",
-            "image": "https://wordplaybooks.com/your_logo.png", // Your company logo URL
-            "order_id": orderId, // Order ID from your backend
-            
-            "handler": function (response) {
-                // Handle successful payment here
-                window.location.href = '/user/order-confirm'
-                
-            },
-            "prefill": {
-                "name": orderData.contactInfo.name,
-                "email": orderData.contactInfo.email,
-                "contact": orderData.contactInfo.number,
-            },
-            "theme": {
-                "color": "#3399cc" // Customize the color of the Razorpay window
+                var options = {
+                    "key": "rzp_test_CgfUBYSTSF2QIh", // Your Razorpay API key
+                    "amount": amount, // Amount in paise
+                    "currency": "INR",
+                    "name": "WordPlayBooks",
+                    "description": "Product or Service Description",
+                    "image": "https://wordplaybooks.com/your_logo.png", // Your company logo URL
+                    "order_id": orderId, // Order ID from your backend
+
+                    "handler": function (response) {
+                        // Handle successful payment here
+                        window.location.href = '/user/order-confirm'
+
+                    },
+                    "prefill": {
+                        "name": orderData.contactInfo.name,
+                        "email": orderData.contactInfo.email,
+                        "contact": orderData.contactInfo.phone,
+                    },
+                    "theme": {
+                        "color": "#3399cc" // Customize the color of the Razorpay window
+                    },
+                    "modal": {
+                        "ondismiss": function () {
+                            window.location.href = '/user/checkout'
+                        }
+                    }
+                };
+
+                var razorpayWindow = new Razorpay(options);
+
+
+                razorpayWindow.on('payment.failed', async function (response) {
+                    try {
+                        const res = await fetch('/user/paymentfailrazorpay', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        if (res.ok) {
+                            const result = await res.json();
+                            console.log('Payment failed response:', result);
+                            window.location.href = '/user/orderFailure';
+                        } else {
+                            const error = await res.text();
+                            console.log('Error response from server:', error);
+                        }
+                    } catch (error) {
+                        console.log(`Error in payment failed handler: ${error}`);
+                    }
+                });
+
+
+                razorpayWindow.open();
             }
-        };
 
-        var razorpayWindow = new Razorpay(options);
-        razorpayWindow.open();
-    }
 
-    
-    
-       
+
+
 
 
             // when click cancel btn go to cart page
@@ -808,145 +857,145 @@ function validateCheckoutForm(data) {
 
 
             // validation for address modal
-           
+
 
             const addressForm = document.getElementById('addAddressForm');
-    const contactName = document.getElementsByName('contactName')[0];
-    const pincode = document.getElementsByName('pincode')[0];
-    const homeAddress = document.getElementsByName('homeAddress')[0];
-    const areaAddress = document.getElementsByName('areaAddress')[0];
-    const landmark = document.getElementsByName('landmark')[0];
-    const phone = document.getElementById("new-address-phone");
-    const doorNo = document.getElementsByName('doorNo')[0];
+            const contactName = document.getElementsByName('contactName')[0];
+            const pincode = document.getElementsByName('pincode')[0];
+            const homeAddress = document.getElementsByName('homeAddress')[0];
+            const areaAddress = document.getElementsByName('areaAddress')[0];
+            const landmark = document.getElementsByName('landmark')[0];
+            const phone = document.getElementById("new-address-phone");
+            const doorNo = document.getElementsByName('doorNo')[0];
 
-    // Validation for adding new address
-    addressForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+            // Validation for adding new address
+            addressForm.addEventListener('submit', (e) => {
+                e.preventDefault();
 
-        let isValid = true;
-        let validateMessage = "";
+                let isValid = true;
+                let validateMessage = "";
 
-        // Check if contact name is empty or contains only numbers
-        if (contactName.value.trim() === "" || !isNaN(contactName.value)) {
-            validateMessage = "Enter a valid name";
-            isValid = false;
-        }
-        // Check pincode
-        else if (pincode.value.length !== 6 || !/^\d{6}$/.test(pincode.value)) {
-        validateMessage = "Enter a valid 6-digit Pincode";
-          isValid = false;
-}
-        // Validate home address
-        else if (homeAddress.value.length < 10 || homeAddress.value.length > 100 || !isNaN(homeAddress.value)) {
-            validateMessage = "Enter a valid home address between 20 and 100 characters";
-            isValid = false;
-        }
-        // Validate area address
-        else if (areaAddress.value.length < 3 || areaAddress.value.length > 100 || !isNaN(areaAddress.value)) {
-            validateMessage = "Enter a valid area address between 10 and 100 characters";
-            isValid = false;
-        }
-        // Validate landmark
-        else if (landmark.value.length > 50 || !isNaN(landmark.value)) {
-            validateMessage = "Enter a valid landmark with maximum 50 characters";
-            isValid = false;
-        }
-       
+                // Check if contact name is empty or contains only numbers
+                if (contactName.value.trim() === "" || !isNaN(contactName.value)) {
+                    validateMessage = "Enter a valid name";
+                    isValid = false;
+                }
+                // Check pincode
+                else if (pincode.value.length !== 6 || !/^\d{6}$/.test(pincode.value)) {
+                    validateMessage = "Enter a valid 6-digit Pincode";
+                    isValid = false;
+                }
+                // Validate home address
+                else if (homeAddress.value.length < 10 || homeAddress.value.length > 100 || !isNaN(homeAddress.value)) {
+                    validateMessage = "Enter a valid home address between 20 and 100 characters";
+                    isValid = false;
+                }
+                // Validate area address
+                else if (areaAddress.value.length < 3 || areaAddress.value.length > 100 || !isNaN(areaAddress.value)) {
+                    validateMessage = "Enter a valid area address between 10 and 100 characters";
+                    isValid = false;
+                }
+                // Validate landmark
+                else if (landmark.value.length > 50 || !isNaN(landmark.value)) {
+                    validateMessage = "Enter a valid landmark with maximum 50 characters";
+                    isValid = false;
+                }
+
 
                 else if (phone.value.length !== 10 || isNaN(phone.value)) {
-            validateMessage = "Enter a valid 10-digit phone number";
-            isValid = false;
-        }
-        // Validate door number
-        else if (doorNo.value.trim() === "") {
-            validateMessage = "Enter a door number";
-            isValid = false;
-        }
+                    validateMessage = "Enter a valid 10-digit phone number";
+                    isValid = false;
+                }
+                // Validate door number
+                else if (doorNo.value.trim() === "") {
+                    validateMessage = "Enter a door number";
+                    isValid = false;
+                }
 
-        // If any of the above is invalid, display an error message
-        if (!isValid) {
-            Swal.fire({
-                icon: "error",
-                title: "Invalid Information",
-                text: validateMessage
+                // If any of the above is invalid, display an error message
+                if (!isValid) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Invalid Information",
+                        text: validateMessage
+                    });
+                } else {
+                    addressForm.submit();
+                }
             });
-        } else {
-            addressForm.submit();
-        }
-    });
-
-
-   
 
 
 
-      async function applyCoupon(){
 
-        const couponCode=document.getElementById('couponCode').value
-        try {
-            const res=await fetch('/user/applycoupon',{
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body:JSON.stringify({couponCode})
 
-            })
-            if(!res.ok){
-                const error=await res.text()
-                showError(error)
+
+            async function applyCoupon() {
+
+                const couponCode = document.getElementById('couponCode').value
+                try {
+                    const res = await fetch('/user/applycoupon', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ couponCode })
+
+                    })
+                    if (!res.ok) {
+                        const error = await res.text()
+                        showError(error)
+
+                    }
+                    const couponData = await res.json()
+
+                    updateTotal(couponData.totalPrice, couponData.couponDiscount);
+                    showCouponBadge(couponCode);
+
+
+
+                } catch (error) {
+
+                    document.getElementById('couponCode').value = '';
+                    console.log(`apply coupon error ${error}`)
+
+                }
+
 
             }
-            const couponData = await res.json()
 
-             updateTotal(couponData.totalPrice,couponData.couponDiscount);
-            showCouponBadge(couponCode);
+            function updateTotal(total, discount) {
+                const totalElement = document.getElementById('totalPriceCheckout');
+                const discountElement = document.getElementById('couponDiscount');
+
+                if (totalElement && discountElement) {
+                    totalElement.textContent = total.toFixed(2);
+                    discountElement.textContent = discount.toFixed(2);
+                } else {
+                    console.error('One or both elements not found:', totalElement, discountElement);
+                }
 
 
-            
-        } catch (error) {
-
-            document.getElementById('couponCode').value = '';
-            console.log(`apply coupon error ${error}`)
-            
-        }
-
-       
-      }
-
-      function updateTotal(total, discount) {
-    const totalElement = document.getElementById('totalPriceCheckout');
-    const discountElement = document.getElementById('couponDiscount');
-    
-    if (totalElement && discountElement) {
-        totalElement.textContent = total.toFixed(2);
-        discountElement.textContent = discount.toFixed(2);
-    } else {
-        console.error('One or both elements not found:', totalElement, discountElement);
-    }
-
-   
-}
+            }
 
 
 
 
-    function showCouponBadge(couponCode) {
-    const couponBadge = document.getElementById('couponBadge');
-    const appliedCouponCode = document.getElementById('appliedCouponCode');
-    couponBadge.style.display = 'block';
-    appliedCouponCode.innerText = couponCode;
-}
+            function showCouponBadge(couponCode) {
+                const couponBadge = document.getElementById('couponBadge');
+                const appliedCouponCode = document.getElementById('appliedCouponCode');
+                couponBadge.style.display = 'block';
+                appliedCouponCode.innerText = couponCode;
+            }
 
-function removeCoupon() {
-    document.getElementById('couponCode').value = '';
-    document.getElementById('couponBadge').style.display = 'none';
-    location.reload();
-}
+            function removeCoupon() {
+                document.getElementById('couponCode').value = '';
+                document.getElementById('couponBadge').style.display = 'none';
+                location.reload();
+            }
 
 
-    
- 
-  
+
+
+
 
         </script>

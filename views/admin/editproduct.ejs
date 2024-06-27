@@ -120,19 +120,7 @@
         object-fit: scale-down;
     }
 
-    /* .delete-button {
-        background-color: #c30606;
-        padding: 10px;
-        color: #ffffff;
-        font-weight: 600;
-        border: none;
-        outline: none;
-    }
-
-    .btn {
-        min-width: 150px;
-    } */
-
+    
 
     .delete-button {
         background-color: #c30606;
@@ -214,9 +202,9 @@
                         value="<%= product.productQuantity %>" required>
 
                     <!-- input for product discount -->
-                    <label for="productDiscount">Product Discount in percentage</label>
+                    <!-- <label for="productDiscount">Product Discount in percentage</label>
                     <input type="number" name="productDiscount" min="0" max="100" value="<%= product.productDiscount %>"
-                        required>
+                        required> -->
 
                     <!-- input for select category this category is from backend -->
                     <label for="productCategory">Product Category </label>
@@ -338,10 +326,10 @@
 
 
 
-            if (isNaN(productDiscount.value) || parseInt(productDiscount.value) < 0 || parseInt(productDiscount.value) > 100) {
-                errorMessage = 'Product quality should be a number and it must be greater than zero'
-                isValid = false;
-            }
+            // if (isNaN(productDiscount.value) || parseInt(productDiscount.value) < 0 || parseInt(productDiscount.value) > 100) {
+            //     errorMessage = 'Product quality should be a number and it must be greater than zero'
+            //     isValid = false;
+            // }
 
 
 

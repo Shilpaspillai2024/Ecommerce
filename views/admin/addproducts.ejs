@@ -188,9 +188,10 @@
                         min="0" max="100000" required>
 
                     <!-- input for product discount -->
-                    <label for="productDiscount">Product Discount in percentage</label>
+                     
+                    <!-- <label for="productDiscount">Product Discount in percentage</label>
                     <input type="number" name="productDiscount" placeholder="0 if discount is not available" min="0"
-                        max="100" required>
+                        max="100" required> -->
 
                     <!-- input for select category this category is from backend -->
                     <label for="productCategory">Product Category </label>
@@ -273,7 +274,7 @@
             const productPrice = document.getElementsByName('productPrice')[0];
             const productQuantity = document.getElementsByName('productQuantity')[0];
             const productAuthor = document.getElementsByName('productAuthor')[0];
-            const productDiscount = document.getElementsByName('productDiscount')[0];
+            // const productDiscount = document.getElementsByName('productDiscount')[0];
             const productDescription = document.getElementsByName('productDescription')[0];
             const productCategory = document.getElementsByName('productCategory')[0];
 
@@ -311,10 +312,7 @@
                     isValid = false
                 }
 
-                if (isNaN(productDiscount.value) || parseInt(productDiscount.value) < 0 || parseInt(productDiscount.value) > 100) {
-                    errorMessage = 'Product quality should be a number and it must be greater than zero'
-                    isValid = false;
-                }
+              
 
                 if (productAuthor.value.trim() === '' || productAuthor.value.length <= 0 || !isNaN(productAuthor.value)) {
                     errorMessage = 'Product Author cannot be empty'

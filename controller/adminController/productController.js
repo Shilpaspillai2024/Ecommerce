@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
 const productSchema=require('../../model/productSchema')
 const categorySchema = require('../../model/categorySchema')
+const offerSchema=require('../../model/offerSchema')
 const multer=require('../../middleware/multer')
 const fs=require('fs')
 
@@ -46,47 +47,6 @@ const fs=require('fs')
 
 // addproduct post
 
-// const addProductPost= async (req,res)=>{
-//   try {
-
-//     const imageArray=[]
-//     req.files.forEach((img)=>{
-//       imageArray.push(img.path)
-//     })
-
-
-//     //product details from the form
-
-//     const productDetails= {
-//       productName:req.body.productName,
-//       productAuthor:req.body.productAuthor,
-//       productPrice:req.body.productPrice,
-//       productDescription:req.body.productDescription,
-//       productQuantity:req.body.productQuantity,
-//       productCategory:req.body.productCategory,
-//       productImage:imageArray,
-//       productDiscount:req.body.productDiscount
-//     };
-
-//     const checkProduct=await productSchema.findOne({productName:req.body.productName,productCategory:req.body.productCategory})
-    
-//     if(!checkProduct)
-//       {
-//     await productSchema.insertMany(productDetails)
-//     req.flash('errorMessage','product added successfully')
-//       }
-//       else{
-//         req.flash('errorMessage','product already exsist')
-//       }
-//       res.redirect('/admin/product')
-//   } catch (err) {
-
-//     console.error(`Error during adding new product to DB: ${err}`);
-//         req.flash('errorMessage', err.message || 'Failed to add product. Please try again later.');
-//         res.redirect('/admin/add-product');
-    
-//   }
-// }
 
 
 const addProductPost = async (req, res) => {
@@ -99,14 +59,23 @@ const addProductPost = async (req, res) => {
 
     // find the productDiscount Price
 
-    let discountPrice
-       if(req.body.productDiscount !=0){
-           discountPrice=req.body.productPrice * (1-(req.body.productDiscount) / 100)
-       }
-       else
-       {
-        discountPrice = req.body.productPrice
-       }
+
+
+    const offer=await offerSchema.find({offerFor: "CATEGORY" }).populate('offerCategoryId')
+
+    let discountPrice = req.body.productPrice
+    let discount = 0
+
+    // find if the product is under the offer
+    for (const off of offer) {
+        if (off.offerCategoryId.categoryName === req.body.productCategory) {
+            discount = off.offerValue
+            discountPrice = (req.body.productPrice * (1 - off.offerValue / 100))
+            discountPrice = discountPrice.toFixed(2);
+            break;
+        }
+    }
+
 
     // Product details from the form
     const productDetails = {
@@ -117,7 +86,7 @@ const addProductPost = async (req, res) => {
       productQuantity: req.body.productQuantity,
       productCategory: req.body.productCategory,
       productImage: imageArray,
-      productDiscount: req.body.productDiscount,
+      productDiscount: discount,
       productDiscountPrice: discountPrice,
     };
 
@@ -168,12 +137,7 @@ const editProduct= async (req,res)=>{
 const editProductPost = async (req, res) => {
   try {
     const id = req.params.id
-
-
-
-
-
-    const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
+const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
 
     imageToDelete.forEach(x => fs.unlinkSync(x));
 
@@ -189,7 +153,7 @@ const editProductPost = async (req, res) => {
 
     
     
-    const { productPrice, productQuantity, productDiscount, productDescription } = req.body;
+    const { productPrice, productQuantity, productDescription } = req.body;
 
     let imgArray = []
 
@@ -201,18 +165,10 @@ const editProductPost = async (req, res) => {
 
 
     
-    let discountPrice
-    if (req.body.productDiscount != 0) {
-        discountPrice = req.body.productPrice * (1 - (req.body.productDiscount) / 100)
-    } else {
-        discountPrice = req.body.productPrice
-    }
-
-    // Update product details including images
+   // Update product details including images
     await productSchema.findByIdAndUpdate(id, {
       productPrice,
       productQuantity,
-      productDiscount,
       productDescription,
       productImage: newImages,
       productDiscountedPrice: discountPrice

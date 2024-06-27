@@ -29,14 +29,8 @@ const cancelOrder=async(req,res)=>{
 
     try {
 
-       
-
-        const order=await orderSchema.find({userId:req.session.user,isCancelled: true}).populate('products.productId').sort({ createdAt: -1 })
-
-
-       
-
-        res.render('user/cancelOrder',{title:"cancelOrder-page",user:req.session.user,alertMessage:req.flash("errorMessage"),order})
+    const order=await orderSchema.find({userId:req.session.user,isCancelled: true}).populate('products.productId').sort({ createdAt: -1 })
+      res.render('user/cancelOrder',{title:"cancelOrder-page",user:req.session.user,alertMessage:req.flash("errorMessage"),order})
         
     } catch (err) {
 
@@ -209,6 +203,12 @@ const orderDetail= async(req,res)=>{
 }
 
 
+const orderFailure=(req,res)=>
+    { 
+        res.render('user/orderFailure',{title:"payment failure page"})
+    }
+
+
 
 
 module.exports={
@@ -216,5 +216,6 @@ module.exports={
     cancelOrder,
     cancellOrderPost,
     returnOrder,
-    orderDetail
+    orderDetail,
+    orderFailure
 }

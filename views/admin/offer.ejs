@@ -1,0 +1,376 @@
+<style>
+    .admin-offer-container {
+        min-height: 100vh;
+    }
+
+    .offer-row {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .offer-for-td {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
+
+<%-include('navbar') %>
+
+    <div class="admin-offer-container container mt-5">
+        <div class="offer-row">
+            <h3 class="text-secondary text-white">Offer List</h3>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target=".add-new-coupon-modal">
+                Add offer <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- table shows the available offers -->
+        <div class="mt-5 table-responsive">
+            <table class="table text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col" class="text-center py-3">sl.no</th>
+                        <th scope="col" class="py-3 text-center">Offer Target</th>
+                        <th scope="col" class="py-3 text-center">Offer For</th>
+                        <th scope="col" class="py-3 text-center">Discount Percentage</th>
+                        <th scope="col" class="text-center py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(offer.length!=0){ %>
+                        <% offer.forEach((offer,index)=>{ %>
+                            <tr>
+                                <th scope="row" class="text-center">
+                                    <%= index+1 %>
+                                </th>
+                                <td class="count-name text-center">
+                                    <%= offer.offerFor %>
+                                </td>
+                                <% if(offer.offerFor.toLowerCase()==="category" ) { %>
+                                    <td class="offer-for-td">
+                                        <%= offer.offerCategoryId.categoryName %>
+                                    </td>
+                                    <% }else{ %>
+                                        <td class="offer-for-td">
+                                            <%= offer.offerProductId.productName %>
+                                        </td>
+                                        <% } %>
+                                            <td class="text-center">
+                                                <%= offer.offerValue %>%
+                                            </td>
+
+                                            <td class="text-center">
+                                                <button type="button" class="btn edit-offer-button"
+                                                    data-bs-toggle="modal" data-offerValue=" <%= offer.offerValue %>"
+                                                    data-offerID="<%= offer._id %>" data-bs-target=".edit-coupon-modal">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+
+                                                <button class="btn text-danger"
+                                                    onclick="deleteOffer('<%= offer._id %>')">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </td>
+                            </tr>
+
+                            <% }) %>
+                                <% }else{ %>
+                                    <tr>
+                                        <th colspan="8" class="p-5 text-secondary text-center">
+                                            No offers added yet
+                                        </th>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- modal for addding new offer -->
+
+    <div class="modal fade add-new-coupon-modal" tabindex="-1" role="dialog" aria-labelledby="addOfferModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content p-5">
+                <div class="form-header text-center mb-4">
+                    <h2>Add Offer</h2>
+                </div>
+                <form action="/admin/add-offer" method="post" id="add-offer-form">
+                    <div class="mb-3">
+                        <label for="offer-target" class="form-label">Offer Target</label>
+                        <select class="form-select" id="offer-target" name="offerTarget">
+                            <option value="" selected disabled>Select offer target</option>
+                            <option value="CATEGORY">Category</option>
+                            <option value="PRODUCT">Product</option>
+                        </select>
+                        <label for="offer-target" class="validateOffer text-danger"></label>
+                    </div>
+
+                    <div class="mb-3" id="category-offer-group" style="display: none">
+                        <label for="category-offer" class="form-label">Category Offer</label>
+                        <select class="form-select" id="category-offer" name="categoryOffer">
+                            <option value="" selected disabled>Select category</option>
+                            <% category.forEach((category)=> { %>
+                                <option value="<%= category._id %>">
+                                    <%= category.categoryName %>
+                                </option>
+                                <% }) %>
+                        </select>
+                        <label for="category-offer" class="validateOffer text-danger"></label>
+                    </div>
+
+                    <div class="mb-3" id="product-offer-group" style="display: none">
+                        <label for="product-offer" class="form-label">Product Offer</label>
+                        <select class="form-select" id="product-offer" name="productOffer">
+                            <option value="" selected disabled>Select product</option>
+                            <% product.forEach((product)=> { %>
+                                <option value="<%= product._id %>">
+                                    <%= product.productName %>
+                                </option>
+                                <% }) %>
+                        </select>
+                        <label for="product-offer" class="validateOffer text-danger"></label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="discountAmount" class="form-label">Discount Percentage</label>
+                        <input type="number" class="form-control" id="discountAmount" name="discountAmount" />
+                        <label for="discountAmount" class="validateOffer text-danger"></label>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+      <!-- Modal for editing offer -->
+      <div class="modal fade edit-coupon-modal" tabindex="-1" role="dialog" aria-labelledby="addOfferModalLabel"
+      id="edit-coupon-modal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content p-5">
+              <div class="form-header text-center mb-4">
+                  <h2>Edit Offer</h2>
+              </div>
+              <form action="/admin/edit-offer" method="post" id="edit-offer-form">
+                  <div class="mb-3">
+                      <label for="editOfferFor" class="form-label">Offer for</label>
+                      <input type="text" class="form-control" id="editOfferFor" name="editOfferFor" disabled />
+                  </div>
+                  <div class="mb-3">
+                      <label for="editOfferTarget" class="form-label" id="editOfferTargetLabel"></label>
+                      <input type="text" class="form-control" id="editOfferTarget" name="editOfferTarget"
+                          disabled />
+                  </div>
+                  <div class="mb-3">
+                      <label for="editDiscountPercent" class="form-label">Discount Percentage</label>
+                      <input type="number" class="form-control" id="editDiscountPercent"
+                          name="editDiscountPercent" />
+                      <label for="editDiscountPercent" class="validateOfferEdt text-danger"></label>
+                  </div>
+                  <div class="text-center">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                          Close
+                      </button>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
+
+    <%- include('footer') %>
+
+
+
+        <script>
+
+            const offerTarget = document.getElementById("offer-target")
+            const categoryOfferGroup = document.getElementById("category-offer-group")
+            const productOfferGroup = document.getElementById("product-offer-group")
+
+
+            offerTarget.addEventListener("change", function () {
+                if (this.value === 'CATEGORY') {
+                    categoryOfferGroup.style.display = "block",
+                        productOfferGroup.style.display = "none"
+                } else if (this.value === 'PRODUCT') {
+                    categoryOfferGroup.style.display = "none",
+                        productOfferGroup.style.display = "block"
+
+                }
+            })
+
+
+
+
+
+
+            // delete offer
+
+            function deleteOffer(offerID) {
+                swal.fire({
+                    icon: "question",
+                    title: "delete the offer",
+                    text: "Are you sure want to delete this offer",
+                    showCancelButton: true,
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const URL = `/admin/delete-offer/${offerID}`;
+                        fetch(URL, {
+                            method: 'DELETE',
+                           headers:{
+                            "Content-Type":"application/json"
+                           }
+                        }).then((res) => {
+                           
+                            console.log('Response status:', res.status);
+                return res.text().then(text => {
+                    console.log('Response text:', text);
+                    return JSON.parse(text);
+                });
+                            
+                        }).then((data) => {
+                            if (data.success) {
+                                swal.fire({
+                                    icon: "success",
+                                    title: "Offer deleted",
+                                    showConfirmButton: false,
+                                    timer: 1000,
+                                }).then(() => {
+                                    window.location.reload()
+                                });
+                            }
+                            if (data.error) {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: data.error,
+                                });
+                            }
+                        })
+                            .catch((err) => {
+                                console.log(err);
+                                Swal.fire({
+                                    icon: "error",
+                                    text: err,
+                                });
+                            });
+                    }
+                })
+            }
+
+            const categoryOffer = document.getElementById("category-offer");
+            const productOffer = document.getElementById("product-offer");
+
+
+            // check category has already offer validation alert
+            categoryOffer.addEventListener('change',(e)=>{
+                e.preventDefault()
+
+                const URL=`/admin/check-category-offer/${e.target.value}`;
+                fetch(URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((res) => {
+                        if (res.ok) {
+                            Swal.fire({
+                                icon: "info",
+                                title: "category offer exist",
+                                text: "Offer for the category exist. if you proceed with the current offer the old one will be replaced ",
+                            });
+                        }
+                    })
+                    .catch((err) => {
+                        const notyf = new Notyf();
+                        notyf.error({
+                            message: err,
+                            duration: 9000,
+                        });
+                    });
+
+            })
+
+
+
+            // check product has already offer validation alert
+            productOffer.addEventListener('change',(e)=>{
+                e.preventDefault()
+
+                const URL=`/admin/check-product-offer/${e.target.value}`;
+                fetch(URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((res) => {
+                        if (res.ok) {
+                            Swal.fire({
+                                icon: "info",
+                                title: "product offer exist",
+                                text: "Offer for the product exist. if you proceed  old one will be replaced ",
+                            });
+                        }
+                    })
+                    .catch((err) => {
+                        const notyf = new Notyf();
+                        notyf.error({
+                            message: err,
+                            duration: 9000,
+                        });
+                    });
+
+            })
+
+
+             // edit the offer in modal
+             const editOfferForm = document.getElementById("edit-offer-form");
+            const editOfferInput = document.getElementById("editDiscountPercent");
+            const editOfferButton = document.querySelectorAll(".edit-offer-button");
+
+
+            editOfferButton.forEach((button)=>{
+                button.addEventListener("click",(e)=>{
+                    const offerValue = button.getAttribute("data-offerValue");
+                    const offerID = button.getAttribute("data-offerID");
+
+                    // get the offer details that is selected to updated
+                    fetch(`/admin/getOffer-details/${offerID}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    })
+                        .then((res) => {
+                            return res.json();
+                        })
+                        .then((data) => {
+                            if (data.status) {
+                                document.getElementById("editOfferTargetLabel").innerHTML = data.offerFor + " name";
+                                document.getElementById("editOfferTarget").value = data.offerTarget;
+                                document.getElementById("editOfferFor").value = data.offerFor;
+                            }
+                        })
+                        .catch((err) => {
+                            console.log("Error on getting the offer details for updating ", err);
+                        });
+
+                    editOfferInput.value = Number(offerValue);
+                    editOfferForm.action = `/admin/edit-offer/${offerID}`;
+                });
+            });
+                
+          
+        </script>

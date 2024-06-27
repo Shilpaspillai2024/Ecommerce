@@ -32,6 +32,7 @@ const schema=new mongoose.Schema({
 
          productDiscount:{
             type:Number,
+            default:0
            
          },
 
