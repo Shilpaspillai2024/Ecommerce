@@ -280,10 +280,6 @@ const getOfferDetails = async (req, res) => {
     }
 }
 
-
-
-
-
 const editOffer = async (req, res) => {
     try {
 

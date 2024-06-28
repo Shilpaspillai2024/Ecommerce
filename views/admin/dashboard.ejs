@@ -1,32 +1,46 @@
 <style>
-  .admin-dashboard {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4rem;
-    /* margin-top: 4rem; */
-    padding: 20px;
-    background-color: #232323;
-    /* border-radius: 10px; */
-  }
+ .dashboard-container {
+        min-height: 100vh;
+    }
+
+    .date-form {
+        padding: 0 8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
 
 
-  .admin-dashboard h2 {
-    margin-bottom: 20px;
-  }
-
-
-  .table {
-
-    border-radius: 15px;
-    overflow: hidden;
-  }
-
-  .table th,
-  .table td {
-    vertical-align: middle;
-  }
+    .secondary {
+            background-color: #6c757d; /* Gray */
+        }
+        .primary {
+            background-color: #007bff; /* Blue */
+        }
+        .success {
+            background-color: #28a745; /* Green */
+        }
+        .info {
+            background-color: #17a2b8; /* Light Blue */
+        }
+        .warning {
+            background-color: #ffc107; /* Yellow */
+        }
+        .danger {
+            background-color: #dc3545; /* Red */
+        }
+        .orange {
+            background-color: #7ab3da; /* Orange */
+        }
+       
+        .btn-custom {
+            background-color: #444;
+            border: none;
+            color: #fff;
+        }
+        .btn-custom:hover {
+            background-color: #555;
+        }
 </style>
 
 
@@ -34,43 +48,123 @@
 
 
 <%- include('navbar') %>
+   <div class="container dashboard-container text-white">
+      <div class="row mt-5">
+          <div class="col-md-12 mb-3">
+              <h2>Sales Report</h2>
+          </div>
+          <div class="col-md-4">
+              <div class="card-counter secondary">
+                  <i class="fa-solid fa-dollar-sign"></i>
+                  <span class="count-numbers">
+                
+                  </span>
+                  <span class="count-name">Overall Order Count</span>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="card-counter primary">
+                  <i class="fa-solid fa-box-archive"></i>
+                  <span class="count-numbers">
+                
+                  </span>
+                  <span class="count-name">Overall Sales Amount</span>
+              </div>
+          </div>
+
+          <div class="col-md-4">
+              <div class="card-counter success">
+                  <i class="fa-solid fa-percent"></i>
+                  <span class="count-numbers">
+                   
+                  </span>
+                  <span class="count-name">Overall Discount</span>
+              </div>
+          </div>
+      </div>
+      <div class="row mt-5">
+          <div class="col-md-4">
+              <div class="card-counter info">
+                  <i class="fa-solid fa-hand-holding-dollar"></i>
+                  <span class="count-numbers">
+                  
+                  </span>
+                  <span class="count-name">Daily Sale </span>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="card-counter danger">
+                  <i class="fa-solid fa-coins"></i>
+                  <span class="count-numbers">
+                      &#8377;
+                  </span>
+                  <span class="count-name">weeklyReport :</span>
+              </div>
+          </div>
+
+          <div class="col-md-4">
+              <div class="card-counter warning">
+                  <i class="fa-solid fa-sack-dollar"></i>
+                  <span class="count-numbers">
+                     
+                  </span>
+                  <span class="count-name">Monthly Sale : <span id="current-month"></span></span>
+              </div>
+          </div>
+      </div>
+      <div class="row mt-5">
+          <div class="col-md-12">
+              <div class="card-counter orange">
+                  <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                  <span class="count-numbers" id="custom-sale-display">&#8377; 00</span>
+                  <form class="date-form" id="custom-sales-form">
+                      <div class="row">
+
+
+                          <div class="col-md-4">
+                              <label for="startDate">Starting Date</label>
+                              <input id="startDate" class="form-control" type="date" name="startDate" />
+                              <label id="startDate-validate" class="text-danger"></label>
+                          </div>
+                          <div class="col-md-4">
+                              <label for="endDate">Ending Date</label>
+                              <input id="endDate" class="form-control" type="date" name="endDate" />
+                              <label id="endDate-validate" class="text-danger"></label>
+                          </div>
+                          <div class="col-md-4">
+                              <label for="report-select">Sales Duration</label>
+                              <select class="form-select" aria-label="Default select example" id="report-select">
+                                  <option value="1" selected>Today</option>
+                                  <option value="2">One Week</option>
+                                  <option value="3">One Month</option>
+                                  <option value="4" id="current-month-option">This Month</option>
+                                  <option value="5">Six Months</option>
+                                  <option value="6">One Year</option>
+                              </select>
+                              <label id="report-select-validate" class="text-danger"></label>
+                          </div>
+
+                          <div class="col-md-12 text-center">
+                              <button class="btn btn-dark m-2" type="submit">Generate Report</button>
+                              <button class="btn btn-dark m-2" type="button" onclick="downloadExcelReport()">Download
+                                  Excel
+                                  Report</button>
+                              <button class="btn btn-dark m-2" type="button" onclick="downloadPdfReport()">Download
+                                  PDf
+                                  Report</button>
+                          </div>
 
 
 
-  <div class="admin-dashboard">
-    <h2 class="text-white">WordPlayBooks </h2>
-    <table class="table table-primary">
-      <thead>
-        <tr>
-          <th scope="col">Si No</th>
-          <th scope="col">Customers</th>
-          <th scope="col">categories</th>
-          <th scope="col">products</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>fiction</td>
-          <td>BOOk</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>NonFiction</td>
-          <td>Atomic habitts</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>Spice it up</td>
-          <td>Cook world</td>
-        </tr>
-      </tbody>
-    </table>
+                      </div>
+                  </form>
 
-  </div>
+                  <span class="count-name">Custom Date Sale</span>
+              </div>
+          </div>
+      </div>
+
+
 
 
 

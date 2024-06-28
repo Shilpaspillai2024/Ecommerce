@@ -11,7 +11,7 @@ const dotenv = require('dotenv').config()
 
 
 
-const razorpayInstance = new Razorpay({
+const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET
 });
@@ -279,7 +279,7 @@ const OrderPlaced = async (req, res) => {
                     totalPrice,
                     couponDiscount,
                     paymentMethod: paymentMethod,
-                    razorpayOrderId: razorpayOrderId,  // Save the Razorpay order ID
+                    razorpayOrderId, // Save the Razorpay order ID
                     status: 'processing',
                 });
 
@@ -302,15 +302,18 @@ const OrderPlaced = async (req, res) => {
         }
         else if (paymentMethod === 'razorpay') {
             try {
-                const options = {
-                    amount: totalPrice * 100, // Amount in paise
-                    currency: 'INR',
-                    receipt: `order_rcptid_${new mongoose.Types.ObjectId()}`
-                };
 
-                const razorpayOrder = await razorpayInstance.orders.create(options);
+                const razorpayOrder = await razorpay.orders.create({
+                    amount: totalPrice * 100,
+                    currency: "INR",
+                    receipt: "receipt#1",
 
-                res.json({ orderId: razorpayOrder.id, amount: options.amount, order: { contactInfo: { name, email, phone } } });
+
+                })
+
+
+                return res.status(200).json({ razorpayOrderId: razorpayOrder.id })
+
             } catch (err) {
                 console.error(`Error creating Razorpay order: ${JSON.stringify(err)}`);
                 res.status(500).send('Error creating Razorpay order');
@@ -333,103 +336,103 @@ function generateRandomOrderId() {
 
 // if razorpay payment fail 
 
-const paymentFailRazorpay = async (req, res) => {
+// const paymentFailRazorpay = async (req, res) => {
 
 
-    try {
+//     try {
 
-        const userId = req.session.user
+//         const userId = req.session.user
 
-        let { name, email, phone, address, paymentMethod, razorpayOrderId, couponCode } = req.body
-
-
-
-        const cart = await cartSchema.findOne({ userId }).populate('items.productId');
-
-        if (!cart || cart.items.length === 0) {
-            return res.status(404).send('Cart is empty or not found ')
-        }
-        let totalPrice = 0;
-        let couponDiscount = 0;
-        const orderProducts = cart.items.map(product => {
-
-            const price = product.productId.productDiscountPrice;
-
-            totalPrice += price * product.productCount
-            return {
-                productId: product.productId._id,
-                quantity: product.productCount,
-                price: price
-            }
-        })
-
-
-        if (couponCode) {
-
-            const coupon = await couponSchema.findOne({ couponName: couponCode })
-
-
-            couponDiscount = coupon.discount
-            totalPrice -= couponDiscount;
-
-
-            // Mark the coupon as used by the user
-            coupon.appliedUsers.push(userId);
-            await coupon.save();
-
-
-        }
+//         let { name, email, phone, address, paymentMethod, razorpayOrderId, couponCode } = req.body
 
 
 
-        let addressObj = {}
+//         const cart = await cartSchema.findOne({ userId }).populate('items.productId');
 
-        let patterns = {
-            contactName: /contactName: '([^']+)'/,
-            doorNo: /doorNo: (\d+)/,
-            Address: /Address: '([^']+)'/,
-            areaAddress: /areaAddress: '([^']+)'/,
-            pincode: /pincode: (\d+)/,
-            landmark: /landmark: '([^']+)'/,
-            phone: /phone: (\d+)/,
-            addressType: /addressType: '([^']+)'/
-        };
+//         if (!cart || cart.items.length === 0) {
+//             return res.status(404).send('Cart is empty or not found ')
+//         }
+//         let totalPrice = 0;
+//         let couponDiscount = 0;
+//         const orderProducts = cart.items.map(product => {
 
-        for (let key in patterns) {
-            let match = address.match(patterns[key]);
-            if (match) {
-                addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
-            }
-        }
-        const orderID = generateRandomOrderId()
-        const order = new orderSchema({
-            userId,
-            orderID,
-            contactInfo: { name, email, phone },
-            address: addressObj,
-            products: orderProducts,
-            totalPrice,
-            couponDiscount,
-            paymentMethod: paymentMethod,
-            status: 'pending',
-        })
+//             const price = product.productId.productDiscountPrice;
+
+//             totalPrice += price * product.productCount
+//             return {
+//                 productId: product.productId._id,
+//                 quantity: product.productCount,
+//                 price: price
+//             }
+//         })
 
 
-        await order.save();
+//         if (couponCode) {
 
-        cart.products = [];
-        await cart.save();
-        console.log('Order saved successfully');
-
-        res.status(200).json(order)
+//             const coupon = await couponSchema.findOne({ couponName: couponCode })
 
 
-    } catch (error) {
-        console.log(`error from payment route ${error}`)
-        res.status(500).send('Internal Server Error');
-    }
+//             couponDiscount = coupon.discount
+//             totalPrice -= couponDiscount;
 
-}
+
+//             // Mark the coupon as used by the user
+//             coupon.appliedUsers.push(userId);
+//             await coupon.save();
+
+
+//         }
+
+
+
+//         let addressObj = {}
+
+//         let patterns = {
+//             contactName: /contactName: '([^']+)'/,
+//             doorNo: /doorNo: (\d+)/,
+//             Address: /Address: '([^']+)'/,
+//             areaAddress: /areaAddress: '([^']+)'/,
+//             pincode: /pincode: (\d+)/,
+//             landmark: /landmark: '([^']+)'/,
+//             phone: /phone: (\d+)/,
+//             addressType: /addressType: '([^']+)'/
+//         };
+
+//         for (let key in patterns) {
+//             let match = address.match(patterns[key]);
+//             if (match) {
+//                 addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
+//             }
+//         }
+//         const orderID = generateRandomOrderId()
+//         const order = new orderSchema({
+//             userId,
+//             orderID,
+//             contactInfo: { name, email, phone },
+//             address: addressObj,
+//             products: orderProducts,
+//             totalPrice,
+//             couponDiscount,
+//             paymentMethod: paymentMethod,
+//             status: 'pending',
+//         })
+
+
+//         await order.save();
+
+//         cart.products = [];
+//         await cart.save();
+//         console.log('Order saved successfully');
+
+//         res.status(200).json(order)
+
+
+//     } catch (error) {
+//         console.log(`error from payment route ${error}`)
+//         res.status(500).send('Internal Server Error');
+//     }
+
+// }
 
 
 
@@ -508,7 +511,6 @@ module.exports = {
     addcheckoutAddress,
     deletecheckoutAddress,
     OrderPlaced,
-    paymentFailRazorpay,
     applycoupon,
     orderConfirm,
 

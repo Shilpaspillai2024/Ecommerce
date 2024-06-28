@@ -245,6 +245,17 @@
         margin-top: 1rem;
 
     }
+
+    /* .disabled-radio-label {
+    color: grey;
+    background-color: rgb(146, 144, 144);
+} */
+
+.disabled-radio-input {
+    pointer-events: none;
+    opacity: 0.6;
+    background-color: rgb(146, 144, 144);
+}
 </style>
 
 
@@ -409,11 +420,16 @@
                                             <div class="col-lg-3 col-sm-6">
                                                 <div data-bs-toggle="collapse">
                                                     <label class="card-radio-label">
-                                                        <input type="radio" name="paymentMethod" id="pay-methodoption1"
-                                                            value="Wallet" class="card-radio-input">
+                                                        <!-- <input type="radio" name="paymentMethod" id="pay-methodoption1"
+                                                            value="Wallet" class="card-radio-input"  <%= balance < total ? 'disabled' : '' %>>
+                                                         -->
+                                                         <input type="radio" name="paymentMethod" id="pay-methodoption1"
+                                                         value="Wallet" class="card-radio-input" <% if (balance < total) { %>disabled<% } %> >
+                                                      
+                                             
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="fa-regular fa-credit-card d-block h2 mb-3"></i>
-                                                            <!-- <i class="bx bx-credit-card d-block h2 mb-3"></i> -->
+                                                          
                                                             Wallet (<%=balance %>)
                                                         </span>
                                                     </label>
@@ -429,7 +445,7 @@
                                                             <!-- <i class="fa-brands fa-paypal d-block h2 mb-3"></i> -->
 
 
-                                                            <svg class="d-block h2 mb-3"" fill=" #072654" height="40"
+                                                            <svg class="d-block h2 mb-3" fill=" #072654" height="40"
                                                                 viewBox=".8 .48 1894.74 400.27" width="100"
                                                                 xmlns="http://www.w3.org/2000/svg">
                                                                 <path
@@ -529,16 +545,12 @@
                                                 </td>
                                                 <% }else { %>
                                                     <td>&#8377;
-                                                        <!-- <%= Math.round(product.productId.productPrice-((product.productId.productDiscount/100)*product.productId.productPrice))
-                                                            %> -->
+                                                       
                                                             <%= Math.round(
                                                                 product.productId.productPrice * (1 - product.productId.productDiscount / 100) * 
                                                                 product.productCount).toLocaleString() %>
 
-                                                            
-
-                                                          
-                                                    </td>
+                                                             </td>
                                                     <% }%>
                                         </tr>
 
@@ -741,114 +753,98 @@
 
 
             // submitting order
+
+
+
+
             async function checkoutSubmit(event) {
-                try {
-                    event.preventDefault();
+    try {
+        event.preventDefault();
 
-                    const couponCode = document.getElementById('couponCode').value;
+        const couponCode = document.getElementById('couponCode').value;
+        const form = document.getElementById('checkout-form');
+        const formData = new FormData(form);
+        let data = Object.fromEntries(formData.entries());
+        data = { ...data, couponCode };
 
-                    const form = document.getElementById('checkout-form');
-                    const formData = new FormData(form);
-                    let data = Object.fromEntries(formData.entries());
-                    data = { ...data, ...{ couponCode: couponCode } }
+        if (!validateCheckoutForm(data)) {
+            return;
+        }
 
-                    if (!validateCheckoutForm(data)) {
-                        return;
-                    }
+        const res = await fetch('/user/checkout-submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
 
-                    const res = await fetch('/user/checkout-submit', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
+        if (res.ok) {
+           
 
-                    if (res.ok) {
-                        const result = await res.json()
+            if (data.paymentMethod === 'razorpay') {
+                const result = await res.json();
 
-                        if (data.paymentMethod === 'razorpay') {
-                            initiateRazorpayPayment(result.orderId, result.amount, result.order)
-                        } else if (data.paymentMethod === 'COD' || data.paymentMethod === 'Wallet') {
-                            window.location.href = '/user/order-confirm';
+                const options = {
+                    key: "rzp_test_CgfUBYSTSF2QIh",
+                    amount: result.amount,
+                    currency: "INR",
+                    name: 'WORDPLAYBOOKS',
+                    order_id: result.razorpayOrderId,
+                    handler: async function(response) {
+                        try {
+                            const resData = {
+                                razorpayOrderId: response.razorpay_order_id,
+                               
+                            };
+
+                            const combinedData = { ...data, ...resData };
+
+                            const payment = await fetch('/user/checkout-submit', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(combinedData)
+                            });
+
+                            if (payment.ok) {
+                                const paymentData = await payment.json();
+                                window.location.href = '/user/order-confirm';
+                            } else {
+                                const paymentError = await payment.text();
+                                showError(paymentError);
+                            }
+                        } catch (error) {
+                            console.log(`handler error ${error}`);
                         }
-
-                    }
-
-                    else {
-                        const error = await res.text();
-                        showError(error);
-                    }
-                } catch (error) {
-                    console.log(`Error in order placing: ${error}`);
-                }
-            }
-            function initiateRazorpayPayment(orderId, amount, orderData) {
-                var options = {
-                    "key": "rzp_test_CgfUBYSTSF2QIh", // Your Razorpay API key
-                    "amount": amount, // Amount in paise
-                    "currency": "INR",
-                    "name": "WordPlayBooks",
-                    "description": "Product or Service Description",
-                    "image": "https://wordplaybooks.com/your_logo.png", // Your company logo URL
-                    "order_id": orderId, // Order ID from your backend
-
-                    "handler": function (response) {
-                        // Handle successful payment here
-                        window.location.href = '/user/order-confirm'
-
                     },
-                    "prefill": {
-                        "name": orderData.contactInfo.name,
-                        "email": orderData.contactInfo.email,
-                        "contact": orderData.contactInfo.phone,
+                    prefill: {
+                        name: data.name,
+                        email: data.email,
+                        contact: data.phone
                     },
-                    "theme": {
-                        "color": "#3399cc" // Customize the color of the Razorpay window
-                    },
-                    "modal": {
-                        "ondismiss": function () {
-                            window.location.href = '/user/checkout'
-                        }
+                    theme: {
+                        color: "#3399cc"
                     }
                 };
 
-                var razorpayWindow = new Razorpay(options);
-
-
-                razorpayWindow.on('payment.failed', async function (response) {
-                    try {
-                        const res = await fetch('/user/paymentfailrazorpay', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data)
-                        });
-
-                        if (res.ok) {
-                            const result = await res.json();
-                            console.log('Payment failed response:', result);
-                            window.location.href = '/user/orderFailure';
-                        } else {
-                            const error = await res.text();
-                            console.log('Error response from server:', error);
-                        }
-                    } catch (error) {
-                        console.log(`Error in payment failed handler: ${error}`);
-                    }
-                });
-
-
-                razorpayWindow.open();
+                const rzp1 = new Razorpay(options);
+                rzp1.open();
+            } else if (data.paymentMethod === 'COD' || data.paymentMethod === 'Wallet') {
+                window.location.href = '/user/order-confirm';
             }
+        } else {
+            const error = await res.text();
+            showError(error);
+        }
+    } catch (error) {
+        console.log(`Error in order placing: ${error}`);
+    }
+}
 
-
-
-
-
-
-            // when click cancel btn go to cart page
+           
+                     // when click cancel btn go to cart page
             document.getElementById('cancelButton').addEventListener('click', function () {
                 window.location.href = '/user/cart'; // Replace 'cart.html' with the URL of your cart page
             });

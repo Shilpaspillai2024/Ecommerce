@@ -113,7 +113,7 @@ user.post('/checkout-submit', checkUserSession, checkoutController.OrderPlaced)
 user.get('/order-confirm', checkUserSession, checkoutController.orderConfirm)
 
 
-user.post('/paymentfailrazorpay',checkUserSession,checkoutController.paymentFailRazorpay)
+// user.post('/paymentfailrazorpay',checkUserSession,checkoutController.paymentFailRazorpay)
 
 user.post('/applycoupon',checkUserSession,checkoutController.applycoupon)
 
