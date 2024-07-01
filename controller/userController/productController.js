@@ -102,60 +102,105 @@ const productView=async (req,res)=>{
 
 
 
-const productSeemore = async(req,res)=>{
+// const productSeemore = async(req,res)=>{
+//     try {
+//         const category=await categorySchema.find()
+
+
+      
+//         const product = await productSchema.find()
+
+
+//         if(req.session.user){
+//             const userId=req.session.user
+
+//             const wishlist=await wishlistSchema.findOne({userId:userId}) 
+
+      
+      
+//             res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),wishlist,user:req.session.user})
+
+//         }
+//         else{
+//             res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),user:req.session.user})
+//         }
+//     } catch (err) {
+//         console.log(`Error during product detail page ${err}`);
+//     }   
+// }
+
+const productSeemore = async (req, res) => {
     try {
-        // const category=await categorySchema.find()
+        const category = await categorySchema.find({isActive:true});
 
+        let { collections, minPrice, maxPrice, ratings, availability, sort } = req.query;
+        let filter = {};
 
-        const sortOption = req.query.sort;
-        let sortCriteria;
+        console.log('Query parameters:', req.query);
 
-        switch (sortOption) {
-            case 'price-low-high':
-                sortCriteria = { productPrice: 1 }; // Ascending order
-                break;
-            case 'price-high-low':
-                sortCriteria = { productPrice: -1 }; // Descending order
-                break;
-            // case 'average-ratings':
-            //     sortCriteria = { averageRating: -1 }; // Assuming you have an averageRating field
-            //     break;
-            case 'new-arrivals':
-                sortCriteria = { createdAt: -1 }; // Assuming you have a createdAt field
-                break;
-            case 'a-z':
-                sortCriteria = { productName: 1 }; // Alphabetical order
-                break;
-            case 'z-a':
-                sortCriteria = { productName: -1 }; // Reverse alphabetical order
-                break;
-            // Add more cases as needed
-            default:
-                sortCriteria = {}; // Default sorting
+        // Filtering
+        if (collections) {
+            
+            filter.productCategory = { $in: collections.split(',') };
+        }
+       
+      
+        if (minPrice || maxPrice) {
+            filter.productPrice = {};
+            if (minPrice) filter.productPrice.$gte = Number(minPrice);
+            if (maxPrice) filter.productPrice.$lte = Number(maxPrice);
+        }
+        if (ratings) {
+            filter.ratings = { $in: ratings.split(',').map(Number) };
+        }
+        if (availability) {
+            filter.productQuantity = { $gt: 0 };
         }
 
-
-        const product = await productSchema.find().sort(sortCriteria);
-
-
-        if(req.session.user){
-            const userId=req.session.user
-
-            const wishlist=await wishlistSchema.findOne({userId:userId}) 
+        // Sorting
+        let sortOption = {};
+        if (sort) {
+            switch (sort) {
+                case 'price-high-low':
+                    sortOption.productPrice = -1;
+                    break;
+                case 'price-low-high':
+                    sortOption.productPrice = 1;
+                    break;
+                case 'latest':
+                    sortOption.addedOn = -1;
+                    break;
+                case 'a-z':
+                    sortOption.productName = 1;
+                    break;
+                case 'z-a':
+                    sortOption.productName = -1;
+                    break;
+                default:
+                    sortOption = {};
+            }
+        }
 
       
-      
-            res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),wishlist,user:req.session.user})
+        const products = await productSchema.find(filter).sort(sortOption);
 
+        let wishlist = { products: [] };
+        if (req.session.user) {
+            const userId = req.session.user;
+            wishlist = await wishlistSchema.findOne({ userId });
         }
-        else{
-            res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),user:req.session.user})
-        }
+
+        res.render('user/productSeemore', {
+            product: products,
+            alertMessage: req.flash('errorMessage'),
+            wishlist,
+            user: req.session.user
+        });
     } catch (err) {
         console.log(`Error during product detail page ${err}`);
-    }   
-}
-
+        res.status(500).send('Internal Server Error');
+    }
+};
 
 
 

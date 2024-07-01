@@ -39,16 +39,7 @@ const addToWishlist=async(req,res)=>{
         const {productId}=req.body
 
         
-     
-        // const product=await productSchema.findById(productId)
-        // if(!product || product.productQuantity<=0){
-        //     return res.status(400).json({ error: 'Product is out of stock ' });
-        
-        // }
-
-
-
-        let wishlist=await wishlistSchema.findOne({userId})
+             let wishlist=await wishlistSchema.findOne({userId})
 
         if(!wishlist){
             wishlist=new wishlistSchema({userId,products:[]})
@@ -80,6 +71,7 @@ const removeWishlist=async (req,res)=>{
        const productId=req.params.id
        const userId=req.session.user
        const wishlist=await wishlistSchema.findOne({userId}).populate('products.productId')
+       
 
        if(wishlist===null){
         return res.status(404).json({error:"Product not found in wishlist"})
@@ -103,6 +95,9 @@ const removeWishlist=async (req,res)=>{
         return res.status(404).json({error:"Error on removing the products from wishlist"})
     }
 }
+
+
+
 
 
 

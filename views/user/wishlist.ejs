@@ -181,6 +181,8 @@
                 <!-- this will render each product on the product collection which is not blocked -->
                 <% products.forEach((product)=>{ %>
 
+
+                     <% if (product.productId) { %>
                     <!-- this is the product container and when it is clicked it redirect to product detail page -->
                     <div class="product-box">
                         <!-- if product discount is available then it is shown as a banner in product top  -->
@@ -251,7 +253,7 @@
 
 
                     </div>
-
+                   <%}%>
                     <% }) %>
                         <% }else{ %>
                             <div class="no-product-banner"></div>

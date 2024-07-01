@@ -267,6 +267,41 @@
     margin-bottom: 10px;
 }
 
+/* // now added */
+
+.filter-btn{
+        position: relative;
+    }
+
+.filter-panel {
+    position: absolute;
+    top: 220px; /* Adjusted to position right under the filter button */
+    left: 120px;
+    z-index: 1000;
+    width: 400px;
+    display: none;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.selected-filters {
+    margin-top: 15px;
+}
+
+
+        .selected-filters .badge {
+            margin-right: 5px;
+        }
+
 
     /* Responsive adjustments */
     @media (max-width: 576px) {
@@ -321,30 +356,66 @@
         <h2 class="product-book">BOOKS</h2>
 
 
-        <div class="filter-sort-container container">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label for="filter-stock" class="form-label">Show:</label>
-                    <select id="filter-stock" class="form-select" onchange="filterAndSortProducts()">
-                        <option value="all">All Products</option>
-                        <option value="in-stock">In Stock Only</option>
-                        <option value="out-of-stock">Out of Stock Only</option>
-                    </select>
+       
+
+        <div class="">
+            <div class="text-center nav-explore-background">
+                <!-- <h1 class="mb-2">ALL COLLECTION</h1> -->
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-primary" id="filter-btn">Filter</button>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sort by
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="applySort('price-high-low')">Price: High to Low</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="applySort('price-low-high')">Price: Low to High</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="applySort('latest')">Latest Arrival</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="applySort('a-z')">A-Z</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="applySort('z-a')">Z-A</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <label for="sort-products" class="form-label">Sort By:</label>
-                    <select id="sort-products" class="form-select" onchange="filterAndSortProducts()">
-                        <option value="popularity">Popularity</option>
-                        <option value="price-low-high">Price: Low to High</option>
-                        <option value="price-high-low">Price: High to Low</option>
-                        <option value="average-ratings">Average Ratings</option>
-                        <option value="featured">Featured</option>
-                        <option value="new-arrivals">New Arrivals</option>
-                        <option value="a-z">A - Z</option>
-                        <option value="z-a">Z - A</option>
-                    </select>
-                </div>
+                <hr>
             </div>
+        </div>
+    
+        <div class="filter-panel" id="filter-panel">
+            <span class="close-icon" id="close-filter-panel">&times;</span> <!-- Close icon -->
+            <form id="filter-form" method="get" action="/user/productSeemore" >
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+                    <div>
+                        <input class="form-check-input" type="checkbox" name="collections" value="Best Seller"> Best Sellers<br>
+                        <input class="form-check-input" type="checkbox" name="collections" value="Fiction"> Fiction<br>
+                        <input class="form-check-input" type="checkbox" name="collections" value="Non-Fiction"> Non-Fiction<br>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Price Range</label>
+                    <div>
+                        <input class="form-control" type="text" class="form-control" placeholder="Min Price" name="minPrice">
+                        <input class="form-control" type="text" class="form-control" placeholder="Max Price" name="maxPrice">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ratings</label>
+                    <div>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="1"> 1 Star<br>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="2"> 2 Stars<br>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="3"> 3 Stars<br>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="4"> 4 Stars<br>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="5"> 5 Stars<br>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Availability</label>
+                    <div>
+                        <input class="form-check-input" type="checkbox" name="availability" value="in-stock"> In Stock<br>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="apply-filters">Apply Filters</button>
+            </form>
         </div>
 
 
@@ -431,7 +502,7 @@
                             <div class="no-product-banner"></div>
                             <% } %>
         </div>
-
+     
     </div>
 
 
@@ -563,11 +634,26 @@
 
 
 
-    function filterAndSortProducts() {
-        const sortOption = document.getElementById('sort-products').value;
-        window.location.href = `/productSeemore?sort=${sortOption}`;
+   
+
+
+    // Function to handle sorting
+    function applySort(sortOption) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('sort', sortOption);
+        window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
     }
 
+    // Function to handle filter panel toggle
+    document.getElementById('filter-btn').addEventListener('click', function() {
+        var filterPanel = document.getElementById('filter-panel');
+        filterPanel.style.display = filterPanel.style.display === 'none' || filterPanel.style.display === '' ? 'block' : 'none';
+    });
+
+    document.getElementById('close-filter-panel').addEventListener('click', function() {
+        var filterPanel = document.getElementById('filter-panel');
+        filterPanel.style.display = 'none';
+    });
 
     </script>
 

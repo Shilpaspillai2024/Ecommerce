@@ -25,6 +25,10 @@ admin.post('/login', adminController.loginPost)
 
 //admin dashbord
 admin.get('/dashboard', checkAdminSession, dashboardController.dashboard)
+admin.post('/custom-sales',checkAdminSession,dashboardController.generateCustomSales)
+admin.post('/pdf-report',checkAdminSession,dashboardController.downloadPdfReport)
+admin.post('/excel-report',checkAdminSession,dashboardController.downloadExcelReport)
+
 
 
 

@@ -1,6 +1,10 @@
 <style>
- .dashboard-container {
+    .dashboard-container {
         min-height: 100vh;
+        background-color: #000;
+        /* Set dashboard background to black */
+        color: #fff;
+        /* Set text color to white */
     }
 
     .date-form {
@@ -10,162 +14,478 @@
         gap: 1rem;
     }
 
-
     .secondary {
-            background-color: #6c757d; /* Gray */
-        }
-        .primary {
-            background-color: #007bff; /* Blue */
-        }
-        .success {
-            background-color: #28a745; /* Green */
-        }
-        .info {
-            background-color: #17a2b8; /* Light Blue */
-        }
-        .warning {
-            background-color: #ffc107; /* Yellow */
-        }
-        .danger {
-            background-color: #dc3545; /* Red */
-        }
-        .orange {
-            background-color: #7ab3da; /* Orange */
-        }
-       
-        .btn-custom {
-            background-color: #444;
-            border: none;
-            color: #fff;
-        }
-        .btn-custom:hover {
-            background-color: #555;
-        }
-</style>
+        background-color: #6c757d;
+        /* Gray */
+    }
 
+    .primary {
+        background-color: #007bff;
+        /* Blue */
+    }
 
+    .success {
+        background-color: #28a745;
+        /* Green */
+    }
+
+    .info {
+        background-color: #17a2b8;
+        /* Light Blue */
+    }
+
+    .warning {
+        background-color: #ffc107;
+        /* Yellow */
+    }
+
+    .danger {
+        background-color: #dc3545;
+        /* Red */
+    }
+
+    .orange {
+        background-color: #7ab3da;
+        /* Orange */
+    }
+
+    .btn-custom {
+        background-color: #444;
+        border: none;
+        color: #fff;
+    }
+
+    .btn-custom:hover {
+        background-color: #555;
+    }
+
+    /* Additional styles for visibility */
+    .card-counter {
+        color: #000;
+        /* Set text color to black for better contrast with the card backgrounds */
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 5px;
+        box-shadow: 2px 2px 10px #333;
+    }
+
+    .table {
+        color: #fff;
+        /* Ensure table text is white */
+    }
+
+    .table thead {
+        background-color: #007bff;
+        /* Blue header background */
+        color: #fff;
+        /* White text for headers */
+    }
+
+    .table tbody tr {
+        background-color: #333;
+        /* Dark row background for better visibility */
+    }
+
+    .form-control,
+    .form-select {
+        background-color: #222;
+        /* Dark background for input fields */
+        color: #fff;
+        /* White text for input fields */
+        border: 1px solid #555;
+        /* Border color */
+    }
+
+    .form-control::placeholder,
+    .form-select::placeholder {
+        color: #888;
+        /* Placeholder color */
+    }
+
+    label {
+        color: #fff;
+        /* White text for labels */
+    }
+
+    .badge {
+        color: #fff;
+        /* White text for badges */
+    }
 </style>
 
 
 <%- include('navbar') %>
-   <div class="container dashboard-container text-white">
-      <div class="row mt-5">
-          <div class="col-md-12 mb-3">
-              <h2>Sales Report</h2>
-          </div>
-          <div class="col-md-4">
-              <div class="card-counter secondary">
-                  <i class="fa-solid fa-dollar-sign"></i>
-                  <span class="count-numbers">
-                
-                  </span>
-                  <span class="count-name">Overall Order Count</span>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="card-counter primary">
-                  <i class="fa-solid fa-box-archive"></i>
-                  <span class="count-numbers">
-                
-                  </span>
-                  <span class="count-name">Overall Sales Amount</span>
-              </div>
-          </div>
+    <div class="container dashboard-container text-white">
+        <div class="row mt-5">
+            <div class="col-md-12 mb-3">
+                <h2>Sales Report</h2>
+            </div>
+            <div class="col-md-4">
+                <div class="card-counter secondary">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                    <span class="count-numbers">
+                        <%= overallSalesCount.toLocaleString() %>
+                    </span>
+                    <span class="count-name">Overall Order Count</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-counter primary">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span class="count-numbers">
+                        &#8377; <%= overallSalesAmount.toLocaleString() %>
+                    </span>
+                    <span class="count-name">Overall Sales Amount</span>
+                </div>
+            </div>
 
-          <div class="col-md-4">
-              <div class="card-counter success">
-                  <i class="fa-solid fa-percent"></i>
-                  <span class="count-numbers">
-                   
-                  </span>
-                  <span class="count-name">Overall Discount</span>
-              </div>
-          </div>
-      </div>
-      <div class="row mt-5">
-          <div class="col-md-4">
-              <div class="card-counter info">
-                  <i class="fa-solid fa-hand-holding-dollar"></i>
-                  <span class="count-numbers">
-                  
-                  </span>
-                  <span class="count-name">Daily Sale </span>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="card-counter danger">
-                  <i class="fa-solid fa-coins"></i>
-                  <span class="count-numbers">
-                      &#8377;
-                  </span>
-                  <span class="count-name">weeklyReport :</span>
-              </div>
-          </div>
+            <div class="col-md-4">
+                <div class="card-counter success">
+                    <i class="fa-solid fa-percent"></i>
+                    <span class="count-numbers">
+                        &#8377; <%= overallDiscount.toLocaleString() %>
+                    </span>
+                    <span class="count-name">Overall Discount</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card-counter info">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span class="count-numbers">
+                        &#8377; <%= dailyReport.toLocaleString() %>
+                    </span>
+                    <span class="count-name">Daily Sale: <%= new Date().toDateString() %> </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-counter danger">
+                    <i class="fa-solid fa-coins"></i>
+                    <span class="count-numbers">
+                        &#8377; <%= weeklyReport.toLocaleString() %>
+                    </span>
+                    <span class="count-name">weeklyReport :</span>
+                </div>
+            </div>
 
-          <div class="col-md-4">
-              <div class="card-counter warning">
-                  <i class="fa-solid fa-sack-dollar"></i>
-                  <span class="count-numbers">
-                     
-                  </span>
-                  <span class="count-name">Monthly Sale : <span id="current-month"></span></span>
-              </div>
-          </div>
-      </div>
-      <div class="row mt-5">
-          <div class="col-md-12">
-              <div class="card-counter orange">
-                  <i class="fa-solid fa-circle-dollar-to-slot"></i>
-                  <span class="count-numbers" id="custom-sale-display">&#8377; 00</span>
-                  <form class="date-form" id="custom-sales-form">
-                      <div class="row">
-
-
-                          <div class="col-md-4">
-                              <label for="startDate">Starting Date</label>
-                              <input id="startDate" class="form-control" type="date" name="startDate" />
-                              <label id="startDate-validate" class="text-danger"></label>
-                          </div>
-                          <div class="col-md-4">
-                              <label for="endDate">Ending Date</label>
-                              <input id="endDate" class="form-control" type="date" name="endDate" />
-                              <label id="endDate-validate" class="text-danger"></label>
-                          </div>
-                          <div class="col-md-4">
-                              <label for="report-select">Sales Duration</label>
-                              <select class="form-select" aria-label="Default select example" id="report-select">
-                                  <option value="1" selected>Today</option>
-                                  <option value="2">One Week</option>
-                                  <option value="3">One Month</option>
-                                  <option value="4" id="current-month-option">This Month</option>
-                                  <option value="5">Six Months</option>
-                                  <option value="6">One Year</option>
-                              </select>
-                              <label id="report-select-validate" class="text-danger"></label>
-                          </div>
-
-                          <div class="col-md-12 text-center">
-                              <button class="btn btn-dark m-2" type="submit">Generate Report</button>
-                              <button class="btn btn-dark m-2" type="button" onclick="downloadExcelReport()">Download
-                                  Excel
-                                  Report</button>
-                              <button class="btn btn-dark m-2" type="button" onclick="downloadPdfReport()">Download
-                                  PDf
-                                  Report</button>
-                          </div>
+            <div class="col-md-4">
+                <div class="card-counter warning">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                    <span class="count-numbers">
+                        &#8377; <%= monthlyReport.toLocaleString() %>
+                    </span>
+                    <span class="count-name">Monthly Sale : <span id="current-month"></span></span>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card-counter orange">
+                    <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                    <span class="count-numbers" id="custom-sale-display">&#8377; 00</span>
+                    <form class="date-form" id="custom-sales-form">
+                        <div class="row">
 
 
+                            <div class="col-md-4">
+                                <label for="startDate">Starting Date</label>
+                                <input id="startDate" class="form-control" type="date" name="startDate" />
+                                <label id="startDate-validate" class="text-danger"></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="endDate">Ending Date</label>
+                                <input id="endDate" class="form-control" type="date" name="endDate" />
+                                <label id="endDate-validate" class="text-danger"></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="report-select">Sales Duration</label>
+                                <select class="form-select" aria-label="Default select example" id="report-select">
+                                    <option value="1" selected>Today</option>
+                                    <option value="2">One Week</option>
+                                    <option value="3">One Month</option>
+                                    <option value="4" id="current-month-option">This Month</option>
+                                    <option value="5">Six Months</option>
+                                    <option value="6">One Year</option>
+                                </select>
+                                <label id="report-select-validate" class="text-danger"></label>
+                            </div>
 
-                      </div>
-                  </form>
-
-                  <span class="count-name">Custom Date Sale</span>
-              </div>
-          </div>
-      </div>
+                            <div class="col-md-12 text-center">
+                                <button class="btn btn-dark m-2" type="submit">Generate Report</button>
+                                <button class="btn btn-dark m-2" type="button" onclick="downloadExcelReport()">Download
+                                    Excel
+                                    Report</button>
+                                <button class="btn btn-dark m-2" type="button" onclick="downloadPdfReport()">Download
+                                    PDf
+                                    Report</button>
+                            </div>
 
 
 
+                        </div>
+                    </form>
+
+                    <span class="count-name">Custom Date Sale</span>
+                </div>
+            </div>
+        </div>
+
+        <%- include('salesChart')%>
+            <!-- table for generating the sales report -->
+            <div class="row my-5">
+                <div class="table-responsive col-md-12">
+                    <table class="table">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col" class="text-center py-3">sl.no</th>
+                                <th scope="col" class="py-3">Order ID</th>
+                                <th scope="col" class="py-3">Ordered Date</th>
+                                <th scope="col" class="py-3">Payment Method</th>
+                                <th scope="col" class="py-3">Status</th>
+                                <th scope="col" class="py-3">Price</th>
+                                <!-- <th scope="col" class="text-center py-3">Actions</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orderDetails.forEach((ele,index)=>{ %>
+                                <tr>
+                                    <th scope="row" class="text-center">
+                                        <%= index+1 %>
+                                    </th>
+                                    <td class="product-name-td">
+                                        <!-- <%= ele._id %> -->
+                                        <%= ele.orderID %>
+                                    </td>
+                                    <td>
+                                        <%= ele.createdAt.toDateString() %>
+                                    </td>
+                                    <td>
+                                        <%= ele.paymentMethod %>
+                                    </td>
+                                    <td>
+                                        <%= ele.status %>
+                                            <!-- <span class="badge">
+                                       
+                                    </span> -->
+
+                                    </td>
+                                    <td>&#8377;<%= ele.totalPrice.toLocaleString() %>
+                                    </td>
+
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <%- include('pagination') %>
+                </div>
+            </div>
+    </div>
+
+    <%- include('footer') %>
 
 
-  <%- include('footer') %>
+        <script>
+
+            // function for validating the date
+            function validateDates(startDate, endDate) {
+                // Clear previous validation messages
+                document.getElementById('startDate-validate').innerHTML = "";
+                document.getElementById('endDate-validate').innerHTML = "";
+                document.getElementById('report-select-validate').innerHTML = "";
+
+                // Validate the dates
+                if (!startDate) {
+                    document.getElementById('startDate-validate').innerHTML = "Start date is required";
+                    return false;
+                }
+                if (!endDate) {
+                    document.getElementById('endDate-validate').innerHTML = "End date is required";
+                    return false;
+                }
+                if (new Date(startDate) > new Date(endDate)) {
+                    document.getElementById('startDate-validate').innerHTML = "Start date cannot be later than end date";
+                    document.getElementById('endDate-validate').innerHTML = "End date cannot be earlier than start date";
+                    return false;
+                }
+                return true
+            }
+
+            //get the current month
+
+
+            const getCurrentMonthYear = () => {
+                const now = new Date()
+                const options = { month: 'long', year: 'numeric' }
+                return now.toLocaleDateString('en-US', options);
+            }
+
+
+            // render the current month and year on the respective fields
+            document.addEventListener('DOMContentLoaded', (event) => {
+                document.getElementById('current-month').innerHTML = getCurrentMonthYear();
+                document.getElementById('current-month-option').innerHTML = getCurrentMonthYear();
+            });
+
+
+
+
+            // get the custom date sales report 
+            const customDateForm = document.getElementById('custom-sales-form');
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+
+            customDateForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // validate the dates and if valid then proceed with fetch
+                if (validateDates(startDate.value, endDate.value)) {
+
+                    // fetch for getting the custom sales report 
+                    const URL = "/admin/custom-sales";
+                    fetch(URL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ startDate: startDate.value, endDate: endDate.value })
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (data.sale) {
+                                document.getElementById('custom-sale-display').innerHTML = "&#8377; " + data.sale.toLocaleString();
+                            } else {
+                                document.getElementById('custom-sale-display').innerHTML = "&#8377; " + 0;
+                            }
+                        })
+                        .catch((err) => {
+                            console.error("Error on getting custom sales report", err);
+                        });
+                }
+            });
+
+
+            // select the predefined dates
+            document.addEventListener("DOMContentLoaded", function () {
+                const reportSelect = document.getElementById('report-select');
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+
+                reportSelect.addEventListener('change', function () {
+                    const now = new Date();
+                    let startDate, endDate;
+
+                    switch (reportSelect.value) {
+                        case '1':
+                            // Today
+                            startDate = now;
+                            endDate = now;
+                            break;
+                        case '2':
+                            // One Week
+                            startDate = new Date(now);
+                            startDate.setDate(now.getDate() - 7);
+                            endDate = now;
+                            break;
+                        case '3':
+                            // One Month
+                            startDate = new Date(now);
+                            startDate.setMonth(now.getMonth() - 1);
+                            endDate = now;
+                            break;
+                        case '4':
+                            // This Month
+                            startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                            endDate = now;
+                            break;
+                        case '5':
+                            // Six Months
+                            startDate = new Date(now);
+                            startDate.setMonth(now.getMonth() - 6);
+                            endDate = now;
+                            break;
+                        case '6':
+                            // One Year
+                            startDate = new Date(now);
+                            startDate.setFullYear(now.getFullYear() - 1);
+                            endDate = now;
+                            break;
+                        default:
+                            startDate = null;
+                            endDate = null;
+                    }
+
+                    startDateInput.value = startDate ? startDate.toISOString().split('T')[0] : '';
+                    endDateInput.value = endDate ? endDate.toISOString().split('T')[0] : '';
+                });
+
+                // Trigger the change event to set initial dates based on the default selection
+                reportSelect.dispatchEvent(new Event('change'));
+            });
+
+
+            // download excel report 
+            function downloadExcelReport() {
+                if (validateDates(startDate.value, endDate.value)) {
+                    const URL = "/admin/excel-report";
+                    fetch(URL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ startDate: startDate.value, endDate: endDate.value })
+                    })
+                        .then((res) => {
+                            if (res.ok) {
+                                return res.blob();
+                            }
+                            throw new Error('Network response was not ok.');
+                        })
+                        .then((blob) => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = `report-${Date.now()}.xlsx`; // Change extension to .xlsx
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                }
+            }
+
+            // download pdf report 
+            function downloadPdfReport() {
+
+                if (validateDates(startDate.value, endDate.value)) {
+                    const URL = "/admin/pdf-report"
+                    fetch(URL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ startDate: startDate.value, endDate: endDate.value })
+                    }).then((res) => {
+                        if (res.ok) {
+                            return res.blob();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                        .then((blob) => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = `report-${Date.now()}.pdf`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        })
+                }
+
+            }
+
+        </script>
