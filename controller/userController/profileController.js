@@ -51,6 +51,10 @@ const changePassword = async(req,res)=>{
 
         const {currentPassword,newPassword,confirmPassword}=req.body;
 
+
+       
+        
+
         if(newPassword !== confirmPassword){
             req.flash('errorMessage', 'New password and confirm new password do not match.');
             return res.redirect('/user/profile');

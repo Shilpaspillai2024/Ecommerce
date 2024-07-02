@@ -357,7 +357,7 @@
                                 <h3>
                                     <del>&#8377; <%= product.productPrice.toLocaleString() %></del>
                                 </h3>
-                                <h3>&#8377; <%= parseInt(product.productPrice - ((product.productDiscount / 100) * product.productPrice)).toLocaleString() %></h3>
+                                <h3>&#8377; <%= Math.round(product.productPrice - ((product.productDiscount / 100) * product.productPrice)).toLocaleString() %></h3>
                             <% } %>
                         </div>
                         

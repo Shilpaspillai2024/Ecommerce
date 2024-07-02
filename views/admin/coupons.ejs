@@ -364,11 +364,13 @@
                     formValid = false
                     document.getElementsByClassName('validateCoupon')[1].innerHTML = "Invalid Discount Amount"
                 }
-                if (discountAmount.value > 10000) {
+                if (discountAmount.value <5 || discountAmount.value >100) {
                     formValid = false
-                    document.getElementsByClassName('validateCoupon')[1].innerHTML = "Invalid Discount Amount. Value must be between 100 and 10000"
+                    document.getElementsByClassName('validateCoupon')[1].innerHTML = "Invalid Discount Amount. Value must be between 5 and 100"
                 }
-                if (minPurchase.value > 1000000 || isNaN(minPurchase.value) || minPurchase.value.trim() === '') {
+
+              
+                if (minPurchase.value > 10000 || isNaN(minPurchase.value) || minPurchase.value.trim() === '') {
                     formValid = false
                     document.getElementsByClassName('validateCoupon')[2].innerHTML = "Invalid Minimum Purchase Amount"
                 }
@@ -458,9 +460,9 @@
                     formValid = false
                     document.getElementsByClassName('editValidateCoupon')[1].innerHTML = "Invalid Discount Amount"
                 }
-                if (newDiscount.value > 10000) {
+                if (newDiscount.value <5 || newDiscount.value >100) {
                     formValid = false
-                    document.getElementsByClassName('editValidateCoupon')[1].innerHTML = "Invalid Discount Amount. Value must be between 100 and 10000"
+                    document.getElementsByClassName('editValidateCoupon')[1].innerHTML = "Invalid Discount Amount. Value must be between 5 and 100"
                 }
                 if (newPurchase.value > 1000000 || isNaN(newPurchase.value) || newPurchase.value.trim() === '') {
                     formValid = false

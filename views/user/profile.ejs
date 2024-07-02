@@ -266,6 +266,7 @@
                 <div class="form-group">
                     <label for="currentPassword">Current Password</label>
                     <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                    <div id="currentPasswordError" class="invalid-feedback"></div>
                 </div>
                 <div class="form-group">
                     <label for="newPassword">New Password</label>
@@ -315,8 +316,10 @@
 
             // change password validation
             const changePasswordForm = document.getElementById('change-password-form');
+            const currentPasswordInput = document.getElementById('currentPassword');
             const newPassword = document.getElementById('newPassword');
             const confirmNewPassword = document.getElementById('confirmNewPassword');
+            const currentPasswordError = document.getElementById('currentPasswordError')
             const newPasswordError = document.getElementById('newPasswordError');
             const confirmNewPasswordError = document.getElementById('confirmNewPasswordError');
 
@@ -326,6 +329,19 @@
                 // Regular expressions for password validation
                 const uppercaseRegex = /[A-Z]/;
                 const specialCharacterRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+
+                // Check if current password and new password are the same
+                if (currentPasswordInput.value === newPassword.value) {
+                    // Display error message for current password
+                    currentPasswordError.textContent = "New password must be different from the current password";
+                    currentPasswordInput.classList.add('is-invalid');
+                    return;
+                } else {
+                    // Remove error message and invalid class if current password and new password are different
+                    currentPasswordError.textContent = "";
+                    currentPasswordInput.classList.remove('is-invalid');
+                }
 
                 // Check if new password and confirm password match
                 if (newPassword.value !== confirmNewPassword.value) {
@@ -350,6 +366,9 @@
                     newPasswordError.textContent = "";
                     newPassword.classList.remove('is-invalid');
                 }
+
+
+
 
                 // If all validations pass, submit the form
                 this.submit();

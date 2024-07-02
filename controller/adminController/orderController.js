@@ -3,9 +3,9 @@ const orderSchema = require('../../model/orderSchema')
 const order = async (req, res) => {
     try {
         // const orderSearch=req.query.orderSearch || '';
-       
 
-        const order = await orderSchema.find().populate('products.productId').populate('userId').sort({createdAt:-1})
+
+        const order = await orderSchema.find().populate('products.productId').populate('userId').sort({ createdAt: -1 })
 
         res.render('admin/order', { admin: req.session.admin, title: 'Order List', alertMessage: req.flash('errorMessage'), order })
 
@@ -39,16 +39,11 @@ const editOrderStatus = async (req, res) => {
         const orderId = req.params.orderId;
         const orderStatus = req.body.orderStatus;
 
-        const productDeliveryStatusEnum = ['processing', 'confirmed', 'pending','shipped', 'cancelled', 'delivered', 'returned'];
+        const productDeliveryStatusEnum = ['processing', 'confirmed', 'pending', 'shipped', 'cancelled', 'delivered', 'returned'];
 
         if (!productDeliveryStatusEnum.includes(orderStatus)) {
             throw new Error('Invalid order status');
         }
-
-       
-
-
-
         const order = await orderSchema.findById(orderId);
 
         if (!order) {
@@ -56,9 +51,6 @@ const editOrderStatus = async (req, res) => {
         }
 
         order.status = orderStatus;
-
-
-       
         // Check if the order status is cancelled and set isCancelled to true
         if (orderStatus === 'cancelled') {
             order.isCancelled = true;

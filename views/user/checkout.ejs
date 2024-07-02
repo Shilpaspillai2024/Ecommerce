@@ -152,6 +152,8 @@
         display: block
     }
 
+ 
+
     .card-radio:hover {
         cursor: pointer
     }
@@ -160,6 +162,11 @@
         display: block
     }
 
+    /* .text-warning {
+    text-align: center;
+    width: 100%;
+} */
+ 
     .edit-btn {
         width: 35px;
         height: 35px;
@@ -251,11 +258,13 @@
     background-color: rgb(146, 144, 144);
 } */
 
-.disabled-radio-input {
-    pointer-events: none;
-    opacity: 0.6;
-    background-color: rgb(146, 144, 144);
-}
+    .disabled-radio-input {
+        pointer-events: none;
+        opacity: 0.6;
+        background-color: rgb(146, 144, 144);
+    }
+
+   
 </style>
 
 
@@ -420,18 +429,18 @@
                                             <div class="col-lg-3 col-sm-6">
                                                 <div data-bs-toggle="collapse">
                                                     <label class="card-radio-label">
-                                                        <!-- <input type="radio" name="paymentMethod" id="pay-methodoption1"
-                                                            value="Wallet" class="card-radio-input"  <%= balance < total ? 'disabled' : '' %>>
-                                                         -->
-                                                         <input type="radio" name="paymentMethod" id="pay-methodoption1"
-                                                         value="Wallet" class="card-radio-input" <% if (balance < total) { %>disabled<% } %> >
-                                                      
-                                             
-                                                        <span class="card-radio py-3 text-center text-truncate">
-                                                            <i class="fa-regular fa-credit-card d-block h2 mb-3"></i>
-                                                          
-                                                            Wallet (<%=balance %>)
-                                                        </span>
+
+                                                        <input type="radio" name="paymentMethod" id="pay-methodoption1"
+                                                            value="Wallet" class="card-radio-input" <% if (balance <
+                                                            total) { %>disabled<% } %> >
+
+
+                                                            <span class="card-radio py-3 text-center text-truncate">
+                                                                <i
+                                                                    class="fa-regular fa-credit-card d-block h2 mb-3"></i>
+
+                                                                Wallet (<%=balance %>)
+                                                            </span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -460,7 +469,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-3 col-sm-6">
+                                            <!-- <div class="col-lg-3 col-sm-6">
                                                 <div>
                                                     <label class="card-radio-label">
                                                         <input type="radio" name="paymentMethod" value="COD"
@@ -469,10 +478,39 @@
                                                         <span class="card-radio py-3 text-center text-truncate">
                                                             <i class="bi bi-cash  d-block h2 mb-3"></i>
                                                             <span>Cash on Delivery</span>
+                                                          </span>
+                                                            
+                                                        </label>
+                                                        <% if (total < 1000) { %>
+                                                        <label for="payment-method-cod" class="badge bg-danger" id="alert-for-COD">
+                                                            Available for below ₹1000</label>
+                                                            <% } %>
+                                                       
+                                                </div>
+                                            </div> -->
+
+
+
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div >
+                                                    <label class="card-radio-label">
+                                                        <input type="radio" name="paymentMethod" value="COD"
+                                                            id="pay-methodoption3" class="card-radio-input" <% if (total >= 1000) { %> disabled <% } %> >
+                                            
+                                                        <span class="card-radio py-3 text-center text-truncate" id="cod-span">
+                                                            <i class="bi bi-cash d-block h2 mb-3"></i>
+                                                            <span>Cash on Delivery</span>
                                                         </span>
                                                     </label>
+                                                    <% if (total >= 1000) { %>
+                                                    <label for="pay-methodoption3" class="badge bg-danger mt-2" id="alert-for-COD">
+                                                        Available for orders below ₹1000
+                                                    </label>
+                                                    <% } %>
                                                 </div>
                                             </div>
+                                            
+                                            
                                             </form>
                                         </div>
                                     </div>
@@ -545,21 +583,32 @@
                                                 </td>
                                                 <% }else { %>
                                                     <td>&#8377;
-                                                       
-                                                            <%= Math.round(
-                                                                product.productId.productPrice * (1 - product.productId.productDiscount / 100) * 
-                                                                product.productCount).toLocaleString() %>
 
-                                                             </td>
+                                                        <%= Math.round( product.productId.productPrice * (1 -
+                                                            product.productId.productDiscount / 100) *
+                                                            product.productCount).toLocaleString() %>
+
+                                                    </td>
                                                     <% }%>
                                         </tr>
 
                                         <% } ) %>
                                             <tr>
-                                                <td>Coupon Discount</td>
+                                                <td>Coupon Discount :</td>
                                                 <td></td>
                                                 <td class="text-center text-danger">&#8377; <span
                                                         id="couponDiscount">0</span></td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td>Shipping Charge :</td>
+                                                <!-- <td>:</td> -->
+                                                 <td></td>
+                                                <!-- <td class="text-end">&#8377; <%= cartDetails.payableAmount> 500 ? "FREE" : 50 %> -->
+                                                
+                                                    <td class="text-end">&#8377; <%=shippingCharge %> 
+                                                </td>
                                             </tr>
 
 
@@ -569,9 +618,8 @@
                                         <th>Total :</th>
                                         <th></th>
                                         <td><i class="bi bi-currency-rupee"></i><span id="totalPriceCheckout">
-                                                <!-- <%= total %> -->
-
-                                                <%= (cartDetails.payableAmount).toLocaleString() %>
+                                                <%= total %>
+                                                
                                             </span>
 
                                         </td>
@@ -584,7 +632,7 @@
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-shield-fill-check h4 me-2"></i>
                                     <div class="flex-grow-1">
-                                        Your order is eligible for FREE Delivery.
+                                        Your order is eligible for FREE Delivery Rs 500 onwards.
                                     </div>
                                 </div>
                             </div>
@@ -692,6 +740,13 @@
         <!-- JavaScript to populate billing address -->
         <script>
 
+
+
+var codSpan = document.getElementById('cod-span');
+    if (codSpan) {
+        codSpan.style.color = '<%= (total >= 1000) ? "gray" : "initial" %>';
+    }
+
             //delete confirmation
 
             document.querySelectorAll('.action-link').forEach((x) => {
@@ -753,98 +808,120 @@
 
 
             // submitting order
+           async function checkoutSubmit(event) {
+                try {
+                    event.preventDefault();
+
+                    const couponCode = document.getElementById('couponCode').value;
+                    const form = document.getElementById('checkout-form');
+                    const formData = new FormData(form);
+                    let data = Object.fromEntries(formData.entries());
+                    data = { ...data, couponCode };
+
+                    if (!validateCheckoutForm(data)) {
+                        return;
+                    }
+
+                    const res = await fetch('/user/checkout-submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (res.ok) {
 
 
+                        if (data.paymentMethod === 'razorpay') {
+                            const result = await res.json();
 
+                            const options = {
+                                key: "rzp_test_CgfUBYSTSF2QIh",
+                                amount: result.amount,
+                                currency: "INR",
+                                name: 'WORDPLAYBOOKS',
+                                order_id: result.razorpayOrderId,
+                                handler: async function (response) {
+                                    try {
+                                        const resData = {
+                                            razorpayOrderId: response.razorpay_order_id,
 
-            async function checkoutSubmit(event) {
-    try {
-        event.preventDefault();
+                                        };
 
-        const couponCode = document.getElementById('couponCode').value;
-        const form = document.getElementById('checkout-form');
-        const formData = new FormData(form);
-        let data = Object.fromEntries(formData.entries());
-        data = { ...data, couponCode };
+                                        const combinedData = { ...data, ...resData };
 
-        if (!validateCheckoutForm(data)) {
-            return;
-        }
+                                        const payment = await fetch('/user/checkout-submit', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify(combinedData)
+                                        });
 
-        const res = await fetch('/user/checkout-submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (res.ok) {
-           
-
-            if (data.paymentMethod === 'razorpay') {
-                const result = await res.json();
-
-                const options = {
-                    key: "rzp_test_CgfUBYSTSF2QIh",
-                    amount: result.amount,
-                    currency: "INR",
-                    name: 'WORDPLAYBOOKS',
-                    order_id: result.razorpayOrderId,
-                    handler: async function(response) {
-                        try {
-                            const resData = {
-                                razorpayOrderId: response.razorpay_order_id,
-                               
+                                        if (payment.ok) {
+                                            const paymentData = await payment.json();
+                                            window.location.href = '/user/order-confirm';
+                                        } else {
+                                            const paymentError = await payment.text();
+                                            showError(paymentError);
+                                        }
+                                    } catch (error) {
+                                        console.log(`handler error ${error}`);
+                                    }
+                                },
+                                prefill: {
+                                    name: data.name,
+                                    email: data.email,
+                                    contact: data.phone
+                                },
+                                theme: {
+                                    color: "#3399cc"
+                                },
+                                "modal": {
+                        "ondismiss": function () {
+                             window.location.href = '/user/checkout-submit'
+                             }
+                            }
                             };
 
-                            const combinedData = { ...data, ...resData };
+                            const rzp1 = new Razorpay(options);
 
-                            const payment = await fetch('/user/checkout-submit', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(combinedData)
-                            });
+                            rzp1.on('payment.failed', async function (response){
+                    
+                    const res = await fetch('/user/paymentfailrazorpay',{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({...data, paymentStatus: 'Pending' })
+                    })
 
-                            if (payment.ok) {
-                                const paymentData = await payment.json();
-                                window.location.href = '/user/order-confirm';
-                            } else {
-                                const paymentError = await payment.text();
-                                showError(paymentError);
-                            }
-                        } catch (error) {
-                            console.log(`handler error ${error}`);
-                        }
-                    },
-                    prefill: {
-                        name: data.name,
-                        email: data.email,
-                        contact: data.phone
-                    },
-                    theme: {
-                        color: "#3399cc"
+                    if(res.ok){
+
+                        const data = await res.json()
+
+                        window.location.href = '/user/orderFailure'
                     }
-                };
 
-                const rzp1 = new Razorpay(options);
-                rzp1.open();
-            } else if (data.paymentMethod === 'COD' || data.paymentMethod === 'Wallet') {
-                window.location.href = '/user/order-confirm';
+
+                })
+                            rzp1.open();
+                        } else if (data.paymentMethod === 'COD' || data.paymentMethod === 'Wallet') {
+                            window.location.href = '/user/order-confirm';
+                        }
+                    } else {
+                        const error = await res.text();
+                        showError(error);
+                    }
+                } catch (error) {
+                    console.log(`Error in order placing: ${error}`);
+                }
             }
-        } else {
-            const error = await res.text();
-            showError(error);
-        }
-    } catch (error) {
-        console.log(`Error in order placing: ${error}`);
-    }
-}
 
-           
-                     // when click cancel btn go to cart page
+
+
+            // when click cancel btn go to cart page
             document.getElementById('cancelButton').addEventListener('click', function () {
                 window.location.href = '/user/cart'; // Replace 'cart.html' with the URL of your cart page
             });
@@ -962,9 +1039,13 @@
             function updateTotal(total, discount) {
                 const totalElement = document.getElementById('totalPriceCheckout');
                 const discountElement = document.getElementById('couponDiscount');
+                const shippingCharge = total < 500 ? 50 : 0;
+               
+
 
                 if (totalElement && discountElement) {
-                    totalElement.textContent = total.toFixed(2);
+                    const totalWithShipping = total + shippingCharge;
+                    totalElement.textContent = totalWithShipping.toFixed(2);
                     discountElement.textContent = discount.toFixed(2);
                 } else {
                     console.error('One or both elements not found:', totalElement, discountElement);

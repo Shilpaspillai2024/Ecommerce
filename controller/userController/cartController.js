@@ -10,6 +10,7 @@ const cart = async (req, res) => {
         let totalPrice = 0;
         let totalPriceWithoutDiscount = 0;
         let cartItemCount = 0;
+    
 
         if (cart) {
             // Iterate over each cart item to calculate total prices and item count

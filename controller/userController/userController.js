@@ -259,14 +259,6 @@ const home= async (req,res)=>{
 
 
 
-// const home = async (req,res)=>{
-//     const category=await categorySchema.find( {isActive:true} )
-
-    
-// }
-
-
-
 const logout = (req,res)=>{
     req.session.destroy((err)=>{
         if(err){

@@ -214,6 +214,62 @@
 
 
 
+
+            const discountAmount = document.getElementById("discountAmount");
+            const expiryDate = document.getElementById("expiryDate");
+            const categoryOffer = document.getElementById("category-offer");
+            const productOffer = document.getElementById("product-offer");
+
+            // add offer validation
+            const offerAddForm = document.getElementById("add-offer-form");
+            offerAddForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                let validateOffer = true;
+                document.getElementsByClassName("validateOffer")[0].innerHTML = "";
+                document.getElementsByClassName("validateOffer")[1].innerHTML = "";
+                document.getElementsByClassName("validateOffer")[2].innerHTML = "";
+                document.getElementsByClassName("validateOffer")[3].innerHTML = "";
+                // document.getElementsByClassName('validateOffer')[4].innerHTML = ''
+
+                if (!offerTarget.value) {
+                    document.getElementsByClassName("validateOffer")[0].innerHTML =
+                        "Select a offer type";
+                    validateOffer = false;
+                }
+
+                if (offerTarget.value === "CATEGORY" && !categoryOffer.value) {
+                    document.getElementsByClassName("validateOffer")[1].innerHTML =
+                        "Select a category";
+                    validateOffer = false;
+                }
+
+                if (offerTarget.value === "PRODUCT" && !productOffer.value) {
+                    document.getElementsByClassName("validateOffer")[2].innerHTML =
+                        "Select a product";
+                    validateOffer = false;
+                }
+
+                if (
+                    discountAmount.value.trim() === 0 ||
+                    isNaN(discountAmount.value) ||
+                    discountAmount.value >= 100 ||
+                    discountAmount.value < 1
+                ) {
+                    document.getElementsByClassName("validateOffer")[3].innerHTML =
+                        "Enter a valid discount between(1- 99)";
+                    validateOffer = false;
+                }
+
+              
+
+                if (validateOffer) {
+                    offerAddForm.submit();
+                }
+            });
+
+
+
             // delete offer
 
             function deleteOffer(offerID) {
@@ -268,8 +324,8 @@
                 })
             }
 
-            const categoryOffer = document.getElementById("category-offer");
-            const productOffer = document.getElementById("product-offer");
+            // const categoryOffer = document.getElementById("category-offer");
+            // const productOffer = document.getElementById("product-offer");
 
 
             // check category has already offer validation alert
@@ -372,5 +428,22 @@
                 });
             });
                 
+
+            editOfferForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                document.getElementsByClassName("validateOfferEdt")[0].innerHTML = "";
+
+                if (
+                    editOfferInput.value.trim() === 0 ||
+                    isNaN(editOfferInput.value) ||
+                    editOfferInput.value >= 100 ||
+                    editOfferInput.value < 1
+                ) {
+                    document.getElementsByClassName("validateOfferEdt")[0].innerHTML =
+                        "Enter a valid discount between(1- 99)";
+                } else {
+                    editOfferForm.submit();
+                }
+            });
           
         </script>

@@ -22,8 +22,6 @@ const razorpay = new Razorpay({
 const checkout = async (req, res) => {
     try {
 
-
-
         const address = await addressSchema.find({ userId: req.session.user }).populate('userId');;
 
         const cartDetails = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId').populate('userId')
@@ -57,8 +55,16 @@ const checkout = async (req, res) => {
             }
         }
 
+        // add shipping charge if total lessthan 500
+        const shippingCharge = total < 500 ? 50 : 0;
 
-        res.render('user/checkout', { title: "checkout-page", cartDetails, cartItems, user: req.session.user, alertMessage: req.flash('errorMessage'), address, balance, total })
+        // const shippingCharge=total>500 ? 0 :50;
+        // const payableAmount=Math.round(total+shippingCharge);
+
+         total=Math.round(total+shippingCharge);
+
+
+        res.render('user/checkout', { title: "checkout-page", cartDetails, cartItems, user: req.session.user, alertMessage: req.flash('errorMessage'), address, balance, total,shippingCharge })
 
     } catch (err) {
 
@@ -177,6 +183,12 @@ const OrderPlaced = async (req, res) => {
 
 
         }
+
+         // Add shipping charge if total price is less than 500
+         const shippingCharge = totalPrice < 500 ? 50 : 0;
+         totalPrice += shippingCharge;
+         
+ 
         // in addressSchema i refer userschema,and in orderschema the address stored as a string(it contain objectid ) ,it take as a object need this for address
 
         let addressObj = {}
@@ -336,103 +348,103 @@ function generateRandomOrderId() {
 
 // if razorpay payment fail 
 
-// const paymentFailRazorpay = async (req, res) => {
+const paymentFailRazorpay = async (req, res) => {
 
 
-//     try {
+    try {
 
-//         const userId = req.session.user
+        const userId = req.session.user
 
-//         let { name, email, phone, address, paymentMethod, razorpayOrderId, couponCode } = req.body
-
-
-
-//         const cart = await cartSchema.findOne({ userId }).populate('items.productId');
-
-//         if (!cart || cart.items.length === 0) {
-//             return res.status(404).send('Cart is empty or not found ')
-//         }
-//         let totalPrice = 0;
-//         let couponDiscount = 0;
-//         const orderProducts = cart.items.map(product => {
-
-//             const price = product.productId.productDiscountPrice;
-
-//             totalPrice += price * product.productCount
-//             return {
-//                 productId: product.productId._id,
-//                 quantity: product.productCount,
-//                 price: price
-//             }
-//         })
-
-
-//         if (couponCode) {
-
-//             const coupon = await couponSchema.findOne({ couponName: couponCode })
-
-
-//             couponDiscount = coupon.discount
-//             totalPrice -= couponDiscount;
-
-
-//             // Mark the coupon as used by the user
-//             coupon.appliedUsers.push(userId);
-//             await coupon.save();
-
-
-//         }
+        let { name, email, phone, address, paymentMethod, razorpayOrderId, couponCode } = req.body
 
 
 
-//         let addressObj = {}
+        const cart = await cartSchema.findOne({ userId }).populate('items.productId');
 
-//         let patterns = {
-//             contactName: /contactName: '([^']+)'/,
-//             doorNo: /doorNo: (\d+)/,
-//             Address: /Address: '([^']+)'/,
-//             areaAddress: /areaAddress: '([^']+)'/,
-//             pincode: /pincode: (\d+)/,
-//             landmark: /landmark: '([^']+)'/,
-//             phone: /phone: (\d+)/,
-//             addressType: /addressType: '([^']+)'/
-//         };
+        if (!cart || cart.items.length === 0) {
+            return res.status(404).send('Cart is empty or not found ')
+        }
+        let totalPrice = 0;
+        let couponDiscount = 0;
+        const orderProducts = cart.items.map(product => {
 
-//         for (let key in patterns) {
-//             let match = address.match(patterns[key]);
-//             if (match) {
-//                 addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
-//             }
-//         }
-//         const orderID = generateRandomOrderId()
-//         const order = new orderSchema({
-//             userId,
-//             orderID,
-//             contactInfo: { name, email, phone },
-//             address: addressObj,
-//             products: orderProducts,
-//             totalPrice,
-//             couponDiscount,
-//             paymentMethod: paymentMethod,
-//             status: 'pending',
-//         })
+            const price = product.productId.productDiscountPrice;
+
+            totalPrice += price * product.productCount
+            return {
+                productId: product.productId._id,
+                quantity: product.productCount,
+                price: price
+            }
+        })
 
 
-//         await order.save();
+        if (couponCode) {
 
-//         cart.products = [];
-//         await cart.save();
-//         console.log('Order saved successfully');
-
-//         res.status(200).json(order)
+            const coupon = await couponSchema.findOne({ couponName: couponCode })
 
 
-//     } catch (error) {
-//         console.log(`error from payment route ${error}`)
-//         res.status(500).send('Internal Server Error');
-//     }
+            couponDiscount = coupon.discount
+            totalPrice -= couponDiscount;
 
-// }
+
+            // Mark the coupon as used by the user
+            coupon.appliedUsers.push(userId);
+            await coupon.save();
+
+
+        }
+
+
+
+        let addressObj = {}
+
+        let patterns = {
+            contactName: /contactName: '([^']+)'/,
+            doorNo: /doorNo: (\d+)/,
+            Address: /Address: '([^']+)'/,
+            areaAddress: /areaAddress: '([^']+)'/,
+            pincode: /pincode: (\d+)/,
+            landmark: /landmark: '([^']+)'/,
+            phone: /phone: (\d+)/,
+            addressType: /addressType: '([^']+)'/
+        };
+
+        for (let key in patterns) {
+            let match = address.match(patterns[key]);
+            if (match) {
+                addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
+            }
+        }
+        const orderID = generateRandomOrderId()
+        const order = new orderSchema({
+            userId,
+            orderID,
+            contactInfo: { name, email, phone },
+            address: addressObj,
+            products: orderProducts,
+            totalPrice,
+            couponDiscount,
+            paymentMethod: paymentMethod,
+            status: 'pending',
+        })
+
+
+        await order.save();
+
+        cart.products = [];
+        await cart.save();
+        console.log('Order saved successfully');
+
+        res.status(200).json(order)
+
+
+    } catch (error) {
+        console.log(`error from payment route ${error}`)
+        res.status(500).send('Internal Server Error');
+    }
+
+}
 
 
 
@@ -513,5 +525,6 @@ module.exports = {
     OrderPlaced,
     applycoupon,
     orderConfirm,
+    paymentFailRazorpay
 
 }

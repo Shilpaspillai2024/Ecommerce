@@ -67,77 +67,18 @@ const productView=async (req,res)=>{
 }
 
 
-
-
-
-
-
-
-
-
-// const productSeemore = async(req,res)=>{
-//     try {
-//         // const category=await categorySchema.find()
-
-//         const product= await productSchema.find()
-
-
-//         if(req.session.user){
-//             const userId=req.session.user
-
-//             const wishlist=await wishlistSchema.findOne({userId:userId}) 
-
-      
-      
-//             res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),wishlist,user:req.session.user})
-
-//         }
-//         else{
-//             res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),user:req.session.user})
-//         }
-//     } catch (err) {
-//         console.log(`Error during product detail page ${err}`);
-//     }   
-// }
-
-
-
-// const productSeemore = async(req,res)=>{
-//     try {
-//         const category=await categorySchema.find()
-
-
-      
-//         const product = await productSchema.find()
-
-
-//         if(req.session.user){
-//             const userId=req.session.user
-
-//             const wishlist=await wishlistSchema.findOne({userId:userId}) 
-
-      
-      
-//             res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),wishlist,user:req.session.user})
-
-//         }
-//         else{
-//             res.render('user/productSeemore',{product,alertMessage:req.flash('errorMessage'),user:req.session.user})
-//         }
-//     } catch (err) {
-//         console.log(`Error during product detail page ${err}`);
-//     }   
-// }
-
 const productSeemore = async (req, res) => {
     try {
         const category = await categorySchema.find({isActive:true});
 
-        let { collections, minPrice, maxPrice, ratings, availability, sort } = req.query;
+        let { collections, category: categoryQuery, minPrice, maxPrice, ratings, availability, sort } = req.query;
         let filter = {};
 
-        console.log('Query parameters:', req.query);
+     
 
+        if (categoryQuery) {
+            filter.productCategory = categoryQuery;
+        }
         // Filtering
         if (collections) {
             
@@ -191,6 +132,7 @@ const productSeemore = async (req, res) => {
         }
 
         res.render('user/productSeemore', {
+            category,
             product: products,
             alertMessage: req.flash('errorMessage'),
             wishlist,

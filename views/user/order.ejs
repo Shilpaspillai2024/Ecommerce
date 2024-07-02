@@ -117,7 +117,7 @@
                                                                     <p class="text-muted mbottom-2">Price</p>
                                                                     <h5 class="mb-0 mtop-2"><i
                                                                             class="bi bi-currency-rupee"></i>
-                                                                        <%= product.price %>
+                                                                        <%= product.productId.productPrice %>
                                                                       
                                                                     </h5>
                                                                 </div>
@@ -134,7 +134,11 @@
                                                                 <div class="mtop-2">
                                                                     <p class="text-muted mbottom-2">Total</p>
                                                                     <h5><i class="bi bi-currency-rupee"></i>
-                                                                        <%= product.price * product.quantity %>
+
+                                                                       
+                                                                      
+                                                                        <!-- <%= product.productId.productPrice * product.quantity %> -->
+                                                                        <%= Math.round(product.productId.productDiscountPrice * product.quantity )%>
                                                                     </h5>
                                                                 </div>
                                                             </div>
@@ -196,8 +200,36 @@
                                                                 order.status==='confirmed' || order.status==='shipped' )
                                                                 {%>
                                                                 <button class="btn btn-danger btn-sm"
-                                                                    onclick="cancelOrder('<%= order._id %>')">
-                                                                    Cancel order
+                                                                    onclick="cancelOrder('<%= order._id %>')">Cancel Order</button>
+                                                                    
+                                                                
+                                                                <button class="btn btn-primary btn-sm" onclick="viewOrder('<%= order._id %>')">
+                                                                    View Order
+                                                                </button>
+                                                                <% }%>
+                                                        </h6>
+
+
+
+                                                       
+                                                    
+                                                    </div>
+                                                   
+                                                </div>
+
+
+                                                <div class="col-md-4">
+
+                                                    <div class="order-actions-top">
+                                                        <h6>
+                                                          
+
+
+                                                            <% if(order.status==='pending' )
+                                                                {%>
+                                                                <button class="btn btn-danger btn-sm"
+                                                                    onclick="payNow('<%= order._id %>')">
+                                                                    PAY NOW
                                                                 </button>
                                                                 <button class="btn btn-primary btn-sm" onclick="viewOrder('<%= order._id %>')">
                                                                     View Order
@@ -212,6 +244,9 @@
                                                     </div>
                                                    
                                                 </div>
+
+
+                                                
                                             </div>
                                         </div>
 
@@ -229,6 +264,14 @@
                                             </div>
                                         </div>
                                         <% } %>
+
+
+
+
+
+
+
+                                        
 
                     </div>
                     <div class="tab-pane fade" id="order-history" role="tabpanel" aria-labelledby="order-history-tab">

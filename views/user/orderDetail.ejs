@@ -71,7 +71,7 @@ a {
                     </td>
                 
                     <td><%= product.quantity %></td>
-                    <td class="text-end"><%= product.price %></td>
+                    <td class="text-end"><%= Math.round(product.price )%></td>
                   </tr>
                   <% }) %>
                   
@@ -120,10 +120,16 @@ a {
             </div>
           </div>
         </div>
+
+
+        
        
         <div class="col-lg-4">
+          
          
           <div class="card mb-4">
+
+           
             <!-- Shipping information -->
             <div class="card-body">
               
@@ -149,10 +155,13 @@ a {
             <div class="card-body">
                
                 <a href="/user/order" class="btn btn-secondary me-5 ms-2">Go Back</a>
-               
             </div>
             </form>
-        </div>
+          </div>
+          <button class="btn btn-danger ms-2"
+          onclick="downloadInvoice('<%= order._id %>')">
+          Invoice <i class="fa-solid fa-download"></i>
+          </button>
         </div>
       </div>
       
@@ -164,5 +173,35 @@ a {
 
 
       <script>
+
+
+
+function downloadInvoice(orderId) {
+                const URL = `/user/invoice/${orderId}`
+                fetch(URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }).then((res) => {
+                    if (res.ok) {
+                        return res.blob();
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                    .then((blob) => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = `report-${Date.now()}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+
+            }
        
       </script>

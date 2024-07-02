@@ -171,7 +171,7 @@ const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
       productQuantity,
       productDescription,
       productImage: newImages,
-      productDiscountedPrice: discountPrice
+      // productDiscountedPrice: discountPrice
 
     });
 
