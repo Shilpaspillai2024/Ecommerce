@@ -1,11 +1,15 @@
 <style>
-    .dashboard-container {
+     .dashboard-container {
         min-height: 100vh;
         background-color: #000;
-        /* Set dashboard background to black */
+       
         color: #fff;
-        /* Set text color to white */
-    }
+      
+    } 
+
+   
+
+    
 
     .date-form {
         padding: 0 8rem;
@@ -226,12 +230,12 @@
                         </div>
                     </form>
 
-                    <!-- <span class="count-name">Custom Date Sale</span> -->
+                    <span class="count-name">Custom Date Sale</span>
                 </div>
             </div>
         </div>
 
-        
+        <%-include('salesChart')%>
             <!-- table for generating the sales report -->
             <div class="row my-5">
                 <div class="table-responsive col-md-12">
@@ -286,6 +290,7 @@
 
 
         <script>
+
 
             // function for validating the date
             function validateDates(startDate, endDate) {

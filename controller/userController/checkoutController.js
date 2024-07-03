@@ -395,6 +395,11 @@ const paymentFailRazorpay = async (req, res) => {
 
         }
 
+         // Add shipping charge if total price is less than 500
+         const shippingCharge = totalPrice < 500 ? 50 : 0;
+         totalPrice += shippingCharge;
+         
+
 
 
         let addressObj = {}
@@ -432,9 +437,9 @@ const paymentFailRazorpay = async (req, res) => {
 
         await order.save();
 
-        cart.products = [];
+        cart.items = [];
         await cart.save();
-        console.log('Order saved successfully');
+    
 
         res.status(200).json(order)
 
@@ -445,6 +450,9 @@ const paymentFailRazorpay = async (req, res) => {
     }
 
 }
+
+
+
 
 
 
@@ -517,6 +525,9 @@ const orderConfirm = async (req, res) => {
 
     }
 }
+
+
+
 
 module.exports = {
     checkout,

@@ -130,10 +130,10 @@ const dashboard = async (req, res) => {
         let payByWallet = 0
 
         orderDetailsProfit.forEach((order) => {
-            if (order.paymentMethod === 'Cash on delivery') {
+            if (order.paymentMethod === 'COD') {
                 payByCash++;
             }
-            if (order.paymentMethod === 'Razor pay') {
+            if (order.paymentMethod === 'razorpay') {
                 payByRazorPay++;
             }
             if (order.paymentMethod === 'Wallet') {

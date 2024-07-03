@@ -115,6 +115,9 @@ user.get('/order-confirm', checkUserSession, checkoutController.orderConfirm)
 
 user.post('/paymentfailrazorpay',checkUserSession,checkoutController.paymentFailRazorpay)
 
+
+
+
 user.post('/applycoupon',checkUserSession,checkoutController.applycoupon)
 
 
@@ -133,6 +136,11 @@ user.post('/return-order',checkUserSession,orderController.returnOrder)
 user.get('/orderdetail/:orderId',checkUserSession,orderController.orderDetail)
 
 user.post('/invoice/:orderId',checkUserSession,orderController.downloadInvoice)
+
+user.post('/retryRazorPay',checkUserSession,orderController.retryRazorPay)
+
+user.post('/proceedpayment',checkUserSession,orderController.proceedPayment)
+user.get('/removeOrder/:id',checkUserSession,orderController.removeOrder)
 
 
 user.get('/orderFailure',checkUserSession,orderController.orderFailure)

@@ -6,6 +6,13 @@ const mongoose=require('mongoose')
 const PDFDocument=require('pdfkit-table')
 const fs=require('fs')
 const path=require('path')
+const Razorpay=require('razorpay')
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+});
+
 
 
 const order=async(req,res)=>{
@@ -334,6 +341,106 @@ console.log(coupondiscount)
 }
 
 
+//payment retyr with razorpay
+
+const retryRazorPay=async(req,res)=>{
+
+ try {
+    const {orderId}=req.body
+
+    
+
+
+    // Check if orderId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(400).send('Invalid orderId');
+    }
+
+    const order=await orderSchema.findById(orderId)
+    console.log(order)
+
+     // Check if the order exists
+     if (!order) {
+        return res.status(404).send('Order not found');
+    }
+     // razorpay order created
+
+     const razorpayOrder = await razorpay.orders.create({
+        amount: order.totalPrice * 100,
+        currency: "INR",
+        receipt: "receipt#1",
+    } )
+
+   
+
+
+    if(razorpayOrder){
+       
+       
+            return res.status(200).json({...order.toObject(),razorpayOrderId : razorpayOrder.id})
+    }else{
+        return res.status(404).send('Retry Payment Failed')
+    }
+    
+ } catch (err) {
+
+    console.log(`Error from Razorpay retry: ${err}`);
+    
+ }
+
+}
+
+
+
+
+
+const proceedPayment=async(req,res)=>{
+
+    try {
+
+        const{ orderId,razorpayOrderId}=req.body
+
+
+        //update status of order
+
+        const update={
+            razorpayOrderId:razorpayOrderId,
+            status:'processing'
+        }
+        const order = await orderSchema.findByIdAndUpdate(orderId,update);
+        for (let product of order.products) {
+            await productSchema.findByIdAndUpdate(product.productId, {
+                $inc: { productQuantity: -product.quantity }
+            });
+        }
+
+        res.status(200).json(order)
+        
+    } catch (err) {
+        console.log(`error from retry payment ${err}`)
+        
+    }
+
+}
+
+
+
+const removeOrder=async(req,res)=>{
+    try {
+
+        const orderId=req.params.id
+        const order=await orderSchema.findByIdAndDelete(orderId)
+        if(order){
+            req.flash('errorMessage','order Suceefully removed')
+            res.redirect('/user/order')
+        }
+        
+    } catch (err) {
+        console.log(`error from remove order ${err}`)
+        
+    }
+}
+
 
 
 
@@ -343,13 +450,6 @@ const orderFailure=(req,res)=>
     }
 
 
-
-
-
-
-
-
-
 module.exports={
     order,
     cancelOrder,
@@ -357,5 +457,8 @@ module.exports={
     returnOrder,
     orderDetail,
     downloadInvoice,
+    retryRazorPay,
+    proceedPayment,
+    removeOrder,
     orderFailure
 }
