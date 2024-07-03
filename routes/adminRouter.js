@@ -8,6 +8,7 @@ const userController = require('../controller/adminController/userController')
 const orderController = require('../controller/adminController/orderController')
 const couponController=require('../controller/adminController/couponController')
 const offerController=require('../controller/adminController/offerController')
+const bestSellingController=require('../controller/adminController/bestSellingController')
 const multer = require('../middleware/multer')
 
 
@@ -30,7 +31,9 @@ admin.post('/pdf-report',checkAdminSession,dashboardController.downloadPdfReport
 admin.post('/excel-report',checkAdminSession,dashboardController.downloadExcelReport)
 
 
+//admin best selling 
 
+admin.get('/bestselling',checkAdminSession,bestSellingController.bestSelling)
 
 
 // category
