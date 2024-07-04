@@ -75,18 +75,18 @@
             border-radius: 5px;
         }
 
-      .submit-btn{
-        background-color: rgb(50, 86, 184);
-        color: white;
-        height: 33px;
-     
-      }
-      .submit-btn:hover {
-    background-color: rgb(50, 86, 184); 
-    color: white; 
+        .submit-btn {
+            background-color: rgb(50, 86, 184);
+            color: white;
+            height: 33px;
 
-}
-     
+        }
+
+        .submit-btn:hover {
+            background-color: rgb(50, 86, 184);
+            color: white;
+
+        }
     </style>
 
     <div class="container my-5">
@@ -100,194 +100,199 @@
                         aria-labelledby="order-status-tab">
                         <% if(order.length>0 ){ %>
                             <% order.forEach((order)=> { %>
-                                <% if(order.status !== 'returned') {%>
-                                
-                                <div class="card border shadow-none mb-4">
+                                <% if(order.status !=='returned' ) {%>
+
+                                    <div class="card border shadow-none mb-4">
 
 
 
-                                    <div class="card-body">
-                                        <!-- Loop through products in the order -->
-                                        <div class="product-list">
-                                            <% order.products.forEach((product)=> { %>
+                                        <div class="card-body">
+                                            <!-- Loop through products in the order -->
+                                            <div class="product-list">
+                                                <% order.products.forEach((product)=> { %>
 
-                                                <div
-                                                    class="product-item d-flex align-items-start border-bottom pbottom-3 mb-3">
-                                                    <div class="me-3">
-                                                        <img src="../../<%= product.productId.productImage[0]%>" alt=""
-                                                            class="avatar-lg rounded">
-                                                    </div>
-                                                    <div class="flex-grow-1 align-self-center overflow-hidden">
-                                                        <div class="mb-3">
-                                                            <h5 class="text-truncate font-size-18"><a href="#"
-                                                                    class="text-dark">
-                                                                    <%= product.productId.productName %>
-                                                                </a></h5>
+                                                    <div
+                                                        class="product-item d-flex align-items-start border-bottom pbottom-3 mb-3">
+                                                        <div class="me-3">
+                                                            <img src="../../<%= product.productId.productImage[0]%>"
+                                                                alt="" class="avatar-lg rounded">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <div class="mtop-2">
-                                                                    <p class="text-muted mbottom-2">Price</p>
-                                                                    <h5 class="mb-0 mtop-2"><i
-                                                                            class="bi bi-currency-rupee"></i>
-                                                                        <%= product.productId.productPrice %>
-                                                                      
-                                                                    </h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="mtop-2">
-                                                                    <p class="text-muted mbottom-2">Quantity</p>
-                                                                    <h5>
-                                                                        <%= product.quantity %>
-                                                                    </h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="mtop-2">
-                                                                    <p class="text-muted mbottom-2">Total</p>
-                                                                    <h5><i class="bi bi-currency-rupee"></i>
 
-                                                                       
-                                                                      
-                                                                        <!-- <%= product.productId.productPrice * product.quantity %> -->
-                                                                        <%= Math.round(product.productId.productDiscountPrice * product.quantity )%>
-                                                                    </h5>
+
+                                                        <div class="flex-grow-1 align-self-center overflow-hidden">
+                                                            <div class="mb-3">
+                                                                <h5 class="text-truncate font-size-18"><a href="#"
+                                                                        class="text-dark">
+                                                                        <%= product.productId.productName %>
+                                                                    </a></h5>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <div class="mtop-2">
+                                                                        <p class="text-muted mbottom-2">Price</p>
+                                                                        <h5 class="mb-0 mtop-2"><i
+                                                                                class="bi bi-currency-rupee"></i>
+                                                                            <%= product.productId.productPrice %>
+
+                                                                        </h5>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="mtop-2">
+                                                                        <p class="text-muted mbottom-2">Quantity</p>
+                                                                        <h5>
+                                                                            <%= product.quantity %>
+                                                                        </h5>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="mtop-2">
+                                                                        <p class="text-muted mbottom-2">Total</p>
+                                                                        <h5><i class="bi bi-currency-rupee"></i>
+
+
+
+                                                                            <!-- <%= product.productId.productPrice * product.quantity %> -->
+                                                                            <%= Math.round(product.productId.productDiscountPrice
+                                                                                * product.quantity )%>
+                                                                        </h5>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <% }) %>
-
+                                                    <% }) %>
 
 
-                                                
-                                        </div>
-                                        <!-- Order details -->
-                                        <div>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="mtop-2">
-                                                        <p class="text-muted mbottom-2">Status</p>
-                                                        <h5>
-                                                            <%= order.status %>
-                                                        </h5>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="mtop-2">
-                                                        <p class="text-muted mbottom-2">Total Price</p>
-                                                        <h5><i class="bi bi-currency-rupee"></i>
-                                                            <%= order.totalPrice %>
-                                                        </h5>
-                                                    </div>
 
 
-                                                    
-                                                </div>
-                                                <% if (order.couponDiscount && order.couponDiscount > 0) { %>
+                                            </div>
+                                            <!-- Order details -->
+                                            <div>
+                                                <div class="row">
                                                     <div class="col-md-4">
                                                         <div class="mtop-2">
-                                                            <p class="text-muted mbottom-2">Coupon Discount</p>
+                                                            <p class="text-muted mbottom-2">Status</p>
                                                             <h5>
-                                                                <i class="bi bi-currency-rupee"></i>
-                                                                <%= order.couponDiscount %>
+                                                                <%= order.status %>
                                                             </h5>
                                                         </div>
                                                     </div>
-                                                    <% } %>
-                                               
-
-                                                <div class="col-md-4">
-
-                                                    <div class="order-actions-top">
-                                                        <h6>
-                                                          
-
-
-                                                            <% if(order.status==='processing' ||
-                                                                order.status==='confirmed' || order.status==='shipped' )
-                                                                {%>
-                                                                <button class="btn btn-danger btn-sm"
-                                                                    onclick="cancelOrder('<%= order._id %>')">Cancel Order</button>
-                                                                    
-                                                                
-                                                                <button class="btn btn-primary btn-sm" onclick="viewOrder('<%= order._id %>')">
-                                                                    View Order
-                                                                </button>
-                                                                <% }%>
-                                                        </h6>
+                                                    <div class="col-md-4">
+                                                        <div class="mtop-2">
+                                                            <p class="text-muted mbottom-2">Total Price</p>
+                                                            <h5><i class="bi bi-currency-rupee"></i>
+                                                                <%= order.totalPrice %>
+                                                            </h5>
+                                                        </div>
 
 
 
-                                                       
-                                                    
                                                     </div>
-                                                   
-                                                </div>
+                                                    <% if (order.couponDiscount && order.couponDiscount> 0) { %>
+                                                        <div class="col-md-4">
+                                                            <div class="mtop-2">
+                                                                <p class="text-muted mbottom-2">Coupon Discount</p>
+                                                                <h5>
+                                                                    <i class="bi bi-currency-rupee"></i>
+                                                                    <%= order.couponDiscount %>
+                                                                </h5>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
 
 
-                                                <div class="col-md-4">
+                                                            <div class="col-md-4">
 
-                                                    <div class="order-actions-top">
-                                                        <h6>
-                                                          
+                                                                <div class="order-actions-top">
+                                                                    <h6>
 
 
-                                                            <% if(order.status==='pending' )
-                                                                {%>
-                                                                <button class="btn btn-danger btn-sm"
-                                                                    onclick="payNow('<%= order._id %>')">
-                                                                    PAY NOW
-                                                                </button>
-                                                                <!-- <button class="btn btn-primary btn-sm" onclick="viewOrder('<%= order._id %>')">
+
+                                                                        <% if(order.status==='processing' ||
+                                                                            order.status==='confirmed' ||
+                                                                            order.status==='shipped' ) {%>
+                                                                            <button class="btn btn-danger btn-sm"
+                                                                                onclick="cancelOrder('<%= order._id %>')">Cancel
+                                                                                Order</button>
+
+
+                                                                            <button class="btn btn-primary btn-sm"
+                                                                                onclick="viewOrder('<%= order._id %>')">
+                                                                                View Order
+                                                                            </button>
+                                                                            <% }%>
+                                                                    </h6>
+
+
+
+
+
+                                                                </div>
+
+                                                            </div>
+
+
+                                                            <div class="col-md-4">
+
+                                                                <div class="order-actions-top">
+                                                                    <h6>
+
+
+
+                                                                        <% if(order.status==='pending' ) {%>
+                                                                            <button class="btn btn-danger btn-sm"
+                                                                                onclick="payNow('<%= order._id %>')">
+                                                                                PAY NOW
+                                                                            </button>
+                                                                            <!-- <button class="btn btn-primary btn-sm" onclick="viewOrder('<%= order._id %>')">
                                                                     View Order
                                                                 </button> -->
 
 
-                                                                <!-- <button class="btn btn-primary btn-sm"
+                                                                            <!-- <button class="btn btn-primary btn-sm"
                                                                 onclick="removeOrder('<%= order._id %>')">Remove Order</button> -->
-                                                                <a href="/user/removeOrder/<%= order._id %>" class="btn submit-btn">Remove</a>
-                                                                <% }%>
-                                                        </h6>
+                                                                            <a href="/user/removeOrder/<%= order._id %>"
+                                                                                class="btn submit-btn">Remove</a>
+                                                                            <% }%>
+                                                                    </h6>
 
 
 
-                                                       
-                                                    
-                                                    </div>
-                                                   
+
+
+                                                                </div>
+
+                                                            </div>
+
+
+
                                                 </div>
-
-
-                                                
                                             </div>
-                                        </div>
 
-                                        <!-- End of order details -->
+                                            <!-- End of order details -->
+                                        </div>
                                     </div>
-                                </div>
-                                <% } %>
-                                <% }) %>
+                                    <% } %>
+                                        <% }) %>
 
-                                    <% }else{ %>
-                                        <div class="card border shadow-none">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Order</h5>
-                                                <p class="card-text">Your dont have any current orders</p>
-                                            </div>
-                                        </div>
-                                        <% } %>
-
+                                            <% }else{ %>
+                                                <div class="card border shadow-none">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Order</h5>
+                                                        <p class="card-text">Your dont have any current orders</p>
+                                                    </div>
+                                                </div>
+                                                <% } %>
 
 
 
 
 
 
-                                        
+
+
 
                     </div>
                     <div class="tab-pane fade" id="order-history" role="tabpanel" aria-labelledby="order-history-tab">
@@ -367,7 +372,7 @@
 
                                                             <div class="order-actions-top">
                                                                 <h6>
-                                                                    <% if(order.status==='delivered' ){ %>
+                                                                    <!-- <% if(order.status==='delivered' ){ %>
                                                                         <button class="btn btn-danger btn-sm"
                                                                             onclick="returnOrder('<%=order._id %>')">
                                                                             Return order
@@ -382,7 +387,28 @@
                                                                                 onclick="cancelOrder('<%= order._id %>')">
                                                                                 Cancel order
                                                                             </button>
-                                                                            <% }%>
+                                                                            <% }%> -->
+                                                                    <% if (order.status==='delivered' ) { %>
+                                                                        <button class="btn btn-danger btn-sm"
+                                                                            onclick="returnOrder('<%= order._id %>')">
+                                                                            Return order
+                                                                        </button>
+                                                                        <% order.products.forEach((product)=> { %>
+                                                                            <button class="btn btn-warning btn-sm"
+                                                                                onclick="addReview('<%= product.productId.id %>', '<%= product.productName %>')">
+                                                                                Add Review
+                                                                            </button>
+                                                                            <% }) %>
+                                                                                <% } else if
+                                                                                    (order.status==='processing' ||
+                                                                                    order.status==='confirmed' ||
+                                                                                    order.status==='shipped' ) { %>
+                                                                                    <button
+                                                                                        class="btn btn-danger btn-sm"
+                                                                                        onclick="cancelOrder('<%= order._id %>')">
+                                                                                        Cancel order
+                                                                                    </button>
+                                                                                    <% } %>
                                                                 </h6>
                                                             </div>
                                                         </div>
@@ -409,76 +435,92 @@
                         <div class="card border shadow-none">
                             <div class="card-body">
                                 <h5 class="card-title">Returned Items</h5>
-                    
-                                <% if(order.length > 0) { %>
-                                    <% order.filter(o => o.status === 'returned').forEach((order) => { %>
+
+                                <% if(order.length> 0) { %>
+                                    <% order.filter(o=> o.status === 'returned').forEach((order) => { %>
                                         <div class="card border shadow-none mb-4">
                                             <div class="card-body">
                                                 <div class="product-list">
-                                                    <% order.products.forEach((product) => { %>
-                                                        <div class="product-item d-flex align-items-start border-bottom pbottom-3 mb-3">
+                                                    <% order.products.forEach((product)=> { %>
+                                                        <div
+                                                            class="product-item d-flex align-items-start border-bottom pbottom-3 mb-3">
                                                             <div class="me-3">
-                                                                <img src="../../<%= product.productId.productImage[0] %>" alt="" class="avatar-lg rounded">
+                                                                <img src="../../<%= product.productId.productImage[0] %>"
+                                                                    alt="" class="avatar-lg rounded">
                                                             </div>
                                                             <div class="flex-grow-1 align-self-center overflow-hidden">
                                                                 <div class="mb-3">
-                                                                    <h5 class="text-truncate font-size-18"><a href="#" class="text-dark"><%= product.productId.productName %></a></h5>
+                                                                    <h5 class="text-truncate font-size-18"><a href="#"
+                                                                            class="text-dark">
+                                                                            <%= product.productId.productName %>
+                                                                        </a></h5>
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <div class="mtop-2">
                                                                             <p class="text-muted mbottom-2">Price</p>
-                                                                            <h5 class="mb-0 mtop-2"><i class="bi bi-currency-rupee"></i> <%= product.price %></h5>
+                                                                            <h5 class="mb-0 mtop-2"><i
+                                                                                    class="bi bi-currency-rupee"></i>
+                                                                                <%= product.price %>
+                                                                            </h5>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <div class="mtop-2">
                                                                             <p class="text-muted mbottom-2">Quantity</p>
-                                                                            <h5><%= product.quantity %></h5>
+                                                                            <h5>
+                                                                                <%= product.quantity %>
+                                                                            </h5>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <div class="mtop-2">
                                                                             <p class="text-muted mbottom-2">Total</p>
-                                                                            <h5><i class="bi bi-currency-rupee"></i> <%= product.price * product.quantity %></h5>
+                                                                            <h5><i class="bi bi-currency-rupee"></i>
+                                                                                <%= product.price * product.quantity %>
+                                                                            </h5>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    <% }) %>
+                                                        <% }) %>
                                                 </div>
                                                 <div>
                                                     <div class="row">
                                                         <div class="col-md-4">
                                                             <div class="mtop-2">
                                                                 <p class="text-muted mbottom-2">Status</p>
-                                                                <h5><%= order.status %></h5>
+                                                                <h5>
+                                                                    <%= order.status %>
+                                                                </h5>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="mtop-2">
                                                                 <p class="text-muted mbottom-2">Total Price</p>
-                                                                <h5><i class="bi bi-currency-rupee"></i> <%= order.totalPrice %></h5>
+                                                                <h5><i class="bi bi-currency-rupee"></i>
+                                                                    <%= order.totalPrice %>
+                                                                </h5>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    <% }) %>
-                                <% } else { %>
-                                    <div class="card border shadow-none">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Returned Items</h5>
-                                            <p class="card-text">No items have been returned.</p>
-                                        </div>
-                                    </div>
-                                <% } %>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <div class="card border shadow-none">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Returned Items</h5>
+                                                        <p class="card-text">No items have been returned.</p>
+                                                    </div>
+                                                </div>
+                                                <% } %>
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -494,7 +536,7 @@
                             role="tab" aria-controls="order-history" aria-selected="false">Order history</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="return-item-tab"data-bs-toggle="pill" href="#return-item" role="tab"
+                        <a class="nav-link" id="return-item-tab" data-bs-toggle="pill" href="#return-item" role="tab"
                             aria-controls="return-Item" aria-selected="false">Returned Items</a>
                     </li>
                 </ul>
@@ -556,6 +598,43 @@
     </div>
 
 
+    <!--  modal for adding Review -->
+
+
+    <div class="modal fade" id="add-review-modal" tabindex="-1" aria-labelledby="add-review-modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <p class="mb-1 w-100  text-center" id="review-product-name"></p>
+                </div>
+                <form class="modal-body rate  w-100 p-5" id="add-review-form" method="post">
+                    <h6 class="mb-0 text-center">Rate the product</h6>
+                    <div class="rating">
+                        <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                        <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                        <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                        <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                        <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                    </div>
+                    <div class=" my-4">
+                        <textarea class="form-control" placeholder="Add your feedback about the product" rows="6"
+                            id="review-feedback" name="reviewFeedback"></textarea>
+                        <label for="review-feedback" class="text-danger" id="review-validate-label"></label>
+                    </div>
+                    <div class="buttons">
+                        <button type="button" class="btn btn-dark w-25" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-warning w-25" type="submit">Submit</button>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
 
     <%- include('footer') %>
 
@@ -587,18 +666,32 @@
             }
 
 
-            const reasonForCancel = document.getElementById('reason-for-cancel')
+            // const reasonForCancel = document.getElementById('reason-for-cancel')
+            // cancelOrderForm.addEventListener('submit', (e) => {
+            //     e.preventDefault();
+            //     document.getElementsByClassName('cancel-form-validate')[0].innerHTML = ""
+
+            //     if (reasonForCancel.value.trim() === 0 || reasonForCancel.value.length > 100 || reasonForCancel.value.length < 10) 
+            //     {
+
+            //         document.getElementsByClassName('cancel-form-validate')[0].innerHTML = "Please provide a reason between 10 and 100 characters"
+            //     } else {
+            //         cancelOrderForm.submit()
+            //     }
+            // })
+
+            const reasonForCancel = document.getElementById('reason-for-cancel');
             cancelOrderForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                document.getElementsByClassName('cancel-form-validate')[0].innerHTML = ""
+                document.getElementsByClassName('cancel-form-validate')[0].innerHTML = "";
 
-                if (reasonForCancel.value.trim() === 0 || reasonForCancel.value.length > 100 || reasonForCancel.value.length < 10) {
-
-                    document.getElementsByClassName('cancel-form-validate')[0].innerHTML = "Please provide a reason between 10 and 100 characters"
+                if (reasonForCancel.value.trim().length === 0 || reasonForCancel.value.length > 100 || reasonForCancel.value.length < 10) {
+                    document.getElementsByClassName('cancel-form-validate')[0].innerHTML = "Please provide a reason between 10 and 100 characters";
                 } else {
-                    cancelOrderForm.submit()
+                    cancelOrderForm.submit();
                 }
-            })
+            });
+
 
 
 
@@ -645,115 +738,253 @@
 
 
 
-           
+
             function viewOrder(orderId) {
-    window.location.href = `/user/orderdetail/${orderId}`;
-}  
+                window.location.href = `/user/orderdetail/${orderId}`;
+            }
 
 
 
-// retry payment
+            // retry payment
 
 
-async function payNow(orderId){
-   
+            async function payNow(orderId) {
 
-try {
 
-    const res = await fetch('/user/retryRazorPay',{
-    method: 'POST',
-    headers: {
-        'Content-Type':'application/json'
-    },
-    body: JSON.stringify({orderId})
-})
-
-if(res.ok){
-
-    const retryPaymentData = await res.json()
-
-    const options = {
-            key: 'rzp_test_CgfUBYSTSF2QIh',
-            amount: retryPaymentData.amount,
-            currency: "INR",
-            name: 'WordPlayBooks',
-            order_id: retryPaymentData.razorpayOrderId,
-            handler: async function(response) {
                 try {
 
-                    
-                    
-                    const resData = {
-                        orderId,
-                        razorpayOrderId: response.razorpay_order_id,
-                        // paymentId: response.razorpay_payment_id,
-                    }
-
-                    const payment = await fetch('/user/proceedpayment', {
+                    const res = await fetch('/user/retryRazorPay', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(resData)
+                        body: JSON.stringify({ orderId })
                     })
 
-                    if(payment.ok){
-                        
-                        const paymentData = payment.json()
+                    if (res.ok) {
 
-                        window.location.href = '/user/order-confirm'
+                        const retryPaymentData = await res.json()
+
+                        const options = {
+                            key: 'rzp_test_CgfUBYSTSF2QIh',
+                            amount: retryPaymentData.amount,
+                            currency: "INR",
+                            name: 'WordPlayBooks',
+                            order_id: retryPaymentData.razorpayOrderId,
+                            handler: async function (response) {
+                                try {
+
+
+
+                                    const resData = {
+                                        orderId,
+                                        razorpayOrderId: response.razorpay_order_id,
+                                        // paymentId: response.razorpay_payment_id,
+                                    }
+
+                                    const payment = await fetch('/user/proceedpayment', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(resData)
+                                    })
+
+                                    if (payment.ok) {
+
+                                        const paymentData = payment.json()
+
+                                        window.location.href = '/user/order-confirm'
+                                    }
+
+                                } catch (error) {
+                                    console.log(`handler error ${error}`)
+                                }
+                            },
+                            prefill: {
+                                name: retryPaymentData.contactInfo.name,
+                                email: retryPaymentData.contactInfo.email,
+                                contact: retryPaymentData.contactInfo.phone
+                            },
+                            notes: {
+                                address: retryPaymentData.address
+                            },
+                            theme: {
+                                color: "#3399cc"
+                            },
+                            "modal": {
+                                "ondismiss": function () {
+                                    window.location.href = '/user/order'
+                                }
+                            }
+
+                        }
+                        const rzp1 = new Razorpay(options);
+
+                        rzp1.on('payment.failed', async function (response) {
+
+
+                            showError('Payment Failure')
+
+                        })
+
+                        rzp1.open()
+
+
+                    } else {
+
+                        const error = await res.text()
+                        showError(error)
+
                     }
 
                 } catch (error) {
-                    console.log(`handler error ${error}`)
+                    console.log(`error from retyr paymment fetch ${error}`)
                 }
-            },
-            prefill: {
-                name: retryPaymentData.contactInfo.name,
-                email: retryPaymentData.contactInfo.email,
-                contact: retryPaymentData.contactInfo.phone
-            },
-            notes: {
-                address: retryPaymentData.address
-            },
-            theme: {
-                color: "#3399cc"
-            },
-            "modal": {
-                "ondismiss": function () {
-                     window.location.href = '/user/order'
-                     }
+
+            }
+
+            function showError(message) {
+                console.error(message);
+            }
+
+
+
+
+            // add review function
+
+
+            function addReview(productId, productName) {
+                // Open the modal for adding a review
+                const myModal = new bootstrap.Modal(document.getElementById('add-review-modal'));
+                document.getElementById('review-product-name').innerHTML = productName;
+                document.getElementById('add-review-form').action = `/user/add-review/${productId}`;
+                myModal.show();
+            }
+
+            // Review form submission
+            const reviewDescription = document.getElementById('review-feedback')
+            const addReviewForm = document.getElementById('add-review-form');
+            addReviewForm.addEventListener('submit',async (e) => {
+                e.preventDefault();
+
+                document.getElementById('review-validate-label').innerHTML = ''
+                let radioChecked = false;
+                let validateReview = true
+
+                // Validate the review star
+                document.getElementsByName('rating').forEach((radio) => {
+                    if (radio.checked) {
+                        radioChecked = true;
+                    }
+                });
+
+                // fire an alert with no stars selected
+                if (radioChecked === false) {
+                    const notyf = new Notyf();
+                    notyf.error({
+                        message: "Select a star value for adding review",
+                        duration: 5000,
+                    });
+                }
+
+                // check the description is valid or not
+
+
+                // Validate review description
+                const descriptionValue = reviewDescription.value.trim();
+                if (descriptionValue.length === 0 || descriptionValue.length < 10 || descriptionValue.length > 200) {
+                    document.getElementById('review-validate-label').innerHTML = 'Please add feedback with a minimum of 10 and maximum of 200 characters';
+                    return; // Prevent form submission
+                }
+
+                //     // if form is valid then proceed with adding review
+                //     if (radioChecked) {
+                //         let form = e.target;
+                //         let action = form.action;
+
+                //         let formData = new URLSearchParams(new FormData(form)).toString();
+                //         fetch(action, {
+                //             method: "POST",
+                //             headers: {
+                //                 "Content-Type": "application/x-www-form-urlencoded"
+                //             },
+                //             body: formData
+                //         }).then((res) => {
+                //             return res.json();
+                //         }).then((data) => {
+                //             if (data.success) {
+                //                 Swal.fire({
+                //                     icon: "success",
+                //                     title: "Product review added",
+                //                     showConfirmButton: false,
+                //                     timer: 800
+                //                 }).then(() => {
+                //                     window.location.reload()
+                //                 })
+                //             }
+                //         }).catch((err) => {
+                //             const notyf = new Notyf();
+                //             notyf.error({
+                //                 message: 'Cannot add review at the moment please try again later',
+                //                 duration: 5000,
+                //             });
+                //         });
+                //     }
+                // });
+
+
+
+                // If all validations pass, proceed with form submission
+                try {
+                    let form = e.target;
+                    let action = form.action;
+
+                    let formData = new URLSearchParams(new FormData(form)).toString();
+                    const response = await fetch(action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
 
-        }
-        const rzp1 = new Razorpay(options);
+                    const data = await response.json();
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Product review added',
+                            showConfirmButton: false,
+                            timer: 800
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        throw new Error('Review not added successfully');
+                    }
+                } catch (err) {
+                    console.error('Error adding review:', err);
+                    const notyf = new Notyf();
+                    notyf.error({
+                        message: 'Cannot add review at the moment, please try again later',
+                        duration: 5000,
+                    });
+                }
+            });
 
-        rzp1.on('payment.failed', async function (response){
 
 
-            showError('Payment Failure')
-
-        })
-
-        rzp1.open()
 
 
-}else{
-    
-    const error = await res.text()
-    showError(error)
 
-}
-    
-} catch (error) {
-    console.log(`error from retyr paymment fetch ${error}`)
-}
 
-}
 
-function showError(message) {
-    console.error(message); 
-}
+
+
 
 
         </script>

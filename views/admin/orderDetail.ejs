@@ -156,18 +156,18 @@ a {
             <div class="card-body">
                 <h3 class="h6">Change Order Status</h3>
                 
+              
                 <div class="mb-3">
-                    <label for="orderStatus" class="form-label">Order Status</label>
-                    <select class="form-select"  id="productDeliveryStatus" name="orderStatus">
-                       
-                        <option value="processing" selected>Processing</option>
-                        <option value="pending">Pending</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="cancelled">Cancelled</option>
-                      
-                    </select>
-                </div>
+                  <label for="orderStatus" class="form-label">Order Status</label>
+                  <select class="form-select" id="productDeliveryStatus" name="orderStatus">
+                      <option value="processing" <%= order.status === 'processing' ? 'selected' : '' %>>Processing</option>
+                      <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                      <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+                      <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                      <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                  </select>
+              </div>
+              
                 <a href="/admin/order" class="btn btn-secondary me-5 ms-2">Go Back</a>
                 <button type="submit" class="btn btn-primary ms-5">Update Status</button>
             </div>

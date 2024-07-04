@@ -142,6 +142,9 @@ user.post('/retryRazorPay',checkUserSession,orderController.retryRazorPay)
 user.post('/proceedpayment',checkUserSession,orderController.proceedPayment)
 user.get('/removeOrder/:id',checkUserSession,orderController.removeOrder)
 
+// add review
+user.post('/add-review/:productId',checkUserSession,orderController.addReview)
+
 
 user.get('/orderFailure',checkUserSession,orderController.orderFailure)
 

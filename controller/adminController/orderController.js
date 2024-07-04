@@ -37,11 +37,12 @@ const orderView = async (req, res) => {
 const editOrderStatus = async (req, res) => {
     try {
         const orderId = req.params.orderId;
-        const orderStatus = req.body.orderStatus;
+        // const orderStatus = req.body.orderStatus;
+        const neworderStatus = req.body.orderStatus;
 
         const productDeliveryStatusEnum = ['processing', 'confirmed', 'pending', 'shipped', 'cancelled', 'delivered', 'returned'];
 
-        if (!productDeliveryStatusEnum.includes(orderStatus)) {
+        if (!productDeliveryStatusEnum.includes(neworderStatus)) {
             throw new Error('Invalid order status');
         }
         const order = await orderSchema.findById(orderId);
@@ -50,9 +51,13 @@ const editOrderStatus = async (req, res) => {
             throw new Error('Order not found');
         }
 
-        order.status = orderStatus;
+        if (order.status === 'delivered') {
+            throw new Error('Order status cannot be changed once delivered');
+        }
+
+        order.status = neworderStatus;
         // Check if the order status is cancelled and set isCancelled to true
-        if (orderStatus === 'cancelled') {
+        if (neworderStatus === 'cancelled') {
             order.isCancelled = true;
         } else {
             order.isCancelled = false; // Optional: reset isCancelled if status changes from cancelled to something else
