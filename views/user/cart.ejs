@@ -119,7 +119,7 @@
                                                     </p>
                                                     <% }%>
 
-                                                        <% if(items.productId.productQuantity<10){ %>
+                                                        <% if(items.productId.productQuantity<10) { %>
                                                             <b class="mb-0 mt-1 ms-3 text-danger">
                                                                 Only <%= items.productId.productQuantity %> stock left
                                                             </b>
@@ -157,9 +157,14 @@
                                                                         </del>
                                                             </span>
                                                             <% } %>
-                                                                &#8377; <%=Math.round((items.productId.productPrice * (1 -
+                                                                <!-- &#8377; <%=Math.round((items.productId.productPrice * (1 -
                                                                     items.productId.productDiscount / 100) *
-                                                                    items.productCount).toLocaleString()) %>
+                                                                    items.productCount).toLocaleString()) %> -->
+
+                                                                    &#8377; <%=(items.productId.productPrice * (1 -
+                                                                    items.productId.productDiscount / 100) *
+                                                                   (items.productCount)).toLocaleString() %>
+
 
                                                                    
                                                     </h5>
@@ -192,9 +197,9 @@
                                                             data-product-id="<%= items.productId._id %>">
 
 
-                                                            <%=Math.round((items.productId.productPrice * (1 -
+                                                            <%=(items.productId.productPrice * (1 -
                                                          items.productId.productDiscount / 100) *
-                                                                items.productCount).toLocaleString())%>
+                                                                (items.productCount)).toLocaleString()%>
                                                                
                                                         </span>
                                                     </h5>

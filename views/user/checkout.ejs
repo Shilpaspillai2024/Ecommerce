@@ -601,15 +601,17 @@
                                             </tr>
 
 
-                                            <tr>
+                                                                                      <tr>
                                                 <td>Shipping Charge :</td>
-                                                <!-- <td>:</td> -->
-                                                 <td></td>
-                                                <!-- <td class="text-end">&#8377; <%= cartDetails.payableAmount> 500 ? "FREE" : 50 %> -->
-                                                
-                                                    <td class="text-end">&#8377; <%=shippingCharge %> 
+                                                <td class="text-end">
+                                                    <% if (shippingCharge === 0) { %>
+                                                        FREE
+                                                    <% } else { %>
+                                                        &#8377; <%= shippingCharge %>
+                                                    <% } %>
                                                 </td>
                                             </tr>
+                                            
 
 
                                 </tbody>

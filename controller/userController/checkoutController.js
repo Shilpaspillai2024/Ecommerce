@@ -47,7 +47,13 @@ const checkout = async (req, res) => {
 
             let currentProduct = await productSchema.findById(product.productId)
 
-            total += product.productCount * product.productId.productDiscountPrice
+            // total += product.productCount * product.productId.productDiscountPrice
+
+          
+         
+
+            total += Math.round(product.productPrice * (1 - product.productId.productDiscount / 100) * product.productCount);
+
 
             if (currentProduct.productQuantity <= 0) {
                 return res.redirect('/user/cart')
@@ -156,8 +162,13 @@ const OrderPlaced = async (req, res) => {
         let totalPrice = 0;
         let couponDiscount = 0;
         const orderProducts = cart.items.map(product => {
+           
 
-            const price = product.productId.productDiscountPrice;
+            const price =Math.round(product.productPrice * (1-product.productId.productDiscount / 100))
+
+
+            //okay
+            // const price = product.productPrice
 
             totalPrice += price * product.productCount
             return {
@@ -368,7 +379,9 @@ const paymentFailRazorpay = async (req, res) => {
         let couponDiscount = 0;
         const orderProducts = cart.items.map(product => {
 
-            const price = product.productId.productDiscountPrice;
+            // const price = product.productId.productDiscountPrice;
+            
+            const price =Math.round(product.productPrice * (1-product.productId.productDiscount / 100))
 
             totalPrice += price * product.productCount
             return {

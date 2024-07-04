@@ -459,8 +459,7 @@ const retryRazorPay = async (req, res) => {
         }
 
         const order = await orderSchema.findById(orderId)
-        console.log(order)
-
+       
         // Check if the order exists
         if (!order) {
             return res.status(404).send('Order not found');
