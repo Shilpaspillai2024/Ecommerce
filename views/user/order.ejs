@@ -100,7 +100,7 @@
                         aria-labelledby="order-status-tab">
                         <% if(order.length>0 ){ %>
                             <% order.forEach((order)=> { %>
-                                <% if(order.status !=='returned' ) {%>
+                                <% if( !order.isCancelled && order.status !=='returned') {%>
 
                                     <div class="card border shadow-none mb-4">
 
@@ -152,9 +152,9 @@
 
 
 
-                                                                            <!-- <%= product.productId.productPrice * product.quantity %> -->
-                                                                            <%= Math.round(product.productId.productDiscountPrice
-                                                                                * product.quantity )%>
+                                                                            <%=Math.round(product.productId.productPrice * product.quantity) %>
+                                                                            <!-- <%= Math.round(product.productId.productDiscountPrice
+                                                                                * product.quantity )%> -->
                                                                         </h5>
                                                                     </div>
                                                                 </div>
@@ -779,7 +779,7 @@
                                     const resData = {
                                         orderId,
                                         razorpayOrderId: response.razorpay_order_id,
-                                        // paymentId: response.razorpay_payment_id,
+                                        
                                     }
 
                                     const payment = await fetch('/user/proceedpayment', {
@@ -898,43 +898,7 @@
                     return; // Prevent form submission
                 }
 
-                //     // if form is valid then proceed with adding review
-                //     if (radioChecked) {
-                //         let form = e.target;
-                //         let action = form.action;
-
-                //         let formData = new URLSearchParams(new FormData(form)).toString();
-                //         fetch(action, {
-                //             method: "POST",
-                //             headers: {
-                //                 "Content-Type": "application/x-www-form-urlencoded"
-                //             },
-                //             body: formData
-                //         }).then((res) => {
-                //             return res.json();
-                //         }).then((data) => {
-                //             if (data.success) {
-                //                 Swal.fire({
-                //                     icon: "success",
-                //                     title: "Product review added",
-                //                     showConfirmButton: false,
-                //                     timer: 800
-                //                 }).then(() => {
-                //                     window.location.reload()
-                //                 })
-                //             }
-                //         }).catch((err) => {
-                //             const notyf = new Notyf();
-                //             notyf.error({
-                //                 message: 'Cannot add review at the moment please try again later',
-                //                 duration: 5000,
-                //             });
-                //         });
-                //     }
-                // });
-
-
-
+                
                 // If all validations pass, proceed with form submission
                 try {
                     let form = e.target;

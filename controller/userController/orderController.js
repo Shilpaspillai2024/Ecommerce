@@ -22,7 +22,9 @@ const order = async (req, res) => {
     try {
 
 
-        const order = await orderSchema.find({ userId: req.session.user, isCancelled: false }).populate('products.productId').sort({ createdAt: -1 })
+        // const order = await orderSchema.find({ userId: req.session.user, isCancelled: false }).populate('products.productId').sort({ createdAt: -1 })
+
+        const order = await orderSchema.find({ userId: req.session.user }).populate('products.productId').sort({ createdAt: -1 })
 
 
 
@@ -60,8 +62,9 @@ const cancellOrderPost = async (req, res) => {
 
         const order = await orderSchema.findByIdAndUpdate(orderId, { status: "cancelled", isCancelled: true })
         // let balance=(order.totalPrice-(order.couponDiscount || 0 ))
+        // let balance = order.totalPrice
 
-        let balance = order.totalPrice
+        let balance = order.totalPrice+(order.couponDiscount || 0)
 
         if (order.paymentMethod !== 'COD') {
 
@@ -125,68 +128,28 @@ const returnOrder = async (req, res) => {
 
         const { orderId } = req.body
 
+        const order = await orderSchema.findByIdAndUpdate(orderId,
+            {
+                status: 'return-pending',
+                reasonforCancel: req.body.reason
+            })
 
-
-        const userId = req.session.user
-
-
-        const order = await orderSchema.findById(orderId)
-
-        if (!order) {
-            return res.status(404).send('Order not found');
-        }
-
-        order.status = 'returned'
-        await order.save()
-
-
-        const wallet = await walletSchema.findOne({ userId })
-
-        // let balance = order.totalPrice - (order.couponDiscount || 0)
-        let balance = order.totalPrice
-
-        if (wallet) {
-            wallet.balance += balance;
-            wallet.transaction.push({
-                typeOfPayment: 'credit',
-                amount: balance,
-                date: Date.now(),
-                orderId: order._id,
-
-            });
-
-            await wallet.save();
-
+        if (order) {
+            req.flash(
+                "errorMessage",
+                "Your order has been under the review for returning. Thank you."
+            );
+            res.redirect("/cancelled-orders")
         } else {
-
-            const walletNew = new walletSchema({
-                userId,
-                balance,
-                transaction: [{
-                    typeOfPayment: 'credit',
-                    amount: balance,
-                    date: Date.now(),
-                    orderId: order._id,
-                }],
-            });
-
-            await walletNew.save();
-
+            req.flash(
+                "errorMessage",
+                "We apologize, but your product is not eligible for return at this time. If you have any questions or need further assistance, please contact our customer support team"
+            );
+            res.redirect("/order");
         }
-
-        for (product of order.products) {
-
-            await productSchema.findByIdAndUpdate(product.productId, { $inc: { productQuantity: product.quantity } })
-
-        }
-
-        res.status(200).send('Return order request submitted successfully');
-
-
 
     } catch (err) {
-        console.log(`Error: ${err}`);
-        res.status(500).send('Failed to submit return order request');
+        console.log(`Error on returning the order  ${err}`);
 
     }
 }
@@ -224,7 +187,7 @@ const addReview = async (req, res) => {
 
         const productId = req.params.productId
 
-       
+
         const rating = parseInt(req.body.rating)
         const reviewFeedback = req.body.reviewFeedback
         const userDetails = await userSchema.findById(req.session.user)
@@ -246,7 +209,7 @@ const addReview = async (req, res) => {
 
         const productObjId = product._id
 
-        //find exsisting rating of the pproduct
+        //find exsisting rating of the product
 
         let review = await reviewSchema.findOne({ productId: productObjId });
 
@@ -254,7 +217,7 @@ const addReview = async (req, res) => {
         if (review) {
             let userReviewed = false;
             for (let i = 0; i < review.reviews.length; i++) {
-                if (review.reviews[i].userId === req.session.user) {
+                if (review.reviews[i].userId.toString() === req.session.user) {
                     userReviewed = true;
                     // Update existing review
                     review.reviews[i].description = reviewFeedback;
@@ -459,7 +422,7 @@ const retryRazorPay = async (req, res) => {
         }
 
         const order = await orderSchema.findById(orderId)
-       
+
         // Check if the order exists
         if (!order) {
             return res.status(404).send('Order not found');

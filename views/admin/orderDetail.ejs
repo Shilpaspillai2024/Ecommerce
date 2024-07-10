@@ -1,7 +1,8 @@
 <style>
     body{
     background:#eee;
-}
+   
+    }
 .card {
     box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
 }
@@ -15,6 +16,7 @@
     background-clip: border-box;
     border: 0 solid rgba(0,0,0,.125);
     border-radius: 1rem;
+ 
 }
 .text-reset {
     --bs-text-opacity: 1;
@@ -24,11 +26,21 @@ a {
     color: #5465ff;
     text-decoration: none;
 }
+.container-fluid{
+  padding-left: 250px;
+  
+
+}
+.container{
+  padding-top: 85px;
+  padding-bottom: 7rem;
+}
 </style>
 
 
 
 <%-include('navbar')%>
+<%-include('sidebar')%>
 <div class="container-fluid">
 
     <div class="container">
@@ -152,9 +164,20 @@ a {
             </div>
           </div>
           <div class="card mb-4">
-            <form action="/admin/edit-order-status/<%= order._id %>" method="post" id="edit-order-status-form">
-            <div class="card-body">
+            
+              <div class="card-body">
+                <% if(order.status === 'return-pending') {%>
+                  <h3>Confirm Order Return</h3>
+                  <p>Confirm order successfully returned</p>
+                  <div>
+                      <a href="/admin/returnOrder/<%= order._id %>" class="btn btn-primary">Confirm</a>
+                      <a href="/admin/order" class="btn submit-btn-light">Go Back</a>
+                  </div>
+              <%}else { %>
+
                 <h3 class="h6">Change Order Status</h3>
+
+                <form action="/admin/edit-order-status/<%= order._id %>" method="post" id="edit-order-status-form">
                 
               
                 <div class="mb-3">
@@ -168,10 +191,11 @@ a {
                   </select>
               </div>
               
-                <a href="/admin/order" class="btn btn-secondary me-5 ms-2">Go Back</a>
-                <button type="submit" class="btn btn-primary ms-5">Update Status</button>
+                <a href="/admin/order" class="btn btn-secondary me-2 ms-2">Go Back</a>
+                <button type="submit" class="btn btn-primary ms-2">Update Status</button>
             </div>
             </form>
+            <% } %>
         </div>
         </div>
       </div>

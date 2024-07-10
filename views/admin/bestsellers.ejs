@@ -3,6 +3,11 @@
         min-height: 100vh;
         margin-bottom: 5rem;
         color: white;
+        padding-left: 200px;
+        padding-top: 7rem;
+        padding-bottom: 7rem;
+         
+     
     }
 
     @media (max-width: 767.98px) {
@@ -10,15 +15,17 @@
             border-left: none !important;
         }
     }
+    
 </style>
 
 
 
 <%- include('navbar') %>
+<%- include('sidebar') %>
 
-    <div class="bestselling-container container mt-5">
+    <div class="bestselling-container container ">
         <div class="row">
-            <div class="col-md-12 col-xl-9">
+            <div class="col-md-12 col-xl-9 ">
                 <h4>BestSelling products</h4>
                 <% if(product.length!=0){ %>
                     <% product.forEach((product)=>{ %>
@@ -27,24 +34,33 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
-                                        <div class="bg-image rounded " style="overflow: hidden; width: 200px;height: 200px;">
-                                            <img src="../../<%= product.productImage[0] %>" class="img-fluid" style="width: 200px; height: 200px; object-fit: contain;"
-                                                alt="" />
+                                        <div class="bg-image rounded "
+                                            style="overflow: hidden; width: 200px;height: 200px;">
+                                            <img src="../../<%= product.productImage[0] %>" class="img-fluid"
+                                                style="width: 200px; height: 200px; object-fit: contain;" alt="" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-xl-6">
-                                       
-                                        <h5 class="text-truncate mb-4 mb-md-0"><%= product.productName %></h5>
-                                        <h6><%= product.productAuthor %></h6>
+
+                                        <h5 class="text-truncate mb-4 mb-md-0">
+                                            <%= product.productName %>
+                                        </h5>
+                                        <h6>
+                                            <%= product.productAuthor %>
+                                        </h6>
                                         <div class="mt-1 mb-0 text-muted small">
                                             <span>category</span>
                                             <span class="text-primary"> : </span>
-                                            <span><%= product.productCategory %></span>
+                                            <span>
+                                                <%= product.productCategory %>
+                                            </span>
                                         </div>
                                         <div class="mb-2 text-muted small">
                                             <span>Discount</span>
                                             <span class="text-primary"> : </span>
-                                            <span> <%= product.productDiscount %>%</span>
+                                            <span>
+                                                <%= product.productDiscount %>%
+                                            </span>
                                         </div>
                                         <p class="text-truncate mb-4 mb-md-0">
                                             <%= product.productDescription %>
@@ -55,9 +71,11 @@
                                             <!-- <h4 class="mb-1 me-1"> &#8377; <%= product.productDiscountedPrice %></h4> -->
                                             <span class="text-danger">&#8377; <%= product.productPrice %></span>
                                         </div>
-                                        <h6 class="text-success"><%= product.productDiscountedPrice>=500?"Free shipping":"Paid shipping" %></h6>
+                                        <h6 class="text-success">
+                                            <%= product.productDiscountedPrice>=500?"Free shipping":"Paid shipping" %>
+                                        </h6>
                                         <div class="d-flex flex-column mt-4">
-                                          
+
                                         </div>
                                     </div>
                                 </div>
@@ -67,23 +85,28 @@
                         <% }) %>
                             <% } %>
             </div>
-            <div class="col-md-12 col-xl-3">
+            <div class="col-md-12 col-xl-3 ">
                 <div class="col-md-12">
                     <h4>BestSelling Categories</h4>
                     <div class="card">
                         <ol class="list-group list-group-light list-group-numbered">
                             <% topCategory.forEach((category)=>{ %>
-                                <li class="list-group-item"><%= category %></li>
-                          <%  }) %>
+                                <li class="list-group-item">
+                                    <%= category %>
+                                </li>
+                                <% }) %>
                         </ol>
                     </div>
                 </div>
-               
+
 
             </div>
         </div>
     </div>
 
 
+
+
+  
 
     <%- include('footer') %>

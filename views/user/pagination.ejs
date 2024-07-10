@@ -1,24 +1,47 @@
+
+<style>
+
+.pagination-spacing {
+    margin-top: 2rem; 
+}
+</style>
+
+
+
 <!-- Pagination -->
-<nav aria-label="Page navigation example">
+<nav aria-label="Page navigation example " class="pagination-spacing">
     <ul class="pagination justify-content-center">
-        <% if (currentPage > 0) { %>
+        <li class="page-item">>
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <button class="page-link" onclick="previousPage('<%= parseInt(currentPage) %>')">Previous</button>
+        </li>
+        <% for(let i = 1; i <= pageNumber; i++) { %> 
             <li class="page-item">
-                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
+                <a class="page-link" href="?page=<%= i %>" ><%= i %></a>
             </li>
         <% } %>
-        <% for (let i = 0; i < totalPages; i++) { %>
-            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                <a class="page-link" href="?page=<%= i %>"><%= i + 1 %></a>
-            </li>
-        <% } %>
-        <% if (currentPage < totalPages - 1) { %>
-            <li class="page-item">
-                <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        <% } %>
+        <li class="page-item">
+            <button class="page-link" onclick="nextPage('<%= parseInt(currentPage) %>','<%= pageNumber %>')">Next</button>
+        </li>
     </ul>
 </nav>
+
+
+<script>
+
+    // next page
+    function nextPage(currentPage,totalPage){
+        if(Number(currentPage)<Number(totalPage)){
+            window.location.href=`?page=${Number(currentPage)+1}`
+        }
+    }
+
+    // previous page
+    function previousPage(currentPage){
+        if((Number(currentPage)-1)!=0){
+            window.location.href=`?page=${Number(currentPage)-1}`
+        }
+    }
+
+</script>

@@ -1,49 +1,49 @@
-const mongoose=require('mongoose')
-const productSchema=require('../../model/productSchema')
+const mongoose = require('mongoose')
+const productSchema = require('../../model/productSchema')
 const categorySchema = require('../../model/categorySchema')
-const offerSchema=require('../../model/offerSchema')
-const multer=require('../../middleware/multer')
-const fs=require('fs')
+const offerSchema = require('../../model/offerSchema')
+const multer = require('../../middleware/multer')
+const fs = require('fs')
 
 
-  const product= async (req,res)=>{
-    try {
-      const productSearch = req.query.productSearch || '';
-        const products = await productSchema.find({ productName: { $regex: productSearch, $options: 'i' } })
+const product = async (req, res) => {
+  try {
+    const productSearch = req.query.productSearch || '';
+    const products = await productSchema.find({ productName: { $regex: productSearch, $options: 'i' } })
 
-       
-        // const products= await productSchema.find()
-        res.render('admin/product',{admin:req.session.admin,title:"Product List",products,alertMessage: req.flash('errorMessage')})
-        
-    } catch (err) {
 
-        console.log(`error in product page load ${err}`)
-        
-    }
+    // const products= await productSchema.find()
+    res.render('admin/product', { admin: req.session.admin, title: "Product List", products, alertMessage: req.flash('errorMessage') })
+
+  } catch (err) {
+
+    console.log(`error in product page load ${err}`)
+
   }
+}
 
- //render the add-product page
-  const addProduct = async (req,res)=>{
-    try {
+//render the add-product page
+const addProduct = async (req, res) => {
+  try {
 
-       // get all category details from the category collection ,the categories are Active
-          const productCategory=await categorySchema.find({isActive: true})
-          
-          // before render the page check whether the category is empty if its empty then send a flash message
-          if(productCategory.length===0){
-            req.flash('errorMessage', 'Product Category is empty, please add at least one category')
-          }
+    // get all category details from the category collection ,the categories are Active
+    const productCategory = await categorySchema.find({ isActive: true })
 
-          res.render('admin/addproducts',{admin:req.session.admin,title:"Add-product",alertMessage:req.flash('errorMessage'),productCategory})
-    } catch (err) {
-
-      console.log(`error in add-product render`)
-      
+    // before render the page check whether the category is empty if its empty then send a flash message
+    if (productCategory.length === 0) {
+      req.flash('errorMessage', 'Product Category is empty, please add at least one category')
     }
+
+    res.render('admin/addproducts', { admin: req.session.admin, title: "Add-product", alertMessage: req.flash('errorMessage'), productCategory })
+  } catch (err) {
+
+    console.log(`error in add-product render`)
+
   }
+}
 // multer as a middleware for multiple image upload
 // the /maximum size is set as 4 
-  const multermiddle=multer.array("productImage",4);
+const multermiddle = multer.array("productImage", 4);
 
 // addproduct post
 
@@ -61,19 +61,19 @@ const addProductPost = async (req, res) => {
 
 
 
-    const offer=await offerSchema.find({offerFor: "CATEGORY" }).populate('offerCategoryId')
+    const offer = await offerSchema.find({ offerFor: "CATEGORY" }).populate('offerCategoryId')
 
     let discountPrice = req.body.productPrice
     let discount = 0
 
     // find if the product is under the offer
     for (const off of offer) {
-        if (off.offerCategoryId.categoryName === req.body.productCategory) {
-            discount = off.offerValue
-            discountPrice = (req.body.productPrice * (1 - off.offerValue / 100))
-            discountPrice = discountPrice.toFixed(2);
-            break;
-        }
+      if (off.offerCategoryId.categoryName === req.body.productCategory) {
+        discount = off.offerValue
+        discountPrice = (req.body.productPrice * (1 - off.offerValue / 100))
+        discountPrice = discountPrice.toFixed(2);
+        break;
+      }
     }
 
 
@@ -97,7 +97,7 @@ const addProductPost = async (req, res) => {
     });
 
     if (!checkProduct) {
-     await productSchema.insertMany(productDetails)
+      await productSchema.insertMany(productDetails)
       req.flash('errorMessage', 'Product added successfully');
       res.redirect('/admin/product');
     } else {
@@ -112,60 +112,67 @@ const addProductPost = async (req, res) => {
 };
 
 
-const editProduct= async (req,res)=>{
+const editProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     const product = await productSchema.findById(productId)
-    const productCategory= await categorySchema.find()
-    if(product){
-      res.render('admin/editproduct',{ admin:req.session.admin, title:"Add-product",alertMessage:req.flash('errorMessage'),product,productCategory})
-   
+    const productCategory = await categorySchema.find()
+    if (product) {
+      res.render('admin/editproduct', { admin: req.session.admin, title: "Add-product", alertMessage: req.flash('errorMessage'), product, productCategory })
+
     }
-    else{
+    else {
       req.flash('errorMessage', 'Unable to edit the product. Please try again')
       res.redirect('/admin/product')
     }
 
 
-    
+
   } catch (err) {
     console.log(`eeror in edit page load ${err}`)
-    
+
   }
 }
- 
+
 const editProductPost = async (req, res) => {
   try {
     const id = req.params.id
-const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
+    const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
+
+    //  for cropper image
+    const croppedImages = JSON.parse(req.body.croppedImages || '[]');
 
     imageToDelete.forEach(x => fs.unlinkSync(x));
 
 
 
-    if(imageToDelete.length>0){
-      await productSchema.findByIdAndUpdate(id,{
-        $pull:{productImage: {$in: imageToDelete}}
+    if (imageToDelete.length > 0) {
+      await productSchema.findByIdAndUpdate(id, {
+        $pull: { productImage: { $in: imageToDelete } }
       })
     }
 
     const product = await productSchema.findById(id);
 
-    
-    
+
+
     const { productPrice, productQuantity, productDescription } = req.body;
 
     let imgArray = []
 
-    req.files.forEach((x) => {
-      imgArray.push(x.path)
-    })
+    // Save cropped images
+    croppedImages.forEach((base64Data, index) => {
+      const base64Image = base64Data.split(';base64,').pop();
+      const fileName = `uploads/${Date.now()}-${index}.jpg`;
+      fs.writeFileSync(fileName, base64Image, { encoding: 'base64' });
+      imgArray.push(fileName);
+    });
 
     const newImages = [...product.productImage, ...imgArray]
 
 
-    
-   // Update product details including images
+
+    // Update product details including images
     await productSchema.findByIdAndUpdate(id, {
       productPrice,
       productQuantity,
@@ -175,7 +182,7 @@ const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
 
     });
 
-    
+
 
     req.flash('errorMessage', 'Product updated successfully');
     res.redirect('/admin/product');
@@ -186,81 +193,80 @@ const imageToDelete = JSON.parse(req.body.deletedImages || '[]');
   }
 };
 
-
 // product deactivating
-const productInactive = async (req,res)=>{
-   try {
-      const  productId=req.params.id;
-      const productInactive=await productSchema.findByIdAndUpdate(productId,{isActive:false})
-      if(productInactive){
-        req.flash('errorMesage','the product is blocked and currently not available for users')
+const productInactive = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const productInactive = await productSchema.findByIdAndUpdate(productId, { isActive: false })
+    if (productInactive) {
+      req.flash('errorMesage', 'the product is blocked and currently not available for users')
 
-      }else{
-        req.flash('errorMessage','product not found')
-      }
-      res.redirect('/admin/product')
-    
-   } catch (err) {
+    } else {
+      req.flash('errorMessage', 'product not found')
+    }
+    res.redirect('/admin/product')
+
+  } catch (err) {
     console.log(`error in deactivating product ${err}`)
-    
-   }
+
+  }
 }
 
 //product activating
 
-const productActive =async (req,res)=>{
+const productActive = async (req, res) => {
   try {
-    const productId=req.params.id;
-    const productActive= await productSchema.findByIdAndUpdate(productId,{isActive:true})
-    if(productActive){
-      req.flash('errorMessage','the product is unblocked')
+    const productId = req.params.id;
+    const productActive = await productSchema.findByIdAndUpdate(productId, { isActive: true })
+    if (productActive) {
+      req.flash('errorMessage', 'the product is unblocked')
     }
-    else{
+    else {
       req.flash('errorMessage,"product is not found')
     }
     res.redirect('/admin/product')
-    
-  } catch (err){
+
+  } catch (err) {
     console.log(`error in activating product ${err}`)
-    
+
   }
 }
 
 
 // Delete the product 
-  const productDelete=async (req,res)=>{
-    try {
-      const productId=req.params.id;
-      const img= await productSchema.findById(productId)
+const productDelete = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const img = await productSchema.findById(productId)
 
-      img.productImage.forEach((image)=>{
-        fs.unlinkSync(image)
-      })
-      const deleteProduct=await productSchema.findByIdAndDelete(productId)
+    img.productImage.forEach((image) => {
+      fs.unlinkSync(image)
+    })
+    const deleteProduct = await productSchema.findByIdAndDelete(productId)
 
-      if(deleteProduct){
-        req.flash('errorMessage','Product Deleted successfully')
-        res.redirect('/admin/product')
+    if (deleteProduct) {
+      req.flash('errorMessage', 'Product Deleted successfully')
+      res.redirect('/admin/product')
     }
-    else{
-        req.flash('errorMessage','unable to delete the the product')
-        res.redirect('/admin/product')
+    else {
+      req.flash('errorMessage', 'unable to delete the the product')
+      res.redirect('/admin/product')
     }
-      
-    } catch (err) {
-      console.log(`error in deletion of products ${err}`)
-      
-    }
-  } 
 
-  module.exports={
-    product,
-    addProduct,
-    multermiddle,
-    addProductPost,
-    editProduct,
-    editProductPost,
-    productInactive,
-    productActive,
-    productDelete
+  } catch (err) {
+    console.log(`error in deletion of products ${err}`)
+
   }
+}
+
+module.exports = {
+  product,
+  addProduct,
+  multermiddle,
+  addProductPost,
+  editProduct,
+  editProductPost,
+  productInactive,
+  productActive,
+  productDelete
+}

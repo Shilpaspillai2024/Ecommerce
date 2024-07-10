@@ -4,7 +4,17 @@
         background-color: #000;
        
         color: #fff;
-      
+          /* added for sidebar */
+
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+
+
+margin-left: 200px;
+/* Width of sidebar */
+padding: 1rem;
+/* Add padding for spacing */
+
     } 
 
    
@@ -115,10 +125,19 @@
         color: #fff;
         /* White text for badges */
     }
+
+
+
+  
 </style>
 
 
 <%- include('navbar') %>
+<%- include('sidebar') %>
+
+
+
+
     <div class="container dashboard-container text-white">
         <div class="row mt-5">
             <div class="col-md-12 mb-3">
@@ -286,7 +305,7 @@
             </div>
     </div>
 
-    <%- include('footer') %>
+   
 
 
         <script>
@@ -494,3 +513,7 @@
             }
 
         </script>
+
+
+
+<%- include('footer') %>

@@ -409,7 +409,7 @@
                 <!-- <h1 class="mb-2">ALL COLLECTION</h1> -->
                 <div class="d-flex justify-content-between ms-4">
                     <button class="btn btn-primary" id="filter-btn">Filter</button>
-                    <div class="dropdown">
+                    <!-- <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle me-4" type="button" id="sortDropdown"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             Sort by
@@ -423,7 +423,22 @@
                             <li><a class="dropdown-item" href="#" onclick="applySort('a-z')">A-Z</a></li>
                             <li><a class="dropdown-item" href="#" onclick="applySort('z-a')">Z-A</a></li>
                         </ul>
+                    </div> -->
+
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle me-4" type="button" id="sortDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Sort by
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="applySort('price-high-low')">Price: High to Low</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="applySort('price-low-high')">Price: Low to High</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="applySort('latest')">Latest Arrival</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="applySort('a-z')">A-Z</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="applySort('z-a')">Z-A</a></li>
+                        </ul>
                     </div>
+                    
                 </div>
                 <hr>
             </div>
@@ -435,8 +450,8 @@
                 <div class="mb-3">
                     <label class="form-label">Category</label>
                     <div>
-                        <input class="form-check-input" type="checkbox" name="collections" value="Best Seller"> Best
-                        Sellers<br>
+                        <input class="form-check-input" type="checkbox" name="collections" value="Novels"> Novels
+                        <br>
                         <input class="form-check-input" type="checkbox" name="collections" value="Fiction"> Fiction<br>
                         <input class="form-check-input" type="checkbox" name="collections" value="Non-Fiction">
                         Non-Fiction<br>
@@ -455,10 +470,10 @@
                     <label class="form-label">Ratings</label>
                     <div>
                         <input class="form-check-input" type="checkbox" name="ratings" value="1"> 1 Star<br>
-                        <input class="form-check-input" type="checkbox" name="ratings" value="2"> 2 Stars<br>
-                        <input class="form-check-input" type="checkbox" name="ratings" value="3"> 3 Stars<br>
-                        <input class="form-check-input" type="checkbox" name="ratings" value="4"> 4 Stars<br>
-                        <input class="form-check-input" type="checkbox" name="ratings" value="5"> 5 Stars<br>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="2"> 2 Star<br>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="3"> 3 Star<br>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="4"> 4 Star<br>
+                        <input class="form-check-input" type="checkbox" name="ratings" value="5"> 5 Star<br>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -559,6 +574,9 @@
                             <div class="no-product-banner"></div>
                             <% } %>
         </div>
+
+
+        <%- include("pagination")%>
 
     </div>
 
@@ -694,12 +712,19 @@
 
 
 
-        // Function to handle sorting
-        function applySort(sortOption) {
+     
+
+
+
+      // Function to handle sorting
+      function applySort(sortOption) {
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set('sort', sortOption);
             window.location.href = `${window.location.pathname}?${urlParams.toString()}`;
         }
+
+       
+
 
         // Function to handle filter panel toggle
         document.getElementById('filter-btn').addEventListener('click', function () {
@@ -730,6 +755,8 @@
             // Redirect to the same page without filter parameters
             window.location.href = `${window.location.pathname}`;
         });
+
+
 
 
     </script>

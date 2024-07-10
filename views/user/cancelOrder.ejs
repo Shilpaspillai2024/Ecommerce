@@ -167,6 +167,7 @@ body{
             <div class="col-xl-9">
                 <% if(order.length!=0){ %>
                     <% order.forEach((ele,index)=> { %>
+                        <% if (ele.isCancelled && ele.status !== 'returned') { %>
                         <div class="card border shadow-none order-container">
                             <div class="card-body">
 
@@ -244,6 +245,7 @@ body{
                                         </div>
                             </div>
                         </div>
+                        <% } %>
                         <% }) %>
                             <% } else { %>
                                 <div class="row text-center">

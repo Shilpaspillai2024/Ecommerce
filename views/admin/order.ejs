@@ -1,6 +1,9 @@
 <style>
     .admin-orders-container {
         min-height: 100vh;
+        padding-left: 200px;
+        padding-top:3rem;
+        padding-bottom: 7rem;
     }
 
     .search-container {
@@ -25,11 +28,20 @@
         width: 30rem;
         height: 2.5rem;
     }
+   .order-list-box{
+    margin-top: 2rem;
+       
+       width:70vw
 
+   }
+   
+  
     table th,
     td {
+       
         text-align: center;
     }
+  
 </style>
 
 
@@ -39,6 +51,7 @@
 
 
 <%- include('navbar') %>
+<%- include('sidebar') %>
 
 
 
@@ -96,6 +109,8 @@
                                     <td><%= order.paymentMethod %></td>
                                     <td><%= order.status %></td>
                                     <td>
+                                    
+
                                         <a href="/admin/order-view/<%= order._id %>" id="view-order-button" class="btn" >
                                             <i class="fa-solid fa-pen-to-square" style="color: #e2df19;"></i>
                                         </a>
@@ -109,6 +124,8 @@
               
             </table>
         </div>
+
+        <%- include('pagination') %>
     </div>
 
 

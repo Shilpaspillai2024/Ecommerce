@@ -4,6 +4,9 @@
 
     .admin-customers-container {
         min-height: 100vh;
+        padding-left: 200px;
+        padding-top: 7rem;
+        padding-bottom: 7rem;
     }
 
     .user-search-box {
@@ -44,6 +47,7 @@
 
     .coupon-tabel {
         text-align: center;
+       
     }
 
     .coupon-name {
@@ -155,6 +159,7 @@
 
 
 <%- include('navbar') %>
+<%- include('sidebar') %>
 
     <div class="admin-customers-container container">
         <div class="user-search-box">
@@ -170,7 +175,7 @@
                     <div class="form-header text-center">
                         <h2>Add Coupon </h2>
                     </div>
-                    <form action="/admin/add-coupon" method="post" class=" mt-5" id="add-coupon-form">
+                    <form action="/admin/add-coupon" method="post" class="mt-5" id="add-coupon-form">
                         <div>
                             <label for="couponName">Coupon Name</label>
                             <input type="text" class="form-control" id="couponName" name="couponName">

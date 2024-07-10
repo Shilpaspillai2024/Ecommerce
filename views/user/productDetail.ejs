@@ -337,12 +337,12 @@
                     </div>
 
                     <% } %>
+                      
                         <div class="rating" id="rating">
-                            <span class="star-rating-product" data-value="1">&#9733;</span>
-                            <span class="star-rating-product" data-value="2">&#9733;</span>
-                            <span class="star-rating-product" data-value="3">&#9733;</span>
-                            <span class="star-rating-product" data-value="4">&#9733;</span>
-                            <span class="star-rating-product" data-value="5">&#9733;</span>
+                            <% for (let i = 1; i <= 5; i++) { %>
+                                <i class="fa fa-star<%= averageRating >= i ? '' : (averageRating >= i - 0.5 ? '-half-alt' : '-o') %>"></i>
+                            <% } %>
+                            <span class="ms-1"><%= averageRating %></span>
                         </div>
 
 

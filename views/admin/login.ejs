@@ -1,4 +1,24 @@
 <style>
+
+
+     .admin-navbar-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem;
+        align-items: center;
+        /* border-bottom: 1px solid #b7b7b7; */
+        box-shadow: 1px 1px 5px #d7d7d7;
+        z-index: 99;
+        background-color:#1c1c1c ;
+    }
+
+    .logo {
+        text-decoration: none;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #f0e8e8;
+    }
     .admin-login-container {
         height: 100vh;
         display: flex;
@@ -8,7 +28,7 @@
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat; */
-        background-color: #1a1a1a;
+        background-color:black;
     }
 
     .login-form {
@@ -44,7 +64,11 @@
 
 
 
-<%- include('navbar') %>
+
+
+<header class="admin-navbar-container">
+    <a href="/admin/dashboard" class="logo">WordPlayBooks </a>
+</header>
 
 
     <div class="admin-login-container">

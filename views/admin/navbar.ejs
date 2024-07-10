@@ -1,17 +1,28 @@
 <style>
     body {
         background-color: #000000;
+        display: flex;
+        margin: 0;
+
     }
 
     .admin-navbar-container {
+        width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         padding: 1rem;
         align-items: center;
-        /* border-bottom: 1px solid #b7b7b7; */
         box-shadow: 1px 1px 5px #d7d7d7;
+        background-color: #1c1c1c;
         z-index: 99;
+        position: fixed;
+        top: 0;
+        left: 0;
+
+
+
+
     }
 
     .logo {
@@ -31,23 +42,25 @@
         font-size: 1rem;
         color: #ebe2e2;
     }
+
+   
 </style>
+
+
+
 <header class="admin-navbar-container">
-    <a href="/admin/dashboard" class="logo">WordPlayBooks </a>
+    <a href="/admin/dashboard" class="logo">WordPlayBooks</a>
+
+
     <nav class="admin-navlinks">
         <% if(admin){ %>
-            <a href="/admin/dashboard"><i class="fa-solid fa-chart-pie" style="color: white;"></i> Dashboard</a>
-            <a href="/admin/bestselling"><i class="fa-solid fa-arrow-trend-up" style="color: white;"></i> BestSelling</a>
-            <a href="/admin/user"><i class="fa-solid fa-users" style="color: white;"></i> Customers</a>
-            <a href="/admin/category"><i class="fa-solid fa-layer-group" style="color: white;"></i> Category</a>
-            <a href="/admin/product"><i class="fa-solid fa-boxes-stacked" style="color: white;"></i> Products</a>
-            <a href="/admin/order"><i class="fa-solid fa-cart-shopping" style="color: white;"></i> Orders</a>
-            <a href="/admin/coupons"><i class="fa-solid fa-ticket" style="color: white;"></i> Coupons</a>
-            <a href="/admin/offer"><i class="fa-solid fa-envelope-open-text" style="color: white;"></i></i> Offer</a>
-            <a href="/admin/logout"><i class="fa-solid fa-door-open" style="color: white;"></i>Logout</a>
+           
+            <a href="/admin/logout"><i class="fa-solid fa-user" style="color: white;"></i>Logout</a>
             <% }%>
     </nav>
-
 </header>
+
+
+
 
 <%- include('alert') %>

@@ -31,30 +31,34 @@ const productView = async (req, res) => {
         let threeStar = 0;
         let fourStar = 0;
         let fiveStar = 0;
+        let totalRating = 0;
+        let reviewCount = 0;
         let review = await reviewSchema.findOne({ productId: product._id }).populate('reviews.userId')
 
         if (review) {
-            review.reviews.forEach((ele)=>{
-                if(ele.star===1){
+            review.reviews.forEach((ele) => {
+                totalRating += ele.star;
+                reviewCount++;
+                if (ele.star === 1) {
                     oneStar++
                 }
-                if(ele.star===2){
+                if (ele.star === 2) {
                     twoStar++
                 }
-                if(ele.star===3){
+                if (ele.star === 3) {
                     threeStar++
                 }
-                if(ele.star===4){
+                if (ele.star === 4) {
                     fourStar++
                 }
-                if(ele.star===5){
+                if (ele.star === 5) {
                     fiveStar++
                 }
             })
 
         }
 
-
+        const averageRating = reviewCount ? (totalRating / reviewCount).toFixed(1) : 0;
 
         const similarProducts = await productSchema.find({ productCategory: product.productCategory, _id: { $ne: productId } })
 
@@ -89,7 +93,21 @@ const productView = async (req, res) => {
 
 
 
-        res.render('user/productDetail', { title: product.productName, product, similarProducts, itemInCart,review,oneStar,twoStar,threeStar,fourStar,fiveStar, alertMessage: req.flash('errorMessage'), user: req.session.user, referrer: referrer })
+        res.render('user/productDetail',
+            {
+                title: product.productName,
+                product,
+                similarProducts,
+                itemInCart,
+                review,
+                oneStar,
+                twoStar,
+                threeStar,
+                fourStar,
+                fiveStar,
+                averageRating,
+                alertMessage: req.flash('errorMessage'), user: req.session.user, referrer: referrer
+            })
 
 
 
@@ -104,59 +122,77 @@ const productSeemore = async (req, res) => {
     try {
         const category = await categorySchema.find({ isActive: true });
 
-        let { collections, category: categoryQuery, minPrice, maxPrice, ratings, availability, sort } = req.query;
-        let filter = {};
+        const allCategory = category.map(item => item.categoryName);
+        const selectedCategory = req.query.collections || allCategory;
+        const minPrice = parseInt(req.query.minPrice) || 0;
+        const maxPrice = parseInt(req.query.maxPrice) || 100000;
+        const productRating = parseInt(req.query.ratings) || 0;
+        const availability = req.query.availability === 'in-stock' ? { productQuantity: { $gt: 0 } } : {};
+        const sortOption = req.query.sort || 'latest';
+        const userSearch = req.query.userSearch || "";
 
 
-
-        if (categoryQuery) {
-            filter.productCategory = categoryQuery;
-        }
-        // Filtering
-        if (collections) {
-
-            filter.productCategory = { $in: collections.split(',') };
-        }
+        // Pagination parameters
+        const productsPerPage = 8;
+        const currentPage = parseInt(req.query.page) || 1;
+        const skip = (currentPage - 1) * productsPerPage;
 
 
-        if (minPrice || maxPrice) {
-            filter.productPrice = {};
-            if (minPrice) filter.productPrice.$gte = Number(minPrice);
-            if (maxPrice) filter.productPrice.$lte = Number(maxPrice);
-        }
-        if (ratings) {
-            filter.ratings = { $in: ratings.split(',').map(Number) };
-        }
-        if (availability) {
-            filter.productQuantity = { $gt: 0 };
-        }
+        let query = {
+            productName: { $regex: userSearch, $options: 'i' },
+            productCategory: { $in: selectedCategory },
+            isActive: true,
+            productPrice: { $gte: minPrice, $lte: maxPrice },
+            ...availability,
+        };
+        // Count the total number of products matching the query
+        const productsCount = await productSchema.countDocuments(query);
 
-        // Sorting
-        let sortOption = {};
-        if (sort) {
-            switch (sort) {
-                case 'price-high-low':
-                    sortOption.productPrice = -1;
-                    break;
-                case 'price-low-high':
-                    sortOption.productPrice = 1;
-                    break;
-                case 'latest':
-                    sortOption.addedOn = -1;
-                    break;
-                case 'a-z':
-                    sortOption.productName = 1;
-                    break;
-                case 'z-a':
-                    sortOption.productName = -1;
-                    break;
-                default:
-                    sortOption = {};
-            }
+
+        // Find products with pagination
+        let products = await productSchema.find(query).skip(skip).limit(productsPerPage);
+
+        // Apply rating filter
+        if (productRating > 0) {
+            products = await Promise.all(products.map(async (product) => {
+                const reviews = await reviewSchema.findOne({ productId: product._id });
+                if (reviews) {
+                    const totalStars = reviews.reviews.reduce((acc, review) => acc + review.star, 0);
+                    const averageRating = reviews.reviews.length ? (totalStars / reviews.reviews.length).toFixed(1) : 0;
+                    // Check if the average rating falls within the desired range
+                    if (Math.floor(averageRating) === productRating) {
+                        return product;
+                    }
+                }
+                return null; // Return null for products that don't match the rating filter
+            }));
+
+            // Filter out null values from the products array
+            products = products.filter(product => product !== null);
         }
 
 
-        const products = await productSchema.find(filter).sort(sortOption);
+        switch (sortOption) {
+            case 'price-high-low':
+
+                products.sort((a, b) => parseFloat(b.productPrice) - parseFloat(a.productPrice))
+
+                break;
+            case 'price-low-high':
+                products.sort((a, b) => parseFloat(a.productPrice) - parseFloat(b.productPrice))
+
+                break;
+            case 'latest':
+                products.sort((a, b) => b.createdAt - a.createdAt)
+                break;
+            case 'a-z':
+                products.sort((a, b) => a.productName.localeCompare(b.productName))
+                break;
+            case 'z-a':
+                products.sort((a, b) => b.productName.localeCompare(a.productName))
+                break;
+
+        }
 
         let wishlist = { products: [] };
         if (req.session.user) {
@@ -169,7 +205,11 @@ const productSeemore = async (req, res) => {
             product: products,
             alertMessage: req.flash('errorMessage'),
             wishlist,
-            user: req.session.user
+            user: req.session.user,
+            pageNumber: Math.ceil(productsCount / productsPerPage),
+            currentPage,
+            totalPages: productsCount,
+            appliedFilters: req.query
         });
     } catch (err) {
         console.log(`Error during product detail page ${err}`);

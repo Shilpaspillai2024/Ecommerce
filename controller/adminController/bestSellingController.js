@@ -4,13 +4,13 @@ const productSchema = require('../../model/productSchema')
 const orderSchema = require('../../model/orderSchema')
 
 
-const bestSelling=async(req,res)=>{
+const bestSelling = async (req, res) => {
     try {
 
-        const order=await orderSchema.aggregate([
-            {$unwind:"$products"},{$group:{_id:"$products.productId",productCount:{$sum:1}}},
-            {$sort:{productCount:-1}},
-            {$limit:10}
+        const order = await orderSchema.aggregate([
+            { $unwind: "$products" }, { $group: { _id: "$products.productId", productCount: { $sum: 1 } } },
+            { $sort: { productCount: -1 } },
+            { $limit: 10 }
         ])
 
 
@@ -31,29 +31,52 @@ const bestSelling=async(req,res)=>{
 
         bestsellingProducts.sort((a, b) => b.productCount - a.productCount)
 
-      
 
-        const topCategory = new Set();
-        bestsellingProducts.forEach((ele) => {
-            topCategory.add(ele.productCategory.trim())
-        })
+
+        // const topCategory = new Set();
+        // bestsellingProducts.forEach((ele) => {
+        //     topCategory.add(ele.productCategory.trim())
+        // })
+
+
+
+
+        // Aggregate to find the bestselling category
+        const topCategories = await orderSchema.aggregate([
+            { $unwind: "$products" },
+            {
+                $lookup: {
+                    from: "products", // the collection name of your productSchema
+                    localField: "products.productId",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+            { $unwind: "$productDetails" },
+            { $group: { _id: "$productDetails.productCategory", categoryCount: { $sum: 1 } } },
+            { $sort: { categoryCount: -1 } },
+            { $limit: 2 }
+        ]);
+
+        const topCategory = topCategories.map(category => category._id);
+
 
 
         res.render('admin/bestsellers', {
-            admin:req.session.admin,
+            admin: req.session.admin,
             title: "Trending Products",
             alertMessage: req.flash("errorMessage"),
             product: bestsellingProducts,
             topCategory
         });
-        
+
     } catch (err) {
         console.log(`Error on rendering bestselling products page ${err}`);
-        
+
     }
 
 }
 
-module.exports={
+module.exports = {
     bestSelling
 }

@@ -88,6 +88,8 @@ admin.get('/order', checkAdminSession, orderController.order)
 admin.get('/order-view/:orderId', checkAdminSession, orderController.orderView)
 admin.post('/edit-order-status/:orderId', checkAdminSession, orderController.editOrderStatus)
 
+admin.get('/returnOrder/:id',checkAdminSession,orderController.returnOrder)
+
 
 
 

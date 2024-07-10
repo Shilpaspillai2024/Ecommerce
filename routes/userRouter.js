@@ -63,6 +63,8 @@ user.get('/productSeemore', checkUserBlocked, productController.productSeemore)
 
 
 
+
+
 //profile route
 user.get('/profile', checkUserSession, profileController.profile)
 
