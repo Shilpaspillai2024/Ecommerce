@@ -1,55 +1,111 @@
 <style>
-body {
-    background-color:black;
-    font-family: Arial, sans-serif;
-}
-.container-fluid {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.confirmation-container {
-    text-align: center;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-h1 {
-    font-size: 36px;
-    color:rgb(162, 218, 33);
-    margin-bottom: 20px;
-}
-p {
-    font-size: 18px;
-    color:#fff;
-    margin-bottom: 10px;
-}
-a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-</style>
-
-    <div class="container-fluid">
-        <div class="container text-center">
-         
-            <h1>Thank you.</h1>
-            <p class="lead w-lg-50 mx-auto">Your order has been placed successfully.</p>
-            <p class="w-lg-50 mx-auto">We will immediatelly process
-                your order and it will be delivered in 2 - 5 business days.</p>
-
-               
-          
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a1a;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+    
+        .success-container {
+            text-align: center;
+            background-color: #232323;
+            padding: 3em;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transform: scale(0);
+            animation: scale-in 0.5s forwards ease-out;
+        }
+    
+        @keyframes scale-in {
+            to {
+                transform: scale(1);
+            }
+        }
+    
+        .checkmark-container {
+            margin-bottom: 1em;
+        }
+    
+        .checkmark {
+            width: 100px;
+            height: 100px;
+        }
+    
+        .checkmark__circle {
+            stroke: #4caf50;
+            stroke-width: 4;
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-linecap: round;
+            animation: draw-circle 1s ease-out forwards;
+        }
+    
+        .checkmark__check {
+            stroke: #4caf50;
+            stroke-width: 4;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            stroke-linecap: round;
+            animation: draw-check 1s 0.5s ease-out forwards;
+        }
+    
+        @keyframes draw-circle {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    
+        @keyframes draw-check {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    
+        .success-message {
+            color: #4caf50;
+            margin-bottom: 0.5em;
+            opacity: 0;
+            animation: fade-in 1s 0.5s forwards;
+        }
+    
+        .order-details {
+            color: #fefeeb;
+            margin-bottom: 1.5em;
+            opacity: 0;
+            animation: fade-in 1s 1s forwards;
+        }
+    
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+    
+    <div class="success-container">
+        <div class="checkmark-container">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="22" fill="none" />
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
         </div>
+        <h1 style="color: #Fefeeb;">Thank you.</h1>
+        <h1 class="success-message">Order Successfully Placed!</h1>
+        <p class="order-details">Thank you for your purchase.you can get order details from order page</p>
+        <p style="color: #Fefeeb;">
+            We will immediatelly process your and it will be delivered in 2 - 5 business days.
+        </p>
+       
     </div>
 
 
     <script>
          setTimeout(() => {
         window.location.href = '/user/home';
-    }, 2000); // 1000 milliseconds = 1 seconds
+    }, 3000); // 1000 milliseconds = 1 seconds
     </script>
     

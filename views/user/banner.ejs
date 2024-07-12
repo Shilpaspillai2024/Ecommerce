@@ -8,7 +8,10 @@
         justify-content: center;
         align-items: center;
         margin: 3rem 0;
+       
     }
+
+   
 
     .banner-center {
         width: 90vw;
@@ -52,28 +55,29 @@
     .banner-action-btn i {
         color: #bcbcbc;
     }
+
     /* Responsive Styles */
-@media (max-width: 768px) {
-    .banner-center {
-        height: 40vh;
+    @media (max-width: 768px) {
+        .banner-center {
+            height: 40vh;
+        }
+
+        .banner-action-btn {
+            transform: scale(1.5);
+            padding: 8px;
+        }
     }
 
-    .banner-action-btn {
-        transform: scale(1.5);
-        padding: 8px;
-    }
-}
+    @media (max-width: 480px) {
+        .banner-center {
+            height: 30vh;
+        }
 
-@media (max-width: 480px) {
-    .banner-center {
-        height: 30vh;
+        .banner-action-btn {
+            transform: scale(1.2);
+            padding: 6px;
+        }
     }
-
-    .banner-action-btn {
-        transform: scale(1.2);
-        padding: 6px;
-    }
-}
 </style>
 
 <div class="banner-container">
@@ -97,16 +101,37 @@
             img.classList.toggle('active', i === index);
         });
     }
+    // to move image automaitcally
 
-    document.querySelector('.banner-action-btn.left').addEventListener('click', () => {
+    function nextImage() {
+        currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
+        showImage(currentIndex);
+    }
+
+    function previousImage() {
         currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length - 1;
         showImage(currentIndex);
+    }
+
+    // document.querySelector('.banner-action-btn.left').addEventListener('click', () => {
+    //     currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length - 1;
+    //     showImage(currentIndex);
+    // });
+
+    // document.querySelector('.banner-action-btn.right').addEventListener('click', () => {
+    //     currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
+    //     showImage(currentIndex);
+    // });
+
+
+    document.querySelector('.banner-action-btn.left').addEventListener('click', () => {
+        previousImage();
     });
 
     document.querySelector('.banner-action-btn.right').addEventListener('click', () => {
-        currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
-        showImage(currentIndex);
+        nextImage();
     });
 
-
+    // Automatically change the image every 3 seconds
+    setInterval(nextImage, 3000);
 </script>

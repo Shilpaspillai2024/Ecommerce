@@ -157,7 +157,7 @@
     }
 
     .similar-product-container {
-        color: white;
+        color: rgb(162, 218, 33);
     }
 
     /* Breadcrumb navigation styles */
@@ -207,7 +207,47 @@
         font-weight: bold;
     }
 
+  
+    #go-to-cart-btn {
+    transition: transform 0.3s ease;
+}
 
+#go-to-cart-btn:hover {
+    transform: scale(1.1); 
+}
+
+
+    #add-to-cart-btn {
+        transition: transform 0.3s ease;
+    }
+
+    #add-to-cart-btn:hover {
+
+        transform: scale(1.05);
+    }
+
+    .pro_wishlist{
+        transition: transform 0.3 ease;
+    }
+    .pro_wishlist:hover{
+        transform: scale(1.1);
+    }
+
+   
+    .detail-wishlist-icon {
+        font-size: 24px;
+        color: #e4d9d9;
+        margin-left: 2rem;
+
+    }
+
+    .heart-fill {
+        color: red;
+    }
+
+    .heart {
+        color: white;
+    }
 
 
 
@@ -272,6 +312,8 @@
             width: 100%;
         }
     }
+
+   
 </style>
 
 <%-include('navbar') %>
@@ -337,51 +379,91 @@
                     </div>
 
                     <% } %>
-                      
+
                         <div class="rating" id="rating">
-                            <% for (let i = 1; i <= 5; i++) { %>
-                                <i class="fa fa-star<%= averageRating >= i ? '' : (averageRating >= i - 0.5 ? '-half-alt' : '-o') %>"></i>
-                            <% } %>
-                            <span class="ms-1"><%= averageRating %></span>
+                            <% for (let i=1; i <=5; i++) { %>
+                                <i
+                                    class="fa fa-star<%= averageRating >= i ? '' : (averageRating >= i - 0.5 ? '-half-alt' : '-o') %>"></i>
+                                <% } %>
+                                    <span class="ms-1">
+                                        <%= averageRating %>
+                                    </span>
                         </div>
 
 
             </div>
 
-            
 
-                        <div class="product-price">
-                            <% if (product.productDiscount === 0) { %>
-                                <h3>&#8377; <%= product.productPrice.toLocaleString() %></h3>
-                            <% } else { %>
-                                <h3>
-                                    <del>&#8377; <%= product.productPrice.toLocaleString() %></del>
-                                </h3>
-                                <h3>&#8377; <%= Math.round(product.productPrice - ((product.productDiscount / 100) * product.productPrice)).toLocaleString() %></h3>
-                            <% } %>
-                        </div>
-                        
-                        <% if (product.productQuantity > 0) { %>
-                            <% if (itemInCart) { %>
-                                <!-- If the product is already in the cart, show "Go to Cart" button -->
-                                <a href="/user/cart" class="btn btn-danger go-to-cart">Go to Cart <i class="fa-solid fa-cart-shopping"></i></a>
-                            <% } else { %>
-                                
 
-                                <button onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%=user%>')" class="btn btn-warning" id="add-to-cart-btn">Add to Cart <i class="fa-solid fa-cart-shopping"></i></button>
-                            <% } %>
-                        <% } else { %>
-                            <div class="product-out-offstock">
-                                <h5>Product is out of stock</h5>
-                            </div>
+            <div class="product-price">
+                <% if (product.productDiscount===0) { %>
+                    <h3>&#8377; <%= product.productPrice.toLocaleString() %>
+                    </h3>
+                    <% } else { %>
+                        <h3>
+                            <del>&#8377; <%= product.productPrice.toLocaleString() %></del>
+                        </h3>
+                        <h3>&#8377; <%= Math.round(product.productPrice - ((product.productDiscount / 100) *
+                                product.productPrice)).toLocaleString() %>
+                        </h3>
                         <% } %>
-                        
-                        <div class="product-description mt-5">
-                            <p><%= product.productDescription %></p>
-                        </div>
-                        
-                       
-                        
+            </div>
+
+            <div class="d-flex  mt-3">
+
+                <% if (product.productQuantity> 0) { %>
+                    <% if (itemInCart) { %>
+                        <!-- If the product is already in the cart, show "Go to Cart" button -->
+                        <a href="/user/cart" class="btn btn-danger go-to-cart" id="go-to-cart-btn">Go to Cart <i
+                                class="fa-solid fa-cart-shopping"></i></a>
+                        <% } else { %>
+
+
+                            <button onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%=user%>')"
+                                class="btn btn-warning" id="add-to-cart-btn">Add to Cart <i
+                                    class="fa-solid fa-cart-shopping"></i></button>
+
+
+
+                            <% } %>
+                                <div class="pro_wishlist ">
+                                    <!-- Add to Wishlist -->
+
+                                    <% if (user && wishlist && wishlist.products.some(item=>
+                                        item.productId.equals(product.id))) { %>
+                                        <a class="detail-wishlist-icon btn btn-success" id="wishlist-heart">
+                                            <i class="fas fa-heart heart-fill"
+                                                onclick="addToWishlist('<%= product.id %>', '<%= user %>', this)"></i>
+                                        </a>
+                                        <% } else { %>
+                                            <a class="detail-wishlist-icon btn btn-success " id="wishlist-heart">
+                                                <i class="fas fa-heart heart"
+                                                    onclick="addToWishlist('<%= product.id %>', '<%= user %>', this)"></i>
+                                            </a>
+                                            <% } %>
+                                </div>
+
+
+
+
+                                <% } else { %>
+                                    <div class="product-out-offstock">
+                                        <h5>Product is out of stock</h5>
+                                    </div>
+                                    <% } %>
+
+
+
+            </div>
+
+            <div class="product-description mt-5">
+                <p>
+                    <%= product.productDescription %>
+                </p>
+            </div>
+
+
+
 
 
         </div>
@@ -395,132 +477,210 @@
 
     <%-include('rating')%>
 
-    <!-- if similar products exist in the collection then only then product is shown  -->
+        <!-- if similar products exist in the collection then only then product is shown  -->
 
-    <% if(similarProducts.length!==0) {%>
+        <% if(similarProducts.length!==0) {%>
 
-        <div class="similar-product-container container">
-            <h2>similar Products</h2>
-            <%-include ('similarProduct') %>
-        </div>
-        <%} %>
-
-
-            <%-include('footer') %>
-
-                <script>
-
-                    // image Zoom efffect
-                    const imageContainer = document.getElementsByClassName("product-full-image-view")[0]
-                    const productImg = document.getElementById('product-image-img')
-                    const productImageEach = document.querySelectorAll(".product-image-each img");
+            <div class="similar-product-container container">
+                <h2>similar Products</h2>
+                <%-include ('similarProduct') %>
+            </div>
+            <%} %>
 
 
-                    imageContainer.addEventListener("mousemove", (e) => {
-                        const rect = e.target.getBoundingClientRect();
-                        const x = (e.clientX - rect.left) / rect.width;
-                        const y = (e.clientY - rect.top) / rect.height;
+                <%-include('footer') %>
 
-                        productImg.style.transformOrigin = `${x * 100}% ${y * 100}%`;
-                        productImg.style.transform = "scale(2)";
+                    <script>
+
+                        // image Zoom efffect
+                        const imageContainer = document.getElementsByClassName("product-full-image-view")[0]
+                        const productImg = document.getElementById('product-image-img')
+                        const productImageEach = document.querySelectorAll(".product-image-each img");
+
+
+                        imageContainer.addEventListener("mousemove", (e) => {
+                            const rect = e.target.getBoundingClientRect();
+                            const x = (e.clientX - rect.left) / rect.width;
+                            const y = (e.clientY - rect.top) / rect.height;
+
+                            productImg.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+                            productImg.style.transform = "scale(2)";
+                        });
+
+                        imageContainer.addEventListener("mouseleave", () => {
+                            productImg.style.transformOrigin = "center"
+                            productImg.style.transform = "scale(1)"
+                        })
+
+                        const rightArrow = document.getElementById('right-arrow-img')
+                        const leftArrow = document.getElementById('left-arrow-img')
+
+                        // current index of the image array is first set as 0
+                        let currentIndex = 0;
+
+                        // image from backend is stored in a disabled input box
+                        const imageList = document.getElementsByName('image')[0].value
+
+                        // the imageList is get as string with commas then that is separated using the comma and added to an array
+                        let ImageArray = imageList.split(",")
+
+                        // find the length of the image array because of index starts with 0 array length is reduced by 1
+                        const maxlength = ImageArray.length - 1
+
+                        // event listener for right arrow
+                        rightArrow.addEventListener('click', () => {
+                            if (currentIndex === maxlength) {
+                                rightArrow.disabled = true
+                            } else {
+                                currentIndex = currentIndex + 1;
+                                productImg.src = `../../${ImageArray[currentIndex]}`
+                            }
+
+                        })
+
+                        // event listener for left arrow
+                        leftArrow.addEventListener('click', () => {
+                            if (currentIndex === 0) {
+                                leftArrow.disabled = true
+                            } else {
+                                currentIndex = currentIndex - 1;
+                                productImg.src = `../../${ImageArray[currentIndex]}`
+                            }
+
+                        })
+
+                        // add to cart
+                        // Improved addToCart function
+                        async function addToCart(productId, price, user) {
+                            const URL = `/user/add-to-cart/${productId}/?price=${price}`;
+
+                            try {
+                                if (user) {
+                                    const response = await fetch(URL, {
+                                        method: "GET",
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    });
+
+                                    if (response.ok) {
+                                        const data = await response.json();
+                                        Swal.fire({
+                                            icon: "success",
+                                            title: data.message || "Product added to cart",
+                                            showConfirmButton: false,
+                                            timer: 700,
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        const errorData = await response.json();
+                                        throw new Error(errorData.error || "Failed to add product to cart");
+                                    }
+                                }
+
+                                else {
+                                    Swal.fire({
+                                        icon: "warning",
+                                        title: "Not logged in",
+                                        text: "Please log in to add products to cart"
+                                    });
+                                }
+                            } catch (err) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Cannot add product to cart",
+                                    text: err.message
+                                });
+                            }
+                        }
+
+
+
+
+
+                        function change(src) {
+                            productImg.src = `../../${src}`
+                        }
+
+
+
+// add to wishlist
+
+                        async function addToWishlist(productId, user, wishlistIcon) {
+            const URL = `/user/addtowishlist`;
+
+            try {
+                if (user) {
+                    const response = await fetch(URL, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ productId })
                     });
+                    if (response.ok) {
+                        const data = await response.json();
 
-                    imageContainer.addEventListener("mouseleave", () => {
-                        productImg.style.transformOrigin = "center"
-                        productImg.style.transform = "scale(1)"
-                    })
 
-                    const rightArrow = document.getElementById('right-arrow-img')
-                    const leftArrow = document.getElementById('left-arrow-img')
 
-                    // current index of the image array is first set as 0
-                    let currentIndex = 0;
 
-                    // image from backend is stored in a disabled input box
-                    const imageList = document.getElementsByName('image')[0].value
+                        if (data.inwishlist) {
+                            wishlistIcon.classList.remove('heart');
+                            wishlistIcon.classList.add('heart-fill');
 
-                    // the imageList is get as string with commas then that is separated using the comma and added to an array
-                    let ImageArray = imageList.split(",")
+                            Swal.fire({
+                                icon: "success",
+                                title: data.message || "Product added to wishlist",
+                                showConfirmButton: false,
+                                timer: 700,
+                            })
 
-                    // find the length of the image array because of index starts with 0 array length is reduced by 1
-                    const maxlength = ImageArray.length - 1
 
-                    // event listener for right arrow
-                    rightArrow.addEventListener('click', () => {
-                        if (currentIndex === maxlength) {
-                            rightArrow.disabled = true
+
+
                         } else {
-                            currentIndex = currentIndex + 1;
-                            productImg.src = `../../${ImageArray[currentIndex]}`
+                            wishlistIcon.classList.remove('heart-fill');
+                            wishlistIcon.classList.add('heart');
+
+
+                            Swal.fire({
+                                icon: "success",
+                                title: data.message || "Product removed from wishlist",
+                                showConfirmButton: false,
+                                timer: 700,
+                            })
+
+
+
+
                         }
 
-                    })
-
-                    // event listener for left arrow
-                    leftArrow.addEventListener('click', () => {
-                        if (currentIndex === 0) {
-                            leftArrow.disabled = true
-                        } else {
-                            currentIndex = currentIndex - 1;
-                            productImg.src = `../../${ImageArray[currentIndex]}`
-                        }
-
-                    })
-
-// add to cart
- // Improved addToCart function
-async function addToCart(productId, price,user) {
-    const URL = `/user/add-to-cart/${productId}/?price=${price}`;
-
-    try {
-        if(user){
-        const response = await fetch(URL, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            Swal.fire({
-                icon: "success",
-                title: data.message || "Product added to cart",
-                showConfirmButton: false,
-                timer: 700,
-            }).then(() => {
-                window.location.reload();
-            });
-        } else {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to add product to cart");
-        }
-    }
-
-    else {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Not logged in",
-                    text: "Please log in to add products to cart"
-                });
-            }
-    } catch (err) {
-        Swal.fire({
-            icon: "error",
-            title: "Cannot add product to cart",
-            text: err.message
-        });
-    }
-}
 
 
-
-                       
-                   
-                    function change(src) {
-                        productImg.src = `../../${src}`
+                    } else {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Failed to add product to wishlist');
                     }
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Not logged in",
+                        text: "Please log in to add products to your wishlist"
+                    });
+                }
+
+            } catch (err) {
+                Swal.fire({
+                    icon: "error",
+                    title: "can't add product wishlist",
+                    text: err.message
+                });
+
+            }
+        }
 
 
 
-                </script>
+
+                    </script>

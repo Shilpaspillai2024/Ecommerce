@@ -90,13 +90,18 @@ const productView = async (req, res) => {
             res.redirect('/user/home')
         }
 
-
+        let wishlist = { products: [] };
+        if (req.session.user) {
+            const userId = req.session.user;
+            wishlist = await wishlistSchema.findOne({ userId });
+        }
 
 
         res.render('user/productDetail',
             {
                 title: product.productName,
                 product,
+                wishlist,
                 similarProducts,
                 itemInCart,
                 review,

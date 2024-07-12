@@ -2,6 +2,18 @@
     body {
         background-color: black;
     }
+    .category-name {
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out; /* Add transition effect */
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .category-name:hover {
+        transform: scale(1.1); /* Scale up the category name on hover */
+        color: rgb(162, 218, 33); /* Change color on hover */
+    }
 
     .prdocut-container {
         padding: 2rem, 0;
@@ -58,9 +70,15 @@
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
+        transition: transform 0.3s ease;
+
 
 
     }
+
+    .product-box:hover {
+    transform: scale(1.1);
+}
 
 
     .product-image-box {
@@ -269,9 +287,18 @@
 
     /* // now added */
 
-    .filter-btn {
-        position: relative;
+    #filter-btn {
+        /* position: relative; */
+        width: 10%;
+      
+        color: #ffffff; /* White text color */
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
     }
+ 
 
     .filter-panel {
         position: absolute;
@@ -281,10 +308,32 @@
         z-index: 1000;
         width: 400px;
         display: none;
-        background-color: white;
+        background-color: #333333;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
         padding: 15px;
+        color: white;
+    }
+
+     /* Sort Dropdown */
+     .dropdown-toggle::after {
+        vertical-align: middle;
+        margin-left: 0.5rem;
+    }
+
+    .dropdown-menu {
+        background-color: #333333; /* Dark dropdown background */
+        border: 1px solid #555555; /* Dark border */
+    }
+
+    .dropdown-item {
+        color: #ffffff; /* White dropdown item text */
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background-color: #555555; /* Dark hover background */
+        color: #ffffff; /* White text on hover */
     }
 
     .close-icon {
@@ -325,7 +374,21 @@
     .product-category-container a :hover {
         scale: 1.1;
     }
+    .wishlist-icon i {
+        transition: transform 0.3s ease; 
+    }
 
+    .wishlist-icon i:hover {
+        transform: scale(1.2); 
+    }
+
+    .cart-icon i {
+        transition: transform 0.3s ease;
+    }
+
+    .cart-icon i:hover {
+        transform: scale(1.2); 
+    }
 
 
     /* Responsive adjustments */
@@ -406,24 +469,10 @@
             <div class="text-center nav-explore-background">
 
 
-                <!-- <h1 class="mb-2">ALL COLLECTION</h1> -->
+              
                 <div class="d-flex justify-content-between ms-4">
-                    <button class="btn btn-primary" id="filter-btn">Filter</button>
-                    <!-- <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle me-4" type="button" id="sortDropdown"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Sort by
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="applySort('price-high-low')">Price: High to
-                                    Low</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="applySort('price-low-high')">Price: Low to
-                                    High</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="applySort('latest')">Latest Arrival</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="applySort('a-z')">A-Z</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="applySort('z-a')">Z-A</a></li>
-                        </ul>
-                    </div> -->
+                    <button class="btn btn-secondary" id="filter-btn">Filter</button>
+                  
 
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle me-4" type="button" id="sortDropdown"
@@ -462,6 +511,7 @@
                     <div>
                         <input class="form-control" type="text" class="form-control" placeholder="Min Price"
                             name="minPrice">
+                            <br>
                         <input class="form-control" type="text" class="form-control" placeholder="Max Price"
                             name="maxPrice">
                     </div>

@@ -1006,7 +1006,7 @@ var codSpan = document.getElementById('cod-span');
 
             async function applyCoupon() {
 
-                const couponCode = document.getElementById('couponCode').value
+                const couponCode = document.getElementById('couponCode').value.trim()
                 try {
                     const res = await fetch('/user/applycoupon', {
                         method: 'POST',
@@ -1019,6 +1019,7 @@ var codSpan = document.getElementById('cod-span');
                     if (!res.ok) {
                         const error = await res.text()
                         showError(error)
+                       
 
                     }
                     const couponData = await res.json()
@@ -1029,14 +1030,13 @@ var codSpan = document.getElementById('cod-span');
 
 
                 } catch (error) {
+                   
 
                     document.getElementById('couponCode').value = '';
                     console.log(`apply coupon error ${error}`)
 
                 }
-
-
-            }
+              }
 
             function updateTotal(total, discount) {
                 const totalElement = document.getElementById('totalPriceCheckout');

@@ -19,7 +19,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
+        transition: transform 0.3s ease;
+
     }
+    .product-box:hover {
+    transform: scale(1.1);
+}
     .product-name-link{
         text-decoration: none;
         color: white;
@@ -76,6 +81,43 @@
         /* align-items: center;  */
         gap: .5rem;
     }
+    .wishlist-icon {
+        font-size: 24px;
+        color: #e4d9d9;
+        margin-left: 10rem;
+        padding-left: 3rem;
+
+    }
+
+    .cart-icon {
+        font-size: 24px;
+        color: #e4d9d9;
+        margin-left: 1rem;
+    }
+    .wishlist-icon i {
+        transition: transform 0.3s ease; 
+    }
+
+    .wishlist-icon i:hover {
+        transform: scale(1.2); 
+    }
+
+    .cart-icon i {
+        transition: transform 0.3s ease;
+    }
+
+    .cart-icon i:hover {
+        transform: scale(1.2); 
+    }
+    .heart-fill {
+        color: red;
+    }
+
+    .heart {
+        color: white;
+    }
+
+
 </style>
 
 
@@ -121,8 +163,169 @@
                                 <%= product.productPrice.toLocaleString() %>
                             </h5>
                         </div>
+
+                        <div>
+                                    
+                            <div class="d-flex flex-row-reverse gap-3">
+                                <% if(user && wishlist && wishlist.products.some(item=>item.productId.equals(product.id) ))
+                                    { %>
+
+                                    <a class="wishlist-icon" id="wishlist-heart">
+                                        <i class="fas fa-heart heart-fill"
+                                            onclick="addToWishlist('<%= product.id %>', '<%= user %>', this)"></i>
+                                    </a>
+
+                                    <% } else { %>
+                                        <a class="wishlist-icon" id="wishlist-heart">
+                                            <i class="fas fa-heart heart"
+                                                onclick="addToWishlist('<%= product.id %>', '<%= user %>', this)"></i>
+                                        </a>
+                                        <% } %>
+
+
+
+                                            <!-- Cart Icon -->
+                                            <a onclick="addToCart('<%= product.id %>','<%= product.productPrice %>','<%=user %>')"
+                                                class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
+                            </div>
+                            <!-- product availability -->
+                            <% if(product.productQuantity<=0){ %>
+                                <h6 class="product-availability">Product Out of stock</h6>
+                                <% } %>
+
+                        </div>
         <!-- </a> -->
        </div>
 
         <% }) %>
 </div>
+
+<script>
+
+
+  // add tocart from icon
+
+  async function addToCart(productId, price, user) {
+
+
+const URL = `/user/add-to-cart/${productId}/?price=${price}`;
+
+try {
+    if (user) {
+        const response = await fetch(URL, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            Swal.fire({
+                icon: "success",
+                title: data.message || "Product added to cart",
+                showConfirmButton: false,
+                timer: 700,
+            }).then(() => {
+                window.location.reload();
+            });
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to add product to cart");
+        }
+    }
+
+    else {
+        Swal.fire({
+            icon: "warning",
+            title: "Not logged in",
+            text: "Please log in to add products to cart"
+        });
+    }
+} catch (err) {
+    Swal.fire({
+        icon: "warning",
+        title: "Cannot add product to cart",
+        text: err.message
+    });
+}
+}
+
+
+    //  add to wish list
+
+
+    async function addToWishlist(productId, user, wishlistIcon) {
+        const URL = `/user/addtowishlist`;
+
+        try {
+            if (user) {
+                const response = await fetch(URL, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+
+
+
+
+                    if (data.inwishlist) {
+                        wishlistIcon.classList.remove('heart');
+                        wishlistIcon.classList.add('heart-fill');
+                        
+                        Swal.fire({
+                        icon: "success",
+                        title: data.message || "Product added to wishlist",
+                        showConfirmButton: false,
+                        timer: 700,
+                    })
+
+
+
+
+                    } else {
+                        wishlistIcon.classList.remove('heart-fill');
+                        wishlistIcon.classList.add('heart');
+
+
+                        Swal.fire({
+                        icon: "success",
+                        title: data.message || "Product removed from wishlist",
+                        showConfirmButton: false,
+                        timer: 700,
+                    })
+                        
+
+
+
+                    }
+
+                    
+
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to add product to wishlist');
+                }
+            } else {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Not logged in",
+                    text: "Please log in to add products to your wishlist"
+                });
+            }
+
+        } catch (err) {
+            Swal.fire({
+                icon: "error",
+                title: "can't add product wishlist",
+                text: err.message
+            });
+
+        }
+    }
+
+</script>

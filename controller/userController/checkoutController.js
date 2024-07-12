@@ -484,6 +484,11 @@ const applycoupon = async (req, res) => {
 
 
         const coupon = await couponSchema.findOne({ couponName })
+
+// check the cupon is avilable
+        if (!coupon) {
+            return res.status(404).json({ error: "Coupon not found" });
+        }
         // check the coupon is expired
 
         if (!coupon.isActive || coupon.expiryDate < new Date()) {

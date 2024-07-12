@@ -59,14 +59,20 @@
         position: relative;
 
 
+        transition: transform 0.3s ease;
+
+
     }
 
-    /* .product-box:hover{
-        transform: scale(1.5); 
-    } */
+    .product-box:hover {
+    transform: scale(1.1);
+}
+
+   
     .product-image-box {
         height: 290px;
         width: 290px;
+        overflow: hidden;
     }
 
     .product-image-box img {
@@ -74,15 +80,11 @@
         width: 250px;
         height: 290px;
         object-fit: scale-down;
-        /* cursor: pointer;
-        transition: transform 0.3s; */
+       
 
-        /* transform: scale(1);  */
-
-    }
-
-
-    .product-text-row {
+     }
+    
+   .product-text-row {
         max-width: 250px;
         white-space: nowrap;
         overflow: hidden;
@@ -92,7 +94,7 @@
     .product-name-link {
         text-decoration: none;
         color: white;
-        /* Set the color you prefer */
+       
     }
 
     .product-name-box {
@@ -110,7 +112,12 @@
         color: #0f0f0f;
         background-color: rgb(36, 189, 36);
         border-radius: 5px 0;
+
+        
     }
+
+
+   
 
     .product-newArrival-box {
         position: absolute;
@@ -128,6 +135,11 @@
         align-items: center;
         gap: .5rem;
     }
+    .Book-more{
+        transition: transform 0.3s ease;
+    
+
+    }
 
     .Book-more a {
         display: flex;
@@ -139,12 +151,23 @@
         text-decoration: underline;
 
         color: rgb(162, 218, 33);
+     
+    }
+    .Book-more:hover{
+        transform: scale(1.1);
+    }
+    .banner-caption{
+        transition: transform 0.3s ease;
+    }
+    .banner-caption:hover{
+        transform: scale(1.1);
     }
 
     .banner-caption h6 {
         color: rgb(162, 218, 33);
         display: flex;
         justify-content: center;
+        
     }
 
     .banner-caption p {
@@ -198,6 +221,23 @@
     .heart {
         color: white;
     }
+
+    .wishlist-icon i {
+        transition: transform 0.3s ease;
+    }
+
+    .wishlist-icon i:hover {
+        transform: scale(1.2); 
+    }
+
+    .cart-icon i {
+        transition: transform 0.3s ease; 
+    }
+
+    .cart-icon i:hover {
+        transform: scale(1.2); 
+    }
+  
 </style>
 
 <div class="container banner-caption ">
@@ -417,10 +457,7 @@
                         timer: 700,
                     })
                         
-
-
-
-                    }
+                   }
 
                     
 
