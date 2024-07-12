@@ -1,14 +1,11 @@
 <style>
+    
     body {
         background-color: #232323;
-        /* background: url('../../image/library.jpg');
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat; */
-    }
+           }
 
     .login-container {
-        /* height: 100vh; */
+        
         display: flex;
         align-items: center;
         justify-content: center;
@@ -23,13 +20,9 @@
         gap: 2rem;
         border: 1px solid #c8c8c8;
         border-radius: 30px;
-        /* padding: 3rem 2rem; */
+       
         padding: 2rem 0rem;
-        /* background-color: rgba(255, 255, 255, 0.4); */
-        /* -webkit-backdrop-filter: blur(5px); */
-        /* backdrop-filter: blur(5px); */
-        /* box-shadow: 1px 1px 20px #fefeeb; */
-        /* background-color: #232323; */
+       
         width: 70%;
         background: url('../../image/Untitled.jpg');
         background-position: center;
@@ -56,8 +49,8 @@
         border-radius: 10px;
         outline: none;
         border: none;
-        /* background-color: #e7e7e7; */
-        background-color: #1a1a1a;
+       
+        padding-right: 35px;
         color: #fefeeb;
         padding: 10px;
     }
@@ -67,7 +60,7 @@
     }
 
     .login-form button {
-        /* width: 10rem; */
+      
         background-color: rgb(162, 218, 33);
         border-radius: 20px;
         width: 10rem;
@@ -117,6 +110,71 @@
     .login-with-socialmedia-box i {
         cursor: pointer;
     }
+    .input-container {
+            position: relative;
+            margin-bottom: 20px;
+            width: 60%;
+        }
+
+        .input-container input {
+          
+            width: calc(100% - 5px);
+            height: 40px;
+            padding: 10px 35px 10px 10px;
+            border-radius: 10px;
+            border: none;
+            color: #080808;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .input-container i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #080808;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .input-container i.active {
+            color: #ffffff;
+        }
+   /* Responsive adjustments */
+@media (max-width: 768px) {
+    .login-form {
+        width: 90%;
+    }
+
+    .login-form input {
+        width: 70%;
+    }
+
+    .input-container {
+        width: 70%;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-form {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .login-form input {
+        width: 90%;
+    }
+
+    .input-container {
+        width: 90%;
+    }
+
+    .login-form button {
+        width: 80%;
+    }
+}
 </style>
 
 
@@ -127,8 +185,18 @@
         <div class="login-form">
             <form action="/user/login" method="post">
                 <h4>User Login</h4>
-                <input type="email" name="username" placeholder="username" required>
-                <input type="password" name="password" placeholder="password" required>
+                
+                <div class="input-container">
+                    <input type="email" name="username" placeholder="Username" required>
+                  
+                </div>
+
+                <div class="input-container">
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    <i class="fas fa-eye-slash toggle-password"></i>
+                    <i class="fas fa-eye toggle-password" id="togglePasswordVisible" style="display: none;"></i>
+                </div>
+               
                 <a href="/user/forget-password" class="login-password-forget">forget password?</a>
 
 
@@ -158,3 +226,29 @@
 
 
     <%- include('footer') %>
+
+    <script>
+     const togglePassword = document.querySelector('.toggle-password');
+    const togglePasswordVisible = document.querySelector('#togglePasswordVisible');
+    const password = document.querySelector('#password');
+
+    togglePassword.addEventListener('click', function () {
+        // Toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        // Toggle the eye icons
+        togglePassword.style.display = type === 'password' ? 'inline-block' : 'none';
+        togglePasswordVisible.style.display = type === 'password' ? 'none' : 'inline-block';
+    });
+
+    togglePasswordVisible.addEventListener('click', function () {
+        // Toggle the type attribute back to password
+        password.setAttribute('type', 'password');
+        
+        // Toggle the eye icons
+        togglePassword.style.display = 'inline-block';
+        togglePasswordVisible.style.display = 'none';
+    });
+</script>
+   

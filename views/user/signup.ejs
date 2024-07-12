@@ -52,6 +52,36 @@
         width: 10rem;
         background-color: rgb(162, 218, 33);
     }
+    .input-container {
+    position: relative;
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+.input-container input {
+    width: calc(100% - 5px);
+    height: 2.5rem;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #e7e7e7;
+    color: #232323;
+    font-size: 16px;
+    outline: none;
+}
+
+.input-container i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #232323;
+    cursor: pointer;
+}
+
+.input-container i.active {
+    color: #080808;
+}
 </style>
 
 
@@ -66,7 +96,13 @@
                 <input type="text" name="name" placeholder="Full name">
                 <input type="email" name="email" placeholder="Email address">
                 <input type="tel" name="phone" placeholder="Phone number">
-                <input type="password" name="password" placeholder="password" id="user-password">
+                <!-- <input type="password" name="password" placeholder="password" id="user-password"> -->
+
+                <div class="input-container">
+                    <input type="password" name="password" placeholder="Password" id="user-password" required>
+                    <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
+                    <i class="fas fa-eye toggle-password" id="togglePasswordVisible" style="display: none;"></i>
+                </div>
                 <input type="password" name="confirmPassword" placeholder="Confirm password" id="user-confirm-password">
 
                 <button class="btn btn-primary" type="submit" id="register-button">Register</button>
@@ -165,4 +201,23 @@
                     registerForm.submit();
                 }
             });
+
+
+            const togglePassword = document.querySelector('#togglePassword');
+           const togglePasswordVisible = document.querySelector('#togglePasswordVisible');
+    
+
+    togglePassword.addEventListener('click', function () {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        togglePassword.style.display = type === 'password' ? 'inline-block' : 'none';
+        togglePasswordVisible.style.display = type === 'password' ? 'none' : 'inline-block';
+    });
+
+    togglePasswordVisible.addEventListener('click', function () {
+        password.setAttribute('type', 'password');
+        togglePassword.style.display = 'inline-block';
+        togglePasswordVisible.style.display = 'none';
+    });
+
         </script>

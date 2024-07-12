@@ -10,22 +10,37 @@
         margin: 3rem 0;
        
     }
-
+    .banner-center {
+            width: 90vw;
+            /* max-width: 1000px; */
+            height: 70vh;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
    
 
-    .banner-center {
+    /* .banner-center {
         width: 90vw;
         height: 50vh;
         border-radius: 20px;
         overflow: hidden;
         position: relative;
-    }
+    } */
 
-    .banner-image {
+    /* .banner-image {
         width: 90vw;
         height: 50vh;
         object-fit: cover;
         display: none;
+    } */
+
+    .banner-image{
+        width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
     }
 
     .banner-image.active {
@@ -55,29 +70,28 @@
     .banner-action-btn i {
         color: #bcbcbc;
     }
+ /* Responsive Styles */
+ @media (max-width: 768px) {
+            .banner-center {
+                height: 50vh;
+            }
 
-    /* Responsive Styles */
-    @media (max-width: 768px) {
-        .banner-center {
-            height: 40vh;
+            .banner-action-btn {
+                scale: 1.5;
+                padding: 8px;
+            }
         }
 
-        .banner-action-btn {
-            transform: scale(1.5);
-            padding: 8px;
-        }
-    }
+        @media (max-width: 480px) {
+            .banner-center {
+                height: 30vh;
+            }
 
-    @media (max-width: 480px) {
-        .banner-center {
-            height: 30vh;
+            .banner-action-btn {
+                scale: 1.2;
+                padding: 6px;
+            }
         }
-
-        .banner-action-btn {
-            transform: scale(1.2);
-            padding: 6px;
-        }
-    }
 </style>
 
 <div class="banner-container">
