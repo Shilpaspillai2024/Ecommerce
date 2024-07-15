@@ -152,7 +152,7 @@
         display: block
     }
 
- 
+
 
     .card-radio:hover {
         cursor: pointer
@@ -166,7 +166,7 @@
     text-align: center;
     width: 100%;
 } */
- 
+
     .edit-btn {
         width: 35px;
         height: 35px;
@@ -263,8 +263,6 @@
         opacity: 0.6;
         background-color: rgb(146, 144, 144);
     }
-
-   
 </style>
 
 
@@ -492,25 +490,28 @@
 
 
                                             <div class="col-lg-3 col-sm-6">
-                                                <div >
+                                                <div>
                                                     <label class="card-radio-label">
                                                         <input type="radio" name="paymentMethod" value="COD"
-                                                            id="pay-methodoption3" class="card-radio-input" <% if (total >= 1000) { %> disabled <% } %> >
-                                            
-                                                        <span class="card-radio py-3 text-center text-truncate" id="cod-span">
-                                                            <i class="bi bi-cash d-block h2 mb-3"></i>
-                                                            <span>Cash on Delivery</span>
-                                                        </span>
+                                                            id="pay-methodoption3" class="card-radio-input" <% if
+                                                            (total>= 1000) { %> disabled <% } %> >
+
+                                                            <span class="card-radio py-3 text-center text-truncate"
+                                                                id="cod-span">
+                                                                <i class="bi bi-cash d-block h2 mb-3"></i>
+                                                                <span>Cash on Delivery</span>
+                                                            </span>
                                                     </label>
-                                                    <% if (total >= 1000) { %>
-                                                    <label for="pay-methodoption3" class="badge bg-danger mt-2" id="alert-for-COD">
-                                                        Available for orders below ₹1000
-                                                    </label>
-                                                    <% } %>
+                                                    <% if (total>= 1000) { %>
+                                                        <label for="pay-methodoption3" class="badge bg-danger mt-2"
+                                                            id="alert-for-COD">
+                                                            Available for orders below ₹1000
+                                                        </label>
+                                                        <% } %>
                                                 </div>
                                             </div>
-                                            
-                                            
+
+
                                             </form>
                                         </div>
                                     </div>
@@ -528,31 +529,30 @@
                 </div> <!-- end row-->
             </div>
 
-
-
-
             <div class="col-xl-4">
-
                 <div class="card">
                     <div class="card-header">
                         <h5 class="font-size-16 mb-0">Order Summary</h5>
                     </div>
-
-
                     <div class="card-body">
-                        <div class="d-flex gap-2 m-2">
+                        <!-- Coupon Code Input and Apply Button -->
+                        <div class="d-flex gap-2 mb-3">
                             <input type="text" id="couponCode" class="form-control" name="couponCode"
                                 placeholder="Enter coupon code">
                             <button type="button" id="applyCouponBtn" onclick="applyCoupon()"
-                                class="btn submit-btn">Apply</button>
+                                class="btn btn-primary">Apply</button>
                         </div>
+
+                        <!-- Applied Coupon Badge -->
                         <div id="couponBadge" class="mb-3" style="display: none;">
                             <span class="badge bg-success">Coupon Applied: <span id="appliedCouponCode"></span></span>
                             <button type="button" class="btn btn-danger btn-sm ms-2"
                                 onclick="removeCoupon()">Remove</button>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table mb-0">
+
+                        <!-- Order Summary Table -->
+                        <div class="table-responsive mb-3">
+                            <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
@@ -561,95 +561,71 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
-
                                     <% cartItems.forEach((product,index)=>{ %>
                                         <tr>
-                                            <th>
+                                            <td>
                                                 <%= product.productId.productName %>
-                                            </th>
-                                            <th>
+                                            </td>
+                                            <td>
                                                 <%= product.productCount %>
-                                            </th>
-
-                                            <!-- <td><i class="bi bi-currency-rupee"></i>
-                                                <%= product.productId.productDiscountPrice * product.productCount %>
-                                            </td> -->
-
-
-                                            <% if(product.productId.productDiscount===0){ %>
-                                                <td>&#8377;
-                                                    <%= product.productId.productPrice*product.productCount %>
-                                                </td>
-                                                <% }else { %>
-                                                    <td>&#8377;
-
-                                                        <%= Math.round( product.productId.productPrice * (1 -
-                                                            product.productId.productDiscount / 100) *
-                                                            product.productCount).toLocaleString() %>
-
-                                                    </td>
-                                                    <% }%>
+                                            </td>
+                                            <td>&#8377; <%= product.productId.productDiscount===0 ?
+                                                    product.productId.productPrice * product.productCount :
+                                                    Math.round(product.productId.productPrice * (1 -
+                                                    product.productId.productDiscount / 100) *
+                                                    product.productCount).toLocaleString() %>
+                                            </td>
                                         </tr>
-
-                                        <% } ) %>
+                                        <% }) %>
                                             <tr>
                                                 <td>Coupon Discount :</td>
                                                 <td></td>
                                                 <td class="text-center text-danger">&#8377; <span
                                                         id="couponDiscount">0</span></td>
                                             </tr>
-
-
-                                                                                      <tr>
+                                            <tr>
                                                 <td>Shipping Charge :</td>
+                                                <td></td>
                                                 <td class="text-end">
-                                                    <% if (shippingCharge === 0) { %>
+                                                    <% if (shippingCharge===0) { %>
                                                         FREE
-                                                    <% } else { %>
-                                                        &#8377; <%= shippingCharge %>
-                                                    <% } %>
+                                                        <% } else { %>
+                                                            &#8377; <%= shippingCharge %>
+                                                                <% } %>
                                                 </td>
                                             </tr>
-                                            
-
-
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Total :</th>
-                                        <th></th>
-                                        <td><i class="bi bi-currency-rupee"></i><span id="totalPriceCheckout">
+                                        <th colspan="2" class="text-end">Total :</th>
+                                        <td class="text-end">&#8377; <span id="totalPriceCheckout">
                                                 <%= total %>
-                                                
-                                            </span>
-
-                                        </td>
+                                            </span></td>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
-                        <div class="mt-4">
-                            <div class="alert alert-success" role="alert">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-shield-fill-check h4 me-2"></i>
-                                    <div class="flex-grow-1">
-                                        Your order is eligible for FREE Delivery Rs 500 onwards.
-                                    </div>
+
+                        <!-- Order Details -->
+                        <div class="alert alert-success mb-3" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-shield-fill-check h4 me-2"></i>
+                                <div class="flex-grow-1">
+                                    Your order is eligible for FREE Delivery Rs 500 onwards.
                                 </div>
                             </div>
-                            <div class="mt-3 text-center">
-                                <button class="btn btn-dark" id="cancelButton">Cancel</button>
-                                <a href="/user/orderConfirm">
-                                    <button type="submit" class="btn btn-success" form="checkout-form"
-                                        id="checkoutButton" onclick="checkoutSubmit(event)">Complete
-                                        Order</button>
-                                </a>
-                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="text-center">
+                            <button class="btn btn-dark me-2" id="cancelButton">Cancel</button>
+                            <a href="/user/orderConfirm" class="btn btn-success"
+                                onclick="checkoutSubmit(event)">Complete Order</a>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
     </div>
@@ -744,10 +720,10 @@
 
 
 
-var codSpan = document.getElementById('cod-span');
-    if (codSpan) {
-        codSpan.style.color = '<%= (total >= 1000) ? "gray" : "initial" %>';
-    }
+            var codSpan = document.getElementById('cod-span');
+            if (codSpan) {
+                codSpan.style.color = '<%= (total >= 1000) ? "gray" : "initial" %>';
+            }
 
             //delete confirmation
 
@@ -810,7 +786,7 @@ var codSpan = document.getElementById('cod-span');
 
 
             // submitting order
-           async function checkoutSubmit(event) {
+            async function checkoutSubmit(event) {
                 try {
                     event.preventDefault();
 
@@ -881,33 +857,33 @@ var codSpan = document.getElementById('cod-span');
                                     color: "#3399cc"
                                 },
                                 "modal": {
-                        "ondismiss": function () {
-                             window.location.href = '/user/checkout-submit'
-                             }
-                            }
+                                    "ondismiss": function () {
+                                        window.location.href = '/user/checkout-submit'
+                                    }
+                                }
                             };
 
                             const rzp1 = new Razorpay(options);
 
-                            rzp1.on('payment.failed', async function (response){
-                    
-                    const res = await fetch('/user/paymentfailrazorpay',{
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({...data, paymentStatus: 'Pending' })
-                    })
+                            rzp1.on('payment.failed', async function (response) {
 
-                    if(res.ok){
+                                const res = await fetch('/user/paymentfailrazorpay', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ ...data, paymentStatus: 'Pending' })
+                                })
 
-                        const data = await res.json()
+                                if (res.ok) {
 
-                        window.location.href = '/user/orderFailure'
-                    }
+                                    const data = await res.json()
+
+                                    window.location.href = '/user/orderFailure'
+                                }
 
 
-                })
+                            })
                             rzp1.open();
                         } else if (data.paymentMethod === 'COD' || data.paymentMethod === 'Wallet') {
                             window.location.href = '/user/order-confirm';
@@ -1019,7 +995,7 @@ var codSpan = document.getElementById('cod-span');
                     if (!res.ok) {
                         const error = await res.text()
                         showError(error)
-                       
+
 
                     }
                     const couponData = await res.json()
@@ -1030,19 +1006,19 @@ var codSpan = document.getElementById('cod-span');
 
 
                 } catch (error) {
-                   
+
 
                     document.getElementById('couponCode').value = '';
                     console.log(`apply coupon error ${error}`)
 
                 }
-              }
+            }
 
             function updateTotal(total, discount) {
                 const totalElement = document.getElementById('totalPriceCheckout');
                 const discountElement = document.getElementById('couponDiscount');
                 const shippingCharge = total < 500 ? 50 : 0;
-               
+
 
 
                 if (totalElement && discountElement) {

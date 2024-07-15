@@ -75,6 +75,32 @@
         align-items: center;
 
     }
+
+
+    @media (min-width: 768px) {
+    .container {
+        flex-direction: row;
+    }
+
+    .cart-item {
+        width: 70%;
+    }
+
+    .empty-cart-container img {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (min-width: 992px) {
+    .cart-item {
+        width: 75%;
+    }
+
+    .empty-cart-container img {
+        width: 40%;
+    }
+}
 </style>
 
 
@@ -134,11 +160,11 @@
                                                         <i class="mdi mdi-trash-can-outline"></i>
                                                     </a>
                                                 </li>
-                                                <li class="list-inline-item">
+                                                <!-- <li class="list-inline-item">
                                                     <a href="#" class="text-muted px-1">
                                                         <i class="mdi mdi-heart-outline"></i>
                                                     </a>
-                                                </li>
+                                                </li> -->
                                             </ul>
                                         </div>
                                     </div>
@@ -214,9 +240,9 @@
                         <% }) %>
                             <% } else { %>
                                 <div class="empty-cart-container">
-                                    <a href="/user/home" class="btn btn-primary">
+                                    <!-- <a href="/user/home" class="btn btn-primary">
                                         <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
-                                    </a>
+                                    </a> -->
                                 </div>
                                 <% } %>
             </div>

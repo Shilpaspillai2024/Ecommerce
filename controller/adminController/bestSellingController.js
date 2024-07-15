@@ -6,12 +6,24 @@ const orderSchema = require('../../model/orderSchema')
 
 const bestSelling = async (req, res) => {
     try {
+        const currentPage = parseInt(req.query.page) || 1;
+        const productsPerPage = 10; 
+        const skip = (currentPage - 1) * productsPerPage;
+
+        // const order = await orderSchema.aggregate([
+        //     { $unwind: "$products" }, { $group: { _id: "$products.productId", productCount: { $sum: 1 } } },
+        //     { $sort: { productCount: -1 } },
+        //     { $limit: 10 }
+        // ])
 
         const order = await orderSchema.aggregate([
-            { $unwind: "$products" }, { $group: { _id: "$products.productId", productCount: { $sum: 1 } } },
+            { $unwind: "$products" },
+            { $group: { _id: "$products.productId", productCount: { $sum: 1 } } },
             { $sort: { productCount: -1 } },
-            { $limit: 10 }
-        ])
+            { $limit: 10 }, // Limit to top 10 bestsellers
+            { $skip: skip }, 
+            { $limit: productsPerPage } // Pagination limit
+        ]);
 
 
         // Extract product IDs from the order results
@@ -31,7 +43,7 @@ const bestSelling = async (req, res) => {
 
         bestsellingProducts.sort((a, b) => b.productCount - a.productCount)
 
-
+        const pageNumber = Math.ceil(10 / productsPerPage);
 
         // const topCategory = new Set();
         // bestsellingProducts.forEach((ele) => {
@@ -67,7 +79,9 @@ const bestSelling = async (req, res) => {
             title: "Trending Products",
             alertMessage: req.flash("errorMessage"),
             product: bestsellingProducts,
-            topCategory
+            topCategory,
+            currentPage,
+            pageNumber
         });
 
     } catch (err) {

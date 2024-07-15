@@ -6,10 +6,27 @@ const coupon = async (req, res) => {
     try {
 
         const couponSearch = req.query.search || "";
+        const currentPage = parseInt(req.query.page) || 1;
+        const couponsPerPage = 10; 
+        const skip = (currentPage - 1) * couponsPerPage;
 
-        const coupon = await couponSchema.find({ couponName: { $regex: couponSearch, $options: 'i', } }).sort({ createdAt: -1 })
+        const totalCoupons = await couponSchema.countDocuments({ couponName: { $regex: couponSearch, $options: 'i' } });
 
-        res.render('admin/coupons', { title: "Coupons", coupon, admin: req.session.admin, alertMessage: req.flash('errorMessage') })
+
+        const coupon = await couponSchema.find({ couponName: { $regex: couponSearch, $options: 'i' } })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(couponsPerPage);
+
+
+        const pageNumber = Math.ceil(totalCoupons / couponsPerPage);
+
+        // const coupon = await couponSchema.find({ couponName: { $regex: couponSearch, $options: 'i', } }).sort({ createdAt: -1 })
+
+        res.render('admin/coupons', { title: "Coupons", coupon, admin: req.session.admin, 
+            alertMessage: req.flash('errorMessage'),
+            currentPage, 
+            pageNumber  })
     } catch (err) {
 
         console.log(`Error while rendering the coupon page ${err}`)

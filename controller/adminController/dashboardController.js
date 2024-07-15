@@ -285,8 +285,8 @@ const downloadPdfReport = async (req, res) => {
                 return [
                     order?._id,
                     order.address?.Address + "\n " + order.address?.areaAddress + "\n " + "Pincode :" + order.address?.pincode,
-                  
-                  totalQuantity,
+
+                    totalQuantity,
                     order?.status,
                     'Rs ' + order?.totalPrice,
                 ]
@@ -430,8 +430,29 @@ const downloadExcelReport = async (req, res) => {
 const category = async (req, res) => {
     try {
         const categorySearch = req.query.categorySearch || '';
+
+        const categoriesPerPage = 5;
+        const currentPage = parseInt(req.query.page) || 1;
+        const skip = (currentPage - 1) * categoriesPerPage;
+
+        const totalCategories = await categorySchema.countDocuments({ categoryName: { $regex: categorySearch, $options: 'i' } });
+
+        // const category = await categorySchema.find({ categoryName: { $regex: categorySearch, $options: 'i' } })
+
         const category = await categorySchema.find({ categoryName: { $regex: categorySearch, $options: 'i' } })
-        res.render('admin/category', { admin: req.session.admin, title: "Category List", category, alertMessage: req.flash('errorMessage'), })
+            .skip(skip)
+            .limit(categoriesPerPage);
+
+
+        const pageNumber = Math.ceil(totalCategories / categoriesPerPage);
+
+        res.render('admin/category', {
+            admin: req.session.admin, title: "Category List", category,
+            alertMessage: req.flash('errorMessage'),
+            currentPage,
+            pageNumber,
+            categorySearch
+        })
 
 
     } catch (error) {

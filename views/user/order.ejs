@@ -100,7 +100,7 @@
                         aria-labelledby="order-status-tab">
                         <% if(order.length>0 ){ %>
                             <% order.forEach((order)=> { %>
-                                <% if( !order.isCancelled && order.status !=='returned') {%>
+                                <% if( !order.isCancelled && order.status !=='returned' && order.status !=='delivered') {%>
 
                                     <div class="card border shadow-none mb-4">
 
@@ -526,22 +526,37 @@
 
 
             <div class="col-xl-4">
-                <ul class="nav nav-pills flex-column" id="order-menu" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="order-status-tab" data-bs-toggle="pill" href="#order-status"
-                            role="tab" aria-controls="order-status" aria-selected="true">Orders status</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="order-history-tab" data-bs-toggle="pill" href="#order-history"
-                            role="tab" aria-controls="order-history" aria-selected="false">Order history</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="return-item-tab" data-bs-toggle="pill" href="#return-item" role="tab"
-                            aria-controls="return-Item" aria-selected="false">Returned Items</a>
-                    </li>
-                </ul>
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-pills flex-column" id="order-menu" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="order-status-tab" data-bs-toggle="pill" href="#order-status"
+                                    role="tab" aria-controls="order-status" aria-selected="true">
+                                    <i class="fas fa-tasks me-2"></i> Orders Status
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="order-history-tab" data-bs-toggle="pill" href="#order-history"
+                                    role="tab" aria-controls="order-history" aria-selected="false">
+                                    <i class="fas fa-history me-2"></i> Order History
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="return-item-tab" data-bs-toggle="pill" href="#return-item" role="tab"
+                                    aria-controls="return-item" aria-selected="false">
+                                    <i class="fas fa-undo me-2"></i> Returned Items
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+            
+            
         </div>
+
+        <%- include('pagination') %>
+
     </div>
 
     <!-- modal for cancel order -->
@@ -634,9 +649,10 @@
 
 
 
-
-
+ 
     <%- include('footer') %>
+
+
 
         <script>
 

@@ -7,13 +7,39 @@ const mongoose = require('mongoose')
 const OfferRender = async (req, res) => {
     try {
 
-        const offer = await offerSchema.find().sort({ createdAt: -1 }).populate('offerCategoryId').populate('offerProductId')
+        const currentPage = parseInt(req.query.page) || 1;
+        const offersPerPage = 10;
+        const skip = (currentPage - 1) * offersPerPage;
+
+        const offer = await offerSchema.find()
+            .sort({ createdAt: -1 })
+            .populate('offerCategoryId')
+            .populate('offerProductId')
+            .skip(skip)
+            .limit(offersPerPage);
+
+
+        // const offer = await offerSchema.find().sort({ createdAt: -1 }).populate('offerCategoryId').populate('offerProductId')
 
         const category = await categorySchema.find({ isActive: true }).sort({ createdAt: -1 })
 
         const product = await productSchema.find({ isActive: true }).sort({ createdAt: -1 })
 
-        res.render('admin/offer', { title: "Offer Management", alertMessage: req.flash('errorMessage'), offer, category, product, admin: req.session.admin })
+        const totalOffers = await offerSchema.countDocuments();
+
+        const pageNumber = Math.ceil(totalOffers / offersPerPage);
+
+
+        res.render('admin/offer', {
+            title: "Offer Management",
+            alertMessage: req.flash('errorMessage'),
+            offer,
+            category,
+            product,
+            currentPage,
+            pageNumber,
+            admin: req.session.admin
+        })
 
 
     } catch (err) {

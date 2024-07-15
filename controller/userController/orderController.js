@@ -24,11 +24,22 @@ const order = async (req, res) => {
 
         // const order = await orderSchema.find({ userId: req.session.user, isCancelled: false }).populate('products.productId').sort({ createdAt: -1 })
 
-        const order = await orderSchema.find({ userId: req.session.user }).populate('products.productId').sort({ createdAt: -1 })
+        // pagination
 
+        const productpage=10;
+        const currentPage=parseInt(req.query.page)|| 1;
+        const skip=(currentPage-1)*productpage
 
+        const order = await orderSchema.find({ userId: req.session.user }).populate('products.productId').skip(skip).limit(productpage).sort({ createdAt: -1 })
 
-        res.render('user/order', { title: "order-page", user: req.session.user, alertMessage: req.flash('errorMessage'), order })
+        const totalProducts = await orderSchema.countDocuments({ userId: req.session.user, isCancelled: false });
+
+        const pageNumber=Math.ceil(totalProducts/productpage)
+
+        res.render('user/order', { title: "order-page", user: req.session.user, alertMessage: req.flash('errorMessage'), order, 
+            pageNumber,
+            currentPage,
+            totalProducts })
 
     } catch (err) {
 
@@ -43,8 +54,31 @@ const cancelOrder = async (req, res) => {
 
     try {
 
-        const order = await orderSchema.find({ userId: req.session.user, isCancelled: true }).populate('products.productId').sort({ createdAt: -1 })
-        res.render('user/cancelOrder', { title: "cancelOrder-page", user: req.session.user, alertMessage: req.flash("errorMessage"), order })
+        const productpage = 10;
+        const currentPage = parseInt(req.query.page) || 1;
+        const skip = (currentPage - 1) * productpage;
+
+
+        const order = await orderSchema
+        .find({ userId: req.session.user, isCancelled: true })
+        .populate('products.productId')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(productpage);
+
+        const totalCancelledOrders = await orderSchema.countDocuments({
+            userId: req.session.user,
+            isCancelled: true,
+        });
+        const pageNumber = Math.ceil(totalCancelledOrders / productpage);
+
+        // const order = await orderSchema.find({ userId: req.session.user, isCancelled: true }).populate('products.productId').sort({ createdAt: -1 })
+        res.render('user/cancelOrder', { title: "cancelOrder-page", 
+            user: req.session.user,
+             alertMessage: req.flash("errorMessage"), order,
+             pageNumber,
+             currentPage,
+             totalCancelledOrders, })
 
     } catch (err) {
 

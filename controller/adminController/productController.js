@@ -9,11 +9,31 @@ const fs = require('fs')
 const product = async (req, res) => {
   try {
     const productSearch = req.query.productSearch || '';
+
+    const currentPage = parseInt(req.query.page) || 1;
+    const productsPerPage = 10;
+    const skip = (currentPage - 1) * productsPerPage;
+
+    const totalProducts = await productSchema.countDocuments({ productName: { $regex: productSearch, $options: 'i' } });
+
     const products = await productSchema.find({ productName: { $regex: productSearch, $options: 'i' } })
+      .skip(skip)
+      .limit(productsPerPage);
+
+    const pageNumber = Math.ceil(totalProducts / productsPerPage);
+
+
+    // const products = await productSchema.find({ productName: { $regex: productSearch, $options: 'i' } })
 
 
     // const products= await productSchema.find()
-    res.render('admin/product', { admin: req.session.admin, title: "Product List", products, alertMessage: req.flash('errorMessage') })
+    res.render('admin/product', {
+      admin: req.session.admin, title: "Product List", products, 
+      alertMessage: req.flash('errorMessage'), 
+      currentPage,
+      pageNumber,
+      productSearch
+    })
 
   } catch (err) {
 
