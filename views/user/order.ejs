@@ -372,22 +372,7 @@
 
                                                             <div class="order-actions-top">
                                                                 <h6>
-                                                                    <!-- <% if(order.status==='delivered' ){ %>
-                                                                        <button class="btn btn-danger btn-sm"
-                                                                            onclick="returnOrder('<%=order._id %>')">
-                                                                            Return order
-                                                                        </button>
-                                                                        <button class="btn btn-warning btn-sm">
-                                                                            Add Review
-                                                                        </button>
-                                                                        <% }else if(order.status==='processing' ||
-                                                                            order.status==='confirmed' ||
-                                                                            order.status==='shipped' ) {%>
-                                                                            <button class="btn btn-danger btn-sm"
-                                                                                onclick="cancelOrder('<%= order._id %>')">
-                                                                                Cancel order
-                                                                            </button>
-                                                                            <% }%> -->
+                                                                   
                                                                     <% if (order.status==='delivered' ) { %>
                                                                         <button class="btn btn-danger btn-sm"
                                                                             onclick="returnOrder('<%= order._id %>')">
