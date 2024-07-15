@@ -27,6 +27,7 @@ const order = async (req, res) => {
     //pagination
 
         const productpage=10;
+        
         const currentPage=parseInt(req.query.page)|| 1;
         const skip=(currentPage-1)*productpage
 

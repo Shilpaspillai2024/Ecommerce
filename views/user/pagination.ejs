@@ -14,7 +14,7 @@
         <li class="page-item">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <button class="page-link" onclick="previousPage('<%= parseInt(currentPage) %>')">Previous</button>
+            <button class="page-link" onclick="previousPage('<%= parseInt(currentpage) %>')">Previous</button>
         </li>
         <% for(let i = 1; i <= pageNumber; i++) { %> 
             <li class="page-item">
@@ -22,7 +22,7 @@
             </li>
         <% } %>
         <li class="page-item">
-            <button class="page-link" onclick="nextPage('<%= parseInt(currentPage) %>','<%= pageNumber %>')">Next</button>
+            <button class="page-link" onclick="nextPage('<%= parseInt(currentpage) %>','<%= pageNumber %>')">Next</button>
         </li>
     </ul>
 </nav>
@@ -31,16 +31,16 @@
 <script>
 
     // next page
-    function nextPage(currentPage,totalPage){
-        if(Number(currentPage)<Number(totalPage)){
-            window.location.href=`?page=${Number(currentPage)+1}`
+    function nextPage(currentpage,totalPage){
+        if(Number(currentpage)<Number(totalPage)){
+            window.location.href=`?page=${Number(currentpage)+1}`
         }
     }
 
     // previous page
-    function previousPage(currentPage){
+    function previousPage(currentpage){
         if((Number(currentPage)-1)!=0){
-            window.location.href=`?page=${Number(currentPage)-1}`
+            window.location.href=`?page=${Number(currentpage)-1}`
         }
     }
 
