@@ -24,7 +24,7 @@ const order = async (req, res) => {
 
         // const order = await orderSchema.find({ userId: req.session.user, isCancelled: false }).populate('products.productId').sort({ createdAt: -1 })
 
-        // pagination
+    //pagination
 
         const productpage=10;
         const currentPage=parseInt(req.query.page)|| 1;
