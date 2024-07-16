@@ -122,7 +122,7 @@
         <% if (userAddress && userAddress.length> 0) { %>
             <div class="list-group">
                 <% userAddress.forEach(address=> { %>
-                    <div class="address-card">
+                    <div class="address-card" data-aos="zoom-in-up">
                         <div class="address-actions">
 
                             <a href="/user/edit-address/<%= address._id %>" class="action-edit-link me-3"><i

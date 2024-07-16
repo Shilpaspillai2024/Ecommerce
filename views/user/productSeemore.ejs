@@ -15,7 +15,7 @@
         color: rgb(162, 218, 33); /* Change color on hover */
     }
 
-    .prdocut-container {
+    .product-container {
         padding: 2rem, 0;
         margin-bottom: 5rem;
     }
@@ -71,6 +71,7 @@
         text-overflow: ellipsis;
         position: relative;
         transition: transform 0.3s ease;
+        margin-bottom: 2rem;
 
 
 
@@ -226,6 +227,7 @@
         background-repeat: no-repeat;
         height: 50vh;
         width: 100%;
+        margin-bottom: 2rem;
     }
 
 
@@ -443,7 +445,7 @@
 
     <div class="product-container">
 
-        <h2 class="product-book">BOOKS</h2>
+        <h2 class="product-book" data-aos="fade-down-left">BOOKS</h2>
 
 
 
@@ -470,7 +472,7 @@
 
 
               
-                <div class="d-flex justify-content-between ms-4">
+                <div class="d-flex justify-content-between ms-4"  data-aos="fade-down-left">
                     <button class="btn btn-secondary" id="filter-btn">Filter</button>
                   
 
@@ -493,7 +495,7 @@
             </div>
         </div>
 
-        <div class="filter-panel" id="filter-panel">
+        <div class="filter-panel" id="filter-panel" >
             <span class="close-icon" id="close-filter-panel">&times;</span> <!-- Close icon -->
             <form id="filter-form" method="get" action="/user/productSeemore">
                 <div class="mb-3">
@@ -546,7 +548,7 @@
                 <% product.forEach((product)=>{ %>
 
 
-                    <div class="product-box">
+                    <div class="product-box" data-aos="flip-right">
 
                         <% if(product.productDiscount!=0) {%>
                             <div class="product-discount-box">
@@ -621,7 +623,7 @@
 
                     <% }) %>
                         <% }else{ %>
-                            <div class="no-product-banner"></div>
+                            <div class="no-product-banner" data-aos="flip-up"></div>
                             <% } %>
         </div>
 

@@ -562,9 +562,23 @@ const deactivateCategory = async (req, res) => {
 
         const deactId = req.params.id
 
-        const deactCat = await categorySchema.findByIdAndUpdate(deactId, { isActive: false })
+       
+        const category = await categorySchema.findById(deactId);
 
-        res.redirect('/admin/category')
+
+        if (category) {
+            // Deactivate the category
+            await categorySchema.findByIdAndUpdate(deactId, { isActive: false });
+
+            // Deactivate all products under this category
+            await productSchema.updateMany({ productCategory: category.categoryName }, { isActive: false });
+
+            res.redirect('/admin/category');
+        } else {
+            res.status(404).send("Category not found");
+        }
+
+
     } catch (err) {
 
         console.log(`error during deactivating the category ${err}`)
@@ -572,17 +586,31 @@ const deactivateCategory = async (req, res) => {
     }
 }
 
+
+
+
 // activateCategory
 const activateCategory = async (req, res) => {
     try {
-        const actid = req.params.id
-        const actCat = await categorySchema.findByIdAndUpdate(actid, { isActive: true })
-        res.redirect('/admin/category')
+        const actId = req.params.id;
 
+        // Find the category by ID
+        const category = await categorySchema.findById(actId);
 
+        if (category) {
+            // Activate the category
+            await categorySchema.findByIdAndUpdate(actId, { isActive: true });
+
+            // Activate all products under this category
+            await productSchema.updateMany({ productCategory: category.categoryName }, { isActive: true });
+
+            res.redirect('/admin/category');
+        } else {
+            res.status(404).send("Category not found");
+        }
     } catch (err) {
-        console.log(`error during activating the category ${err}`)
-
+        console.log(`Error during activating the category: ${err}`);
+        res.status(500).send("Server Error");
     }
 }
 

@@ -168,7 +168,7 @@ body{
                 <% if(order.length!=0){ %>
                     <% order.forEach((ele,index)=> { %>
                         <% if (ele.isCancelled && ele.status !== 'returned') { %>
-                        <div class="card border shadow-none order-container">
+                        <div class="card border shadow-none order-container" data-aos="flip-right">
                             <div class="card-body">
 
                                 <% ele.products.forEach((product,index)=> { %>

@@ -90,9 +90,9 @@
     </style>
 
     <div class="container my-5">
-        <div class="row">
+        <div class="row"data-aos="zoom-in-left">
 
-            <h2 class="text-white">Order Summary</h2>
+            <h2 class="text-white"  >Order Summary</h2>
 
             <div class="col-xl-8">
                 <div class="tab-content" id="order-content">
@@ -512,7 +512,7 @@
 
             <div class="col-xl-4">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body" >
                         <ul class="nav nav-pills flex-column" id="order-menu" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" id="order-status-tab" data-bs-toggle="pill" href="#order-status"
@@ -585,6 +585,7 @@
                         <div class="mb-3">
                             <label for="returnReason" class="form-label">Reason for Return</label>
                             <textarea class="form-control" id="returnReason" name="reason" rows="5" required></textarea>
+                            <label for="reason-for-return" class="return-form-validate text-danger"></label>
                         </div>
                         <input type="hidden" id="orderId" name="orderId">
                     </form>
@@ -708,6 +709,16 @@
             }
 
             async function submitReturnOrder() {
+
+                const returnReason = document.getElementById('returnReason');
+             const validationMessage = document.getElementsByClassName('return-form-validate')[0];
+                validationMessage.innerHTML = "";
+
+    // Validation check
+    if (returnReason.value.trim().length === 0 || returnReason.value.length > 100 || returnReason.value.length < 10) {
+        validationMessage.innerHTML = "Please provide a reason between 10 and 100 characters";
+        return;
+    }
                 try {
 
                     const form = document.getElementById('returnOrderForm')

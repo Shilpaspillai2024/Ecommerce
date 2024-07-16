@@ -138,7 +138,7 @@ const productSeemore = async (req, res) => {
 
 
         // Pagination parameters
-        const productsPerPage = 8;
+        const productsPerPage = 9;
         const currentPage = parseInt(req.query.page) || 1;
         const skip = (currentPage - 1) * productsPerPage;
 
