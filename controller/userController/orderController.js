@@ -92,7 +92,9 @@ const cancellOrderPost = async (req, res) => {
         const orderId = req.params.orderId;
         const userId = req.session.user;
         const order = await orderSchema.findByIdAndUpdate(orderId, { status: "cancelled", isCancelled: true })
-        let balance = order.totalPrice+(order.couponDiscount || 0)
+        // let balance = order.totalPrice-(order.couponDiscount || 0)
+
+        let balance = order.totalPrice
 
         if (order.paymentMethod !== 'COD') {
 
