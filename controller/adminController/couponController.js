@@ -20,9 +20,6 @@ const coupon = async (req, res) => {
 
 
         const pageNumber = Math.ceil(totalCoupons / couponsPerPage);
-
-        // const coupon = await couponSchema.find({ couponName: { $regex: couponSearch, $options: 'i', } }).sort({ createdAt: -1 })
-
         res.render('admin/coupons', { title: "Coupons", coupon, admin: req.session.admin, 
             alertMessage: req.flash('errorMessage'),
             currentPage, 

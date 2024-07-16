@@ -72,9 +72,7 @@ const cancelOrder = async (req, res) => {
             isCancelled: true,
         });
         const pageNumber = Math.ceil(totalCancelledOrders / productpage);
-
-        // const order = await orderSchema.find({ userId: req.session.user, isCancelled: true }).populate('products.productId').sort({ createdAt: -1 })
-        res.render('user/cancelOrder', { title: "cancelOrder-page", 
+         res.render('user/cancelOrder', { title: "cancelOrder-page", 
             user: req.session.user,
              alertMessage: req.flash("errorMessage"), order,
              pageNumber,
@@ -91,14 +89,9 @@ const cancelOrder = async (req, res) => {
 
 const cancellOrderPost = async (req, res) => {
     try {
-        const orderId = req.params.orderId
-
-        const userId = req.session.user
-
+        const orderId = req.params.orderId;
+        const userId = req.session.user;
         const order = await orderSchema.findByIdAndUpdate(orderId, { status: "cancelled", isCancelled: true })
-        // let balance=(order.totalPrice-(order.couponDiscount || 0 ))
-        // let balance = order.totalPrice
-
         let balance = order.totalPrice+(order.couponDiscount || 0)
 
         if (order.paymentMethod !== 'COD') {

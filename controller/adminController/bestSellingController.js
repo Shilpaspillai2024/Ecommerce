@@ -7,21 +7,16 @@ const orderSchema = require('../../model/orderSchema')
 const bestSelling = async (req, res) => {
     try {
         const currentPage = parseInt(req.query.page) || 1;
-        const productsPerPage = 10; 
+        const productsPerPage = 10;
         const skip = (currentPage - 1) * productsPerPage;
 
-        // const order = await orderSchema.aggregate([
-        //     { $unwind: "$products" }, { $group: { _id: "$products.productId", productCount: { $sum: 1 } } },
-        //     { $sort: { productCount: -1 } },
-        //     { $limit: 10 }
-        // ])
 
         const order = await orderSchema.aggregate([
             { $unwind: "$products" },
             { $group: { _id: "$products.productId", productCount: { $sum: 1 } } },
             { $sort: { productCount: -1 } },
-            { $limit: 10 }, // Limit to top 10 bestsellers
-            { $skip: skip }, 
+            { $limit: 10 },
+            { $skip: skip },
             { $limit: productsPerPage } // Pagination limit
         ]);
 
@@ -45,14 +40,6 @@ const bestSelling = async (req, res) => {
 
         const pageNumber = Math.ceil(10 / productsPerPage);
 
-        // const topCategory = new Set();
-        // bestsellingProducts.forEach((ele) => {
-        //     topCategory.add(ele.productCategory.trim())
-        // })
-
-
-
-
         // Aggregate to find the bestselling category
         const topCategories = await orderSchema.aggregate([
             { $unwind: "$products" },
@@ -71,9 +58,6 @@ const bestSelling = async (req, res) => {
         ]);
 
         const topCategory = topCategories.map(category => category._id);
-
-
-
         res.render('admin/bestsellers', {
             admin: req.session.admin,
             title: "Trending Products",

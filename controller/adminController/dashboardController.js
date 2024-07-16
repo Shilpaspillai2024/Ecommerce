@@ -434,11 +434,7 @@ const category = async (req, res) => {
         const categoriesPerPage = 5;
         const currentPage = parseInt(req.query.page) || 1;
         const skip = (currentPage - 1) * categoriesPerPage;
-
         const totalCategories = await categorySchema.countDocuments({ categoryName: { $regex: categorySearch, $options: 'i' } });
-
-        // const category = await categorySchema.find({ categoryName: { $regex: categorySearch, $options: 'i' } })
-
         const category = await categorySchema.find({ categoryName: { $regex: categorySearch, $options: 'i' } })
             .skip(skip)
             .limit(categoriesPerPage);
@@ -562,7 +558,7 @@ const deactivateCategory = async (req, res) => {
 
         const deactId = req.params.id
 
-       
+
         const category = await categorySchema.findById(deactId);
 
 
@@ -585,9 +581,6 @@ const deactivateCategory = async (req, res) => {
 
     }
 }
-
-
-
 
 // activateCategory
 const activateCategory = async (req, res) => {

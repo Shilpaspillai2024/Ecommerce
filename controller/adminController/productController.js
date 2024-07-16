@@ -28,8 +28,8 @@ const product = async (req, res) => {
 
     // const products= await productSchema.find()
     res.render('admin/product', {
-      admin: req.session.admin, title: "Product List", products, 
-      alertMessage: req.flash('errorMessage'), 
+      admin: req.session.admin, title: "Product List", products,
+      alertMessage: req.flash('errorMessage'),
       currentPage,
       pageNumber,
       productSearch

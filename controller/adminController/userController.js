@@ -18,9 +18,7 @@ const userSchema=require('../../model/userSchema')
          .limit(usersPerPage);
 
          const pageNumber = Math.ceil(totalUsers / usersPerPage);
-
-        // const users = await userSchema.find({name: { $regex: userSearch ,$options:'i'}})
-        res.render('admin/user', {admin:req.session.admin, title: "users list", users,
+         res.render('admin/user', {admin:req.session.admin, title: "users list", users,
              alertMessage: req.flash('errorMessage') ,
              currentPage,
              pageNumber,

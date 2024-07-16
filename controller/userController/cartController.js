@@ -73,15 +73,10 @@ const addToCartPost = async (req, res) => {
             // Check if the product already exists in the cart
             checkUserCart.items.forEach((ele) => {
 
-                // if (ele.productId.id === productId) {
-
                 if (ele.productId && ele.productId.id === productId) {
                     productExist = true;
 
-                    // ele.productCount += 1; 
-
-
-                }
+                   }
             });
 
             if (!productExist) {
@@ -103,11 +98,9 @@ const addToCartPost = async (req, res) => {
 
             await newCart.save();
         }
-        // req.flash('errorMessage', "Product successfully added to cart.");
+        
         return res.status(200).json({ message: "Product added to cart" })
 
-
-        // res.redirect(`/user/product-view/${productId}`);
     }
     catch (err) {
         console.log(`Error during adding product to cart: ${err}`);

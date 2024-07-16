@@ -27,7 +27,7 @@ const order = async (req, res) => {
             currentPage,
             totalProducts: totalProducts.length,
             alertMessage: req.flash('errorMessage'),
-             order
+            order
         })
 
     } catch (err) {
@@ -59,10 +59,7 @@ const orderView = async (req, res) => {
 const editOrderStatus = async (req, res) => {
     try {
         const orderId = req.params.orderId;
-
         const neworderStatus = req.body.orderStatus;
-
-        // const productDeliveryStatusEnum = ['processing', 'confirmed', 'pending', 'shipped', 'cancelled', 'delivered', 'returned'];
         const productDeliveryStatusEnum = ['processing', 'confirmed', 'pending', 'shipped', 'cancelled', 'delivered'];
 
         if (!productDeliveryStatusEnum.includes(neworderStatus)) {

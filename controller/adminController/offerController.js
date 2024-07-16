@@ -18,9 +18,6 @@ const OfferRender = async (req, res) => {
             .skip(skip)
             .limit(offersPerPage);
 
-
-        // const offer = await offerSchema.find().sort({ createdAt: -1 }).populate('offerCategoryId').populate('offerProductId')
-
         const category = await categorySchema.find({ isActive: true }).sort({ createdAt: -1 })
 
         const product = await productSchema.find({ isActive: true }).sort({ createdAt: -1 })
