@@ -22,7 +22,7 @@ passport.deserializeUser(async (id, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://wordplaybooks.live/user/auth/google/redirect",
+    callbackURL: "http://wordplaybooks.shop/user/auth/google/redirect",
     // passReqToCallback: true,
   },
   async function(accessToken,refreshToken, profile, done) {
