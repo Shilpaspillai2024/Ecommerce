@@ -257,7 +257,11 @@ const productActive = async (req, res) => {
 const productDelete = async (req, res) => {
   try {
     const productId = req.params.id;
+    console.log("productId",productId)
     const img = await productSchema.findById(productId)
+    
+    console.log("Images to delete:", img.productImage);
+
 
     img.productImage.forEach((image) => {
       fs.unlinkSync(image)
