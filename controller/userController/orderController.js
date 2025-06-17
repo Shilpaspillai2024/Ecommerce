@@ -60,12 +60,17 @@ const cancelOrder = async (req, res) => {
         const skip = (currentPage - 1) * productpage;
 
 
-        const order = await orderSchema
+        const orderData = await orderSchema
         .find({ userId: req.session.user, isCancelled: true })
         .populate('products.productId')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(productpage);
+
+        const order = orderData.map(ord => {
+            const filteredProducts = ord.products.filter(prod => prod.productId !== null);
+            return { ...ord._doc, products: filteredProducts };
+        });
 
         const totalCancelledOrders = await orderSchema.countDocuments({
             userId: req.session.user,
