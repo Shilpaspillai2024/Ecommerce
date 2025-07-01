@@ -105,12 +105,15 @@ const cancellOrderPost = async (req, res) => {
 
             const wallet = await walletSchema.findOne({ userId })
 
+
+            const currentDate=new Date();
+
             if (wallet) {
                 wallet.balance += balance;
                 wallet.transaction.push({
                     typeOfPayment: 'credit',
                     amount: balance,
-                    date: Date.now(),
+                    date: currentDate,
                     orderId: order._id
                 });
 
@@ -124,7 +127,7 @@ const cancellOrderPost = async (req, res) => {
                     transaction: [{
                         typeOfPayment: 'credit',
                         amount: balance,
-                        date: Date.now(),
+                        date:currentDate,
                         orderId: order._id,
                     }],
                 });
@@ -142,10 +145,10 @@ const cancellOrderPost = async (req, res) => {
 
         if (order) {
             req.flash('errorMessage', 'Your order has been successfully cancelled.If you need any further assistence you can Contact out customer support...!')
-            res.redirect('/user/cancelled-orders')
+            res.redirect('/cancelled-orders')
         } else {
             req.flash('errorMessage', 'We apologize, but your product is not eligible for return at this time. please contact our customer support team !....')
-            res.redirect('/user/order')
+            res.redirect('/order')
         }
 
 
@@ -531,7 +534,7 @@ const removeOrder = async (req, res) => {
         const order = await orderSchema.findByIdAndDelete(orderId)
         if (order) {
             req.flash('errorMessage', 'order Suceefully removed')
-            res.redirect('/user/order')
+            res.redirect('/order')
         }
 
     } catch (err) {

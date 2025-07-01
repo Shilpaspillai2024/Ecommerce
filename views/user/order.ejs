@@ -253,7 +253,7 @@
 
                                                                             <!-- <button class="btn btn-primary btn-sm"
                                                                 onclick="removeOrder('<%= order._id %>')">Remove Order</button> -->
-                                                                            <a href="/user/removeOrder/<%= order._id %>"
+                                                                            <a href="/removeOrder/<%= order._id %>"
                                                                                 class="btn submit-btn">Remove</a>
                                                                             <% }%>
                                                                     </h6>
@@ -551,7 +551,7 @@
             <div class="modal-content">
                 <div class="modal-body p-5">
                     <h2 class="text-center mb-5">Reason for cancelling</h2>
-                    <form action="/user/cancel-order/" method="post" id="cancel-order-form">
+                    <form action="/cancel-order/" method="post" id="cancel-order-form">
                         <div class="form-group">
                             <textarea class="form-control" id="reason-for-cancel" rows="5" name="cancelReason"
                                 placeholder="please provide the reason for cancelling the order"></textarea>
@@ -660,7 +660,7 @@
                         const myModal = new bootstrap.Modal(document.getElementById('cancelOrderModal'));
                         myModal.show();
 
-                        cancelOrderForm.action = `/user/cancel-order/${orderId}`
+                        cancelOrderForm.action = `/cancel-order/${orderId}`
 
 
                     }
@@ -725,7 +725,7 @@
                     const formdata = new FormData(form)
                     const data = Object.fromEntries(formdata.entries())
 
-                    const res = await fetch('/user/return-order', {
+                    const res = await fetch('/return-order', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -734,7 +734,7 @@
                     });
 
                     if (res.ok) {
-                        window.location.href = '/user/order';
+                        window.location.href = '/order';
                     }
                     else {
                         const error = await res.text();
@@ -752,7 +752,7 @@
 
 
             function viewOrder(orderId) {
-                window.location.href = `/user/orderdetail/${orderId}`;
+                window.location.href = `/orderdetail/${orderId}`;
             }
 
 
@@ -765,7 +765,7 @@
 
                 try {
 
-                    const res = await fetch('/user/retryRazorPay', {
+                    const res = await fetch('/retryRazorPay', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -794,7 +794,7 @@
                                         
                                     }
 
-                                    const payment = await fetch('/user/proceedpayment', {
+                                    const payment = await fetch('/proceedpayment', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json'
@@ -806,7 +806,7 @@
 
                                         const paymentData = payment.json()
 
-                                        window.location.href = '/user/order-confirm'
+                                        window.location.href = '/order-confirm'
                                     }
 
                                 } catch (error) {
@@ -826,7 +826,7 @@
                             },
                             "modal": {
                                 "ondismiss": function () {
-                                    window.location.href = '/user/order'
+                                    window.location.href = '/order'
                                 }
                             }
 
@@ -870,7 +870,7 @@
                 // Open the modal for adding a review
                 const myModal = new bootstrap.Modal(document.getElementById('add-review-modal'));
                 document.getElementById('review-product-name').innerHTML = productName;
-                document.getElementById('add-review-form').action = `/user/add-review/${productId}`;
+                document.getElementById('add-review-form').action = `/add-review/${productId}`;
                 myModal.show();
             }
 

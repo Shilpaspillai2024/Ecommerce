@@ -459,7 +459,7 @@
             <% category.forEach((item)=>{ %>
                 <% if(item.isActive) {%>
     
-                    <a href="/user/productSeemore/?category=<%= item.categoryName %>" class="category-name">
+                    <a href="/productSeemore/?category=<%= item.categoryName %>" class="category-name">
                         <%- item.categoryName %>
                     </a>
     
@@ -497,7 +497,7 @@
 
         <div class="filter-panel" id="filter-panel" >
             <span class="close-icon" id="close-filter-panel">&times;</span> <!-- Close icon -->
-            <form id="filter-form" method="get" action="/user/productSeemore">
+            <form id="filter-form" method="get" action="/productSeemore">
                 <div class="mb-3">
                     <label class="form-label">Category</label>
                     <div>
@@ -570,7 +570,7 @@
                                     </div>
 
                                     <div class="product-name-box">
-                                        <a href="/user/product-view/<%=product.id %>" class="product-name-link">
+                                        <a href="/product-view/<%=product.id %>" class="product-name-link">
                                             <h6 class="product-text-row">
                                                 <%=product.productName%>
                                             </h6>
@@ -639,7 +639,7 @@
         async function addToCart(productId, price, user) {
 
 
-            const URL = `/user/add-to-cart/${productId}/?price=${price}`;
+            const URL = `/add-to-cart/${productId}/?price=${price}`;
 
             try {
                 if (user) {
@@ -687,7 +687,7 @@
 
 
         async function addToWishlist(productId, user, wishlistIcon) {
-            const URL = `/user/addtowishlist`;
+            const URL = `/addtowishlist`;
 
             try {
                 if (user) {

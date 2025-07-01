@@ -125,12 +125,12 @@
                     <div class="address-card" data-aos="zoom-in-up">
                         <div class="address-actions">
 
-                            <a href="/user/edit-address/<%= address._id %>" class="action-edit-link me-3"><i
+                            <a href="/edit-address/<%= address._id %>" class="action-edit-link me-3"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
 
 
 
-                            <a href="/user/delete-address/<%= address.id %>" class="action-link"><i
+                            <a href="/delete-address/<%= address.id %>" class="action-link"><i
                                     class="fa-solid fa-trash-can"></i></a>
 
                         </div>
@@ -199,7 +199,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="address-form" action="/user/add-address" method="POST">
+                    <form id="address-form" action="/add-address" method="POST">
                         <div class="form-group">
                             <label for="address-type">Address Type:</label>
                             <select class="form-select" id="address-type" name="addressType">

@@ -205,7 +205,7 @@
 
 
 
-                    <form action="/user/profile" method="post" id="edit-personal-form">
+                    <form action="/profile" method="post" id="edit-personal-form">
 
                         <div class="form-group">
                             <label for="firstName">First Name</label>
@@ -238,15 +238,15 @@
             <div class="col-md-4">
                 <div class="side-menu"  data-aos="flip-up">
                     <h4>Manage account</h4>
-                    <a href="/user/profile">Personal Information</a>
+                    <a href="/profile">Personal Information</a>
 
-                    <a href="/user/address">My Address</a>
+                    <a href="/address">My Address</a>
                     <a href="#" onclick="openPasswordModal()">Change Password</a>
                     <h4>My order</h4>
-                    <a href="/user/order">Order status</a>
+                    <a href="/order">Order status</a>
                     <!-- <a href="/user/cancelled-orders">Return item</a> -->
 
-                    <a href="/user/logout">SignOut</a>
+                    <a href="/logout">SignOut</a>
                 </div>
             </div>
         </div>
@@ -261,7 +261,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Change Password</h2>
-            <form action="/user/change-password" method="post" id="change-password-form">
+            <form action="/change-password" method="post" id="change-password-form">
                 <div class="form-group">
                     <label for="currentPassword">Current Password</label>
                     <input type="password" class="form-control" id="currentPassword" name="currentPassword">

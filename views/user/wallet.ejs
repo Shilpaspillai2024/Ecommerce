@@ -18,15 +18,16 @@
     }
 </style>
 <%- include('navbar') %>
-
 <div class="container mt-4">
     <!-- Balance Card -->
     <div class="card mb-4">
-        <div class="card-body ">
+        <div class="card-body">
             <h1>Wallet</h1>
             <div class="d-flex justify-content-between">
-                <h5 class="card-title">Balance: </h5>
-                <h2 class="money"><i class="bi bi-currency-rupee"></i><%= balance.toFixed(2) %></h2>
+                <h5 class="card-title">Balance:</h5>
+                <h2 class="money">
+                    <i class="bi bi-currency-rupee"></i><%= balance.toFixed(2) %>
+                </h2>
             </div>
         </div>
     </div>
@@ -39,6 +40,16 @@
                     <a class="nav-link active">History</a>
                 </li>
             </ul>
+
+            <% if (typeof totalTransactions !== 'undefined' && totalTransactions > 0) { %>
+                <div class="mt-3 mb-3">
+                    <small class="text-muted">
+                        Showing <%= ((currentPage - 1) * 5) + 1 %> to 
+                        <%= Math.min(currentPage * 5, totalTransactions) %> 
+                        of <%= totalTransactions %> transactions
+                    </small>
+                </div>
+            <% } %>
 
             <table class="table mt-3">
                 <thead>
@@ -54,25 +65,116 @@
                     <% if (walletHistory && walletHistory.length > 0) { %>
                         <% walletHistory.forEach((transaction, index) => { %>
                             <tr>
-                                <td><%= index + 1 %></td>
-                                <td><%= transaction.date.toLocaleString() %></td>
+                                <td><%= (currentPage - 1) * 5 + index + 1 %></td>
+                                <td><%= transaction.formattedDate %></td>
                                 <td><%= transaction.orderId %></td>
-                                <td><%= transaction.typeOfPayment %></td>
+                                <td>
+                                    <span class="badge <%= transaction.typeOfPayment === 'credit' ? 'bg-success' : 'bg-danger' %>">
+                                        <%= transaction.typeOfPayment %>
+                                    </span>
+                                </td>
                                 <td class="text-end">
-                                    <p class="<%= transaction.typeOfPayment %>">
+                                    <span class="<%= transaction.typeOfPayment === 'credit' ? 'text-success' : 'text-danger' %>">
                                         <%= transaction.typeOfPayment === 'credit' ? '+' : '-' %>
                                         <i class="bi bi-currency-rupee"></i><%= transaction.amount.toFixed(2) %>
-                                    </p>
+                                    </span>
                                 </td>
                             </tr>
                         <% }); %>
                     <% } else { %>
                         <tr>
-                            <td colspan="5">No wallet transactions</td>
+                            <td colspan="5" class="text-center text-muted">No wallet transactions found</td>
                         </tr>
                     <% } %>
                 </tbody>
             </table>
+
+            <!-- Pagination -->
+            <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+                <nav aria-label="Wallet pagination" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <!-- Previous Button -->
+                        <% if (currentPage > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span> Previous
+                                </a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span> Previous
+                                </span>
+                            </li>
+                        <% } %>
+
+                        <!-- Page Numbers -->
+                        <% 
+                        let startPage = Math.max(1, currentPage - 2);
+                        let endPage = Math.min(totalPages, currentPage + 2);
+                        
+                        // Ensure we show at least 5 pages if possible
+                        if (endPage - startPage < 4) {
+                            if (startPage === 1) {
+                                endPage = Math.min(totalPages, startPage + 4);
+                            } else {
+                                startPage = Math.max(1, endPage - 4);
+                            }
+                        }
+                        %>
+
+                        <!-- First page if not in range -->
+                        <% if (startPage > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">1</a>
+                            </li>
+                            <% if (startPage > 2) { %>
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            <% } %>
+                        <% } %>
+
+                        <!-- Page range -->
+                        <% for (let i = startPage; i <= endPage; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                <% if (i === currentPage) { %>
+                                    <span class="page-link"><%= i %></span>
+                                <% } else { %>
+                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                <% } %>
+                            </li>
+                        <% } %>
+
+                        <!-- Last page if not in range -->
+                        <% if (endPage < totalPages) { %>
+                            <% if (endPage < totalPages - 1) { %>
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            <% } %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a>
+                            </li>
+                        <% } %>
+
+                        <!-- Next Button -->
+                        <% if (currentPage < totalPages) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                    Next <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Next">
+                                    Next <span aria-hidden="true">&raquo;</span>
+                                </span>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
         </div>
     </div>
 </div>

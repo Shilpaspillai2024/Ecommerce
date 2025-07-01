@@ -18,7 +18,7 @@ const profile= async (req,res) =>{
 
        console.log(`error during profile page load ${err}`)
         req.flash('errorMessage', 'Failed to load profile page.');
-        res.redirect('/user/home'); 
+        res.redirect('/home'); 
         
     }
 
@@ -34,11 +34,11 @@ const personalInformation = async(req,res)=>{
 
         console.log(userDetail);
         req.flash('errorMessage', 'Personal information updated successfully.');
-        res.redirect('/user/profile');
+        res.redirect('/profile');
     } catch (err) {
         console.log(`Error updating personal information: ${err}`);
         req.flash('errorMessage', 'Failed to update personal information. Please try again later.');
-        res.redirect('/user/profile');
+        res.redirect('/profile');
     }
 }
 
@@ -57,7 +57,7 @@ const changePassword = async(req,res)=>{
 
         if(newPassword !== confirmPassword){
             req.flash('errorMessage', 'New password and confirm new password do not match.');
-            return res.redirect('/user/profile');
+            return res.redirect('/profile');
         }
         
         const user = await userSchema.findById(userId);
@@ -66,7 +66,7 @@ const changePassword = async(req,res)=>{
         const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
         if (!isPasswordMatch) {
             req.flash('errorMessage', 'Incorrect current password.');
-            return res.redirect('/user/profile'); // Redirect to profile page with error message
+            return res.redirect('/profile'); // Redirect to profile page with error message
         }
 
         // Hash the new password
@@ -76,11 +76,11 @@ const changePassword = async(req,res)=>{
         await userSchema.findByIdAndUpdate(userId, { password: hashedNewPassword });
 
         req.flash('errorMessage', 'Password changed successfully.');
-        res.redirect('/user/profile'); // Redirect to profile page with success message
+        res.redirect('/profile'); // Redirect to profile page with success message
     } catch (err) {
         console.error(`Error changing password: ${err}`);
         req.flash('errorMessage', 'Failed to change password. Please try again later.');
-        res.redirect('/user/profile'); // Redirect to profile page with error message
+        res.redirect('/profile'); // Redirect to profile page with error message
     }
 
 }
@@ -108,7 +108,7 @@ const address= async(req,res)=>{
      } catch (err) {
         console.log(`Error when loading the address page ${err}`)
         req.flash('errorMessage','Failed to load address page')
-        res.redirect('/user/profile')
+        res.redirect('/profile')
         
      }
 }
@@ -133,12 +133,12 @@ const addAddress= async(req,res)=>{
 
         req.flash('errorMessage', ' address added successfully');
       
-        res.redirect('/user/address');
+        res.redirect('/address');
         
     } catch (err) {
         console.error(`Error during adding address to DB: ${err}`);
         req.flash('errorMessage', err.message || 'Failed to add address. Please try again later.');
-        res.redirect('/user/address');
+        res.redirect('/address');
         
     }
 }
@@ -157,18 +157,18 @@ const deleteAddress= async(req,res)=>{
 
         if (!address) {
             req.flash('errorMessage', 'Address not found or not authorized to delete');
-            return res.redirect('/user/address');
+            return res.redirect('/address');
         }
         await addressSchema.deleteOne({ _id: addressId });
 
         req.flash('errorMessage', 'Address deleted successfully');
-        res.redirect('/user/address');
+        res.redirect('/address');
 
         
     } catch (err) {
         console.error(`Error during deleting address from DB: ${err}`);
         req.flash('errorMessage', err.message || 'Failed to delete address. Please try again later.');
-        res.redirect('/user/address');
+        res.redirect('/address');
         
     }
 }
@@ -187,7 +187,7 @@ const deleteAddress= async(req,res)=>{
 
             if (!address) {
                 req.flash('errorMessage', 'Address not found or not authorized to edit');
-                return res.redirect('/user/address');
+                return res.redirect('/address');
             }
 
             res.render('user/editAddress',{title:"user-editAddress",alertMessage:req.flash('errorMessage'),user:req.session.user,address})
@@ -196,7 +196,7 @@ const deleteAddress= async(req,res)=>{
 
         console.log(`Error when loading the address page ${err}`)
         req.flash('errorMessage','Failed to load editaddress page')
-        res.redirect('/user/address')
+        res.redirect('/address')
         
         
     }
@@ -226,16 +226,16 @@ const deleteAddress= async(req,res)=>{
             if (!updatedAddress) {
                 // If address is not found or not authorized, redirect with error message
                 req.flash('errorMessage', 'Address not found or not authorized to edit');
-                return res.redirect('/user/editAddress');
+                return res.redirect('/editAddress');
             }
     
             // Redirect to the address page with success message
             req.flash('errorMessage', 'Address updated successfully');
-            res.redirect('/user/address');
+            res.redirect('/address');
         } catch (err) {
             console.log(`Error when updating the address: ${err}`);
             req.flash('errorMessage', 'Failed to update address');
-            res.redirect('/user/address');
+            res.redirect('/address');
         }
     }
     

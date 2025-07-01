@@ -371,7 +371,7 @@
 
                                                                         </span>
 
-                                                                        <a href="/user/delete-checkout-address/<%= address.id %>"
+                                                                        <a href="/delete-checkout-address/<%= address.id %>"
                                                                             class="action-link"><i
                                                                                 class="fa-solid fa-trash-can"></i></a>
 
@@ -523,7 +523,7 @@
 
                 <div class="row my-4">
                     <div class="col">
-                        <a href="/user/home" class="btn btn-link text-white">
+                        <a href="/home" class="btn btn-link text-white">
                             <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping </a>
                     </div>
                 </div> <!-- end row-->
@@ -619,7 +619,7 @@
                         <!-- Action Buttons -->
                         <div class="text-center">
                             <button class="btn btn-dark me-2" id="cancelButton">Cancel</button>
-                            <a href="/user/orderConfirm" class="btn btn-success"
+                            <a href="/orderConfirm" class="btn btn-success"
                                 onclick="checkoutSubmit(event)">Complete Order</a>
                         </div>
                     </div>
@@ -647,7 +647,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="addAddressForm" action="/user/add-checkout-address" method="POST">
+                    <form id="addAddressForm" action="/add-checkout-address" method="POST">
 
                         <div class="form-group">
                             <label for="address-type">Address Type:</label>
@@ -800,7 +800,7 @@
                         return;
                     }
 
-                    const res = await fetch('/user/checkout-submit', {
+                    const res = await fetch('/checkout-submit', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -829,7 +829,7 @@
 
                                         const combinedData = { ...data, ...resData };
 
-                                        const payment = await fetch('/user/checkout-submit', {
+                                        const payment = await fetch('/checkout-submit', {
                                             method: 'POST',
                                             headers: {
                                                 'Content-Type': 'application/json'
@@ -839,7 +839,7 @@
 
                                         if (payment.ok) {
                                             const paymentData = await payment.json();
-                                            window.location.href = '/user/order-confirm';
+                                            window.location.href = '/order-confirm';
                                         } else {
                                             const paymentError = await payment.text();
                                             showError(paymentError);
@@ -858,7 +858,7 @@
                                 },
                                 "modal": {
                                     "ondismiss": function () {
-                                        window.location.href = '/user/checkout-submit'
+                                        window.location.href = '/checkout-submit'
                                     }
                                 }
                             };
@@ -867,7 +867,7 @@
 
                             rzp1.on('payment.failed', async function (response) {
 
-                                const res = await fetch('/user/paymentfailrazorpay', {
+                                const res = await fetch('/paymentfailrazorpay', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -879,14 +879,14 @@
 
                                     const data = await res.json()
 
-                                    window.location.href = '/user/orderFailure'
+                                    window.location.href = '/orderFailure'
                                 }
 
 
                             })
                             rzp1.open();
                         } else if (data.paymentMethod === 'COD' || data.paymentMethod === 'Wallet') {
-                            window.location.href = '/user/order-confirm';
+                            window.location.href = '/order-confirm';
                         }
                     } else {
                         const error = await res.text();
@@ -901,7 +901,7 @@
 
             // when click cancel btn go to cart page
             document.getElementById('cancelButton').addEventListener('click', function () {
-                window.location.href = '/user/cart'; // Replace 'cart.html' with the URL of your cart page
+                window.location.href = '/cart'; // Replace 'cart.html' with the URL of your cart page
             });
 
 
@@ -984,7 +984,7 @@
 
                 const couponCode = document.getElementById('couponCode').value.trim()
                 try {
-                    const res = await fetch('/user/applycoupon', {
+                    const res = await fetch('/applycoupon', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

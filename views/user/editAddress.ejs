@@ -61,7 +61,7 @@
     <h2 class="mt-5 text-center">Edit Address</h2>
 
     <!-- Form for editing the address -->
-    <form id="edit-address-form" action="/user/edit-address/<%= address._id %>" method="POST">
+    <form id="edit-address-form" action="/edit-address/<%= address._id %>" method="POST">
         <div class="form-group">
             <label for="edit-address-type">Address Type:</label>
             <select class="form-select" id="edit-address-type" name="addressType">
@@ -105,7 +105,7 @@
         <input type="hidden" id="edit-address-id" name="id">
 
         <div class="col-auto text-center ">
-            <a href="/user/address" class="btn btn-secondary cancel-btn">Cancel</a>
+            <a href="/address" class="btn btn-secondary cancel-btn">Cancel</a>
             <button type="submit" class="btn btn-primary save-changes-btn">Save Changes</button>
         </div>
 

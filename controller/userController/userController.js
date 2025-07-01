@@ -15,7 +15,7 @@ const passportSetup = require('../../config/passport-setup')
 
 const user=(req,res)=>{
     try{
-        res.redirect('/user/home')
+        res.redirect('/home')
     }catch(err){
         console.log('Error During user route');
     }
@@ -27,7 +27,7 @@ const user=(req,res)=>{
 const login= (req,res)=>{
     if(req.session.user){
        
-        res.redirect('/user/home')
+        res.redirect('/home')
         
        
     }else{
@@ -42,18 +42,18 @@ const login= (req,res)=>{
         if(checkUser != null){
             if(checkUser.isBlocked){
                 req.flash('errorMessage','Access to this account has been restricted.')
-                res.redirect('/user/login')
+                res.redirect('/login')
             }else{
                 const passwordCheck=await bcrypt.compare(req.body.password,checkUser.password)
                 // console.log(passwordCheck)
                 if( checkUser && passwordCheck){
                     req.session.user=checkUser.id;
                   
-                    res.redirect('/user/home')
+                    res.redirect('/home')
                  }
                 else{                   
                     req.flash('errorMessage','invalid username or password')
-                    res.redirect('/user/login')
+                    res.redirect('/login')
                 }
             }
         }   
@@ -80,7 +80,7 @@ const login= (req,res)=>{
       }
       if (!user) {
        
-        return res.redirect("/user/login");
+        return res.redirect("/login");
       } // Redirect to login if authentication fails
       req.logIn(user, (err) => {
         if (err) {
@@ -91,7 +91,7 @@ const login= (req,res)=>{
       
 
         req.session.user = user.id;
-        return res.redirect("/user/home"); // Redirect to profile page if authentication is successful
+        return res.redirect("/home"); // Redirect to profile page if authentication is successful
       });
     })(req, res, next);
   };
@@ -105,7 +105,7 @@ const login= (req,res)=>{
  const signup=(req,res)=>{
     try {
         if(req.session.user){
-            res.redirect('/user/home')
+            res.redirect('/home')
          }else{
             res.render('user/signup',{user:req.session.user,title:"Signup",alertMessage:req.flash('errorMessage')})
          }
@@ -133,7 +133,7 @@ const login= (req,res)=>{
          // if user with same email id exist then render the register page with error message
        if(userExist){
         req.flash('errorMessage','An account with this email address already exsist,pls try with another email ! ')
-        res.redirect('/user/signup')
+        res.redirect('/signup')
        }
        else{
 
@@ -154,7 +154,7 @@ const login= (req,res)=>{
         req.session.name=userData.name;
         req.session.phone=userData.number;
 // redirect to the otp page for validation
-        res.redirect('/user/otp')
+        res.redirect('/otp')
        }
     }
 
@@ -189,18 +189,18 @@ const otpPost = async (req,res)=>{
                 await userSchema.insertMany(userdata).then(()=>{
                     console.log(` new user registration successful`)
                     req.flash('errorMessage','user registeration successful !')
-                    res.redirect('/user/login')
+                    res.redirect('/login')
                 }).catch((err)=>{
                     console.log(`error during registration ${err}`)
                 })
             }else{
                 req.flash('errorMessage','Otp invalid pls try again...')
-                res.redirect('/user/OTP')
+                res.redirect('/OTP')
             }
         }
         else{
         req.flash('errorMessage','An error OCCured during otp genetation try again !')
-        res.redirect('/user/signup')
+        res.redirect('/signup')
         }
 
     } catch (err) {
@@ -218,7 +218,7 @@ const otpResend = (req,res)=>{
         req.session.otpExpireTime=Date.now()
         res.status(200)
         req.flash('errorMessage','Otp resend successfully')
-        res.redirect('/user/otp')
+        res.redirect('/otp')
         
     } catch (err) {
         console.log(`error during otp sended ${err}`)
@@ -244,11 +244,11 @@ const home= async (req,res)=>{
             const wishlist=await wishlistSchema.findOne({userId:userId}) 
 
 
-            res.render('user/home',{title:"user Home",product,category,wishlist:wishlist|| { products: [] },alertMessage:req.flash('errorMessage'),user:req.session.user})
+            res.render('user/home',{title:"Home",product,category,wishlist:wishlist|| { products: [] },alertMessage:req.flash('errorMessage'),user:req.session.user})
         }
         else{
 
-        res.render('user/home',{title:"user Home",product,category,alertMessage:req.flash('errorMessage'),user:req.session.user})
+        res.render('user/home',{title:"Home",product,category,alertMessage:req.flash('errorMessage'),user:req.session.user})
         }
     } catch (err) {
 
@@ -264,7 +264,7 @@ const logout = (req,res)=>{
         if(err){
             console.log(err)
         }else{
-            res.redirect('/user/login')
+            res.redirect('/login')
         }
     })
 }

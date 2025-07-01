@@ -144,8 +144,8 @@ body{
 
            
            
-            <a href="/user/order" class="nav-link ms-4 "><i class="fa-solid fa-truck-moving"></i> Orders</a>
-            <a href="/user/cancelled-orders" class="nav-link ms-4 active"><i class="fa-solid fa-ban"></i> Cancelled
+            <a href="/order" class="nav-link ms-4 "><i class="fa-solid fa-truck-moving"></i> Orders</a>
+            <a href="/cancelled-orders" class="nav-link ms-4 active"><i class="fa-solid fa-ban"></i> Cancelled
                 Orders</a>
 
         </nav>
@@ -180,7 +180,7 @@ body{
                                             <div>
                                               
                                                 <h5 class="text-truncate font-size-18"><a
-                                                        href="/user/product-view/<%= product.productId %>"
+                                                        href="/product-view/<%= product.productId %>"
                                                         class="text-dark">
                                                         <%= product.productId.productName %>
                                                     </a></h5>
@@ -268,7 +268,7 @@ body{
             <div class="modal-content">
                 <div class="modal-body p-5">
                     <h2 class="text-center mb-5">Reason for cancelling</h2>
-                    <form action="/user/cancel-order/" method="post" id="cancel-order-form">
+                    <form action="/cancel-order/" method="post" id="cancel-order-form">
                         <div class="form-group">
                             <textarea class="form-control" id="reason-for-cancel" rows="5" name="cancelReason"
                                 placeholder="please provide the reason for cancelling the order"></textarea>
@@ -304,7 +304,7 @@ body{
                         const myModal = new bootstrap.Modal(document.getElementById('cancelOrderModal'));
                         myModal.show();
 
-                        cancelOrderForm.action = `/user/cancel-order/${orderId}`
+                        cancelOrderForm.action = `/cancel-order/${orderId}`
 
 
                     }

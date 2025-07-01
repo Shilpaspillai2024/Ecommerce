@@ -132,7 +132,7 @@
                                         <div class="flex-grow-1 align-self-center overflow-hidden">
                                             <div>
                                                 <h5 class="text-truncate font-size-18">
-                                                    <a href="/user/product-view/<%= items.productId.id %>"
+                                                    <a href="/product-view/<%= items.productId.id %>"
                                                         class="text-dark">
                                                         <%= items.productId.productName %>
                                                     </a>
@@ -305,14 +305,14 @@
 
                     <div class="row my-4">
                         <div class="col-sm-6">
-                            <a href="/user/home" class="btn btn-link">
+                            <a href="/home" class="btn btn-link">
                                 <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping
                             </a>
                         </div>
                         <!-- end col -->
                         <div class="col-sm-6">
                             <div class="text-sm-end mt-2 mt-sm-0">
-                                <a href="/user/checkout" class="btn btn-success">
+                                <a href="/checkout" class="btn btn-success">
                                     <i class="mdi mdi-cart-outline me-1"></i> Checkout
                                 </a>
                             </div>
@@ -329,7 +329,7 @@
 
                 <img src="/image/cart-empty.jpg" alt="">
 
-                <a href="/user/home" class="btn btn-primary">
+                <a href="/home" class="btn btn-primary">
                     Continue Shopping
                 </a>
 
@@ -361,7 +361,7 @@
 
 
                         if (productQualityInput[index].value >= 1 && productQualityInput[index].value < 10) {
-                            const URL = `/user/increment-product/${productId}`
+                            const URL = `/increment-product/${productId}`
 
                             fetch(URL, {
                                 method: "PUT",
@@ -410,7 +410,7 @@
 
 
                         if (productQualityInput[index].value > 1) {
-                            const URL = `/user/decrement-product/${productId}`
+                            const URL = `/decrement-product/${productId}`
 
                             fetch(URL, {
                                 method: "PUT",
@@ -460,7 +460,7 @@
                             confirmButtonText: 'Yes, remove it!'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                URL = `/user/remove-cart-product/${productId}`
+                                URL = `remove-cart-product/${productId}`
                                 fetch(URL, {
                                     method: 'DELETE',
                                     headers: {

@@ -31,7 +31,7 @@ const checkout = async (req, res) => {
         if (!cartDetails) {
             req.flash('errorMessage', "The cart is empty, please go to the shop");
 
-            return res.redirect('/user/cart')
+            return res.redirect('/cart')
 
         }
 
@@ -56,7 +56,7 @@ const checkout = async (req, res) => {
 
 
             if (currentProduct.productQuantity <= 0) {
-                return res.redirect('/user/cart')
+                return res.redirect('/cart')
 
             }
         }
@@ -102,13 +102,13 @@ const addcheckoutAddress = async (req, res) => {
 
         req.flash('errorMessage', ' address added successfully');
 
-        res.redirect('/user/checkout');
+        res.redirect('/checkout');
 
     }
     catch (err) {
         console.error(`Error during adding address to DB: ${err}`);
         req.flash('errorMessage', err.message || 'Failed to add address. Please try again later.');
-        res.redirect('/user/checkout');
+        res.redirect('/checkout');
 
     }
 }
@@ -132,18 +132,18 @@ const deletecheckoutAddress = async (req, res) => {
 
         if (!address) {
             req.flash('errorMessage', 'Address not found or not authorized to delete');
-            return res.redirect('/user/checkoutaddress');
+            return res.redirect('/checkoutaddress');
         }
         await addressSchema.deleteOne({ _id: addressId });
 
         req.flash('errorMessage', 'Address deleted successfully');
-        res.redirect('/user/checkout');
+        res.redirect('/checkout');
 
 
     } catch (err) {
         console.error(`Error during deleting address from DB: ${err}`);
         req.flash('errorMessage', err.message || 'Failed to delete address. Please try again later.');
-        res.redirect('/user/checkout');
+        res.redirect('/checkout');
 
     }
 }

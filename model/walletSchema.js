@@ -15,6 +15,7 @@ const schema=new mongoose.Schema({
             amount:Number,
             date: {
                 type: Date,
+                default: Date.now,
             },
             orderId: {
                 type:mongoose.Schema.Types.ObjectId,

@@ -1,247 +1,310 @@
 <style>
-    .admin-navbar-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 1.5rem 3rem;
-        align-items: center;
-        /* border-bottom: 1px solid #b7b7b7; */
-        /* box-shadow: 1px 1px 5px #d7d7d7; */
-        z-index: 99;
-        position: relative;
-        background-color: black;
-        border-bottom: 1px solid #b2b2b2;
-    }
+  .admin-navbar-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem 2rem; /* Reduced from 1.5rem 3rem */
+    align-items: center;
+    z-index: 99;
+    position: relative;
+    background-color: black;
+    border-bottom: 1px solid #b2b2b2;
+  }
 
-    .logo {
-        text-decoration: none;
-        font-size: 1.5rem;
-        font-weight: 500;
-        color: white;
-        font-family: 'Times New Roman', Times, serif;
-        font-style: italic;
-        transition: transform 0.3s ease;
-    }
-    .logo:hover {
-        transform: scale(1.1); 
-    }
+  .logo {
+    text-decoration: none;
+    font-size: 1.3rem; /* Reduced from 1.5rem */
+    font-weight: 500;
+    color: white;
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    transition: transform 0.3s ease;
+  }
+  .logo:hover {
+    transform: scale(1.05); /* Reduced hover scale */
+  }
 
-    .admin-navlinks {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        cursor: pointer;
-        transition: color 0.3s ease,
-         transform 0.3s ease;
-    }
+  .admin-navlinks {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; /* Reduced from 2rem */
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
 
-    .admin-navlinks a {
-        text-decoration: none;
-        font-size: 1rem;
-        color: #e0d6d6;
-    }
+  .admin-navlinks a {
+    text-decoration: none;
+    font-size: 1rem;
+    color: #e0d6d6;
+  }
 
-    .admin-navlinks a:hover{
-        transform: scale(1.1);
-    }
+  .admin-navlinks a:hover {
+    transform: scale(1.05); /* Reduced hover scale */
+  }
 
-    .navbar-search-box {
-        border: 1px solid #bbb5b5;
-        border-radius: 20px;
-        width: 24rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-left: 0.5rem;
-        margin-left: 86px;
-        transition: transform 0.3s ease;
+  .navbar-search-box {
+    border: 1px solid #bbb5b5;
+    border-radius: 20px;
+    width: 18rem; /* Reduced from 24rem */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0.5rem;
+    margin-left: 2rem; /* Reduced from 86px */
+    transition: transform 0.3s ease;
+  }
+  .navbar-search-box:hover {
+    transform: scale(1.05); /* Reduced hover scale */
+  }
 
-    }
-    .navbar-search-box:hover{
-        transform: scale(1.1);
-    }
+  .navbar-search-box input {
+    border: none;
+    outline: none;
+    width: 80%;
+    background-color: #000000;
+    color: rgb(240, 232, 232);
+  }
 
-    .navbar-search-box input {
-        border: none;
-        outline: none;
-        width: 80%;
-        background-color: #000000;
-        color: rgb(240, 232, 232);
-    }
+  .navbar-search-box button i {
+    color: #e7d6d6;
+  }
 
-    .navbar-search-box button i {
-        color: #e7d6d6;
-    }
+  .nav-link-items {
+    scale: 1.2; /* Reduced from 1.3 */
+    transition: color 0.3s ease;
+  }
+  .nav-link-items:hover {
+    transform: scale(1.05); /* Reduced hover scale */
+  }
 
-    .nav-link-items {
-        scale: 1.3;
-        transition: color 0.3s ease,
+  /* side bar  */
+  .sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    right: -250px;
+    background-color: black;
+    transition: right 0.3s ease;
+    box-shadow: 0 0 20px #000000;
+    z-index: 10;
+  }
 
-    }
-    .nav-link-items:hover{
-        transform: scale(1.1);
-    }
+  .sidebar ul {
+    color: rgb(248, 242, 242);
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
 
-    /* side bar  */
-    .sidebar {
-        height: 100%;
-        width: 250px;
-        position: fixed;
-        top: 0;
-        right: -250px;
-        background-color: black;
-        transition: right 0.3s ease;
-        box-shadow: 0 0 20px #000000;
-        z-index: 10;
-    }
+  .sidebar ul li {
+    width: 90%;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-weight: 700;
+    transition: 0.3s ease-in-out;
+  }
 
-    .sidebar ul {
-        color: rgb(248, 242, 242);
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 2rem;
+  .sidebar ul li:hover {
+    border: 1px solid white;
+  }
 
-    }
+  .sidebar ul li a {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    color: white;
+  }
 
-    .sidebar ul li {
-        width: 90%;
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 10px;
-        font-weight: 700;
-        transition: .3s ease-in-out;
-    }
+  .toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+  }
 
-    .sidebar ul li:hover {
-        border: 1px solid white;
-    }
-
-    .sidebar ul li a {
-        display: block;
-        width: 100%;
-        text-decoration: none;
-        color: white;
-    }
-
-    .toggle-btn {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-    }
-
-    #go-back-home {
-        background-color: #707070;
-        color: #ffffff;
-    }
-
+  #go-back-home {
+    background-color: #707070;
+    color: #ffffff;
+  }
 
   /* Responsive Styles */
-@media (max-width: 1024px) {
+  @media (max-width: 1024px) {
     .navbar-search-box {
-        width: 18rem;
+      width: 15rem; /* Further reduced for tablets */
     }
-}
 
-@media (max-width: 768px) {
     .admin-navbar-container {
-        flex-direction: column;
-        align-items: flex-start;
+      padding: 1rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .admin-navbar-container {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem;
     }
 
     .navbar-search-box {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 1rem;
+      width: 100%;
+      margin-left: 0;
+      margin-top: 1rem;
     }
 
     .admin-navlinks {
-        gap: 1rem;
+      gap: 1rem;
     }
-}
+  }
 
-@media (max-width: 480px) {
+  @media (max-width: 480px) {
     .admin-navbar-container {
-        padding: 1rem;
+      padding: 0.8rem;
     }
 
     .navbar-search-box {
-        width: 100%;
-        margin-left: 0;
+      width: 100%;
+      margin-left: 0;
     }
 
     .logo {
-        font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
     .admin-navlinks {
-        gap: 0.5rem;
+      gap: 0.8rem;
     }
-}
+  }
 </style>
 
-
 <header class="admin-navbar-container">
-    <a href="/user" class="logo">WordPlay<br>Books</a>
-    <form action="/user/productseemore" method="get" class="navbar-search-box">
-        <input type="text" name="userSearch" id="user-search" placeholder="What are you looking for?">
-        <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </form>
-    <nav class="admin-navlinks">
+  <a href="/" class="logo">WordPlay<br />Books</a>
+  <form action="/productseemore" method="get" class="navbar-search-box">
+    <input
+      type="text"
+      name="userSearch"
+      id="user-search"
+      placeholder="What are you looking for?"
+    />
+    <button type="submit" class="btn">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </form>
+  <nav class="admin-navlinks">
+    <a href="/home" class="nav-link-items"
+      ><i class="fa-solid fa-house" style="color: rgb(162, 218, 33)"></i
+    ></a>
 
-        <a href="/user/home" class="nav-link-items"><i class="fa-solid fa-house"
-            style="color:  rgb(162, 218, 33);"></i></a>
+    <a href="/wishlist" class="nav-link-items"
+      ><i class="fa-solid fa-heart" style="color: rgb(162, 218, 33)"></i>
 
-        <a href="/user/wishlist" class="nav-link-items"><i class="fa-solid fa-heart"
-                style="color:  rgb(162, 218, 33);"></i></a>
-        <a href="/user/cart" class="nav-link-items"><i class="fa-solid fa-cart-shopping"
-                style="color:  rgb(162, 218, 33);"></i>
+      <% if (wishlistItemCount > 0) { %>
 
-                <% if (cartItemCount > 0) { %>
-                    <span class="cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        <%= cartItemCount %>
-                    </span>
-                <% } %>
-            </a>
+      <span
+        id="wishlist-count"
+        class="cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger <%= wishlistItemCount === 0 ? 'd-none' : '' %>"
+      >
+        <%= wishlistItemCount %>
+      </span>
 
-        <!-- if user is logged in -->
-        <% if (user) { %>
-            <span class="nav-link-items" onclick="toggleSidebar()"><i class="fa-solid fa-user"
-                    style="color:  rgb(162, 218, 33);"></i></span>
-            <div class="sidebar" id="sidebar">
-                <ul>
-                    <li id="go-back-home" onclick="toggleSidebar()"><span><i class="fa-solid fa-angles-left"></i> Go
-                            back</span></li>
-                    <li><a href="/user/profile"><i class="fa-solid fa-user"></i> Profile</a></li>
-                    <li><a href="/user/order"><i class="fa-solid fa-box-open"></i> Orders</a></li>
-                    <li><a href="/user/cancelled-orders"><i class="fa-solid fa-trash-can"></i> Canceled Orders</a></li>
-                    <li><a href="/user/wallet"><i class="fa-solid fa-wallet"></i> Wallet</a></li>
-                    <li><a href="/user/forget-password"><i class="fa-solid fa-lock"></i> Reset Password</a></li>
-                    <li><a href="/user/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                </ul>
-            </div>
-            <% } else { %>
-                <a href="/user/login" class="btn btn-outline-secondary">Login</a>
-                <% } %>
-    </nav>
+      <% } %>
+    </a>
+    <a href="/cart" class="nav-link-items"
+      ><i
+        class="fa-solid fa-cart-shopping"
+        style="color: rgb(162, 218, 33)"
+      ></i>
 
+      <% if (cartItemCount > 0) { %>
+      <span
+        class="cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+      >
+        <%= cartItemCount %>
+      </span>
+      <% } %>
+    </a>
+
+    <!-- if user is logged in -->
+    <% if (user) { %>
+    <span class="nav-link-items" onclick="toggleSidebar()"
+      ><i class="fa-solid fa-user" style="color: rgb(162, 218, 33)"></i
+    ></span>
+    <div class="sidebar" id="sidebar">
+      <ul>
+        <li id="go-back-home" onclick="toggleSidebar()">
+          <span><i class="fa-solid fa-angles-left"></i> Go back</span>
+        </li>
+        <li>
+          <a href="/profile"><i class="fa-solid fa-user"></i> Profile</a>
+        </li>
+        <li>
+          <a href="/order"><i class="fa-solid fa-box-open"></i> Orders</a>
+        </li>
+        <li>
+          <a href="/cancelled-orders"
+            ><i class="fa-solid fa-trash-can"></i> Canceled Orders</a
+          >
+        </li>
+        <li>
+          <a href="/wallet"><i class="fa-solid fa-wallet"></i> Wallet</a>
+        </li>
+        <li>
+          <a href="/forget-password"
+            ><i class="fa-solid fa-lock"></i> Reset Password</a
+          >
+        </li>
+        <li>
+          <a href="/logout"
+            ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+          >
+        </li>
+      </ul>
+    </div>
+    <% } else { %>
+    <a href="/login" class="btn btn-outline-secondary">Login</a>
+    <% } %>
+  </nav>
 </header>
 <%-include ('alert') %>
 
+<script>
+  // toggle side bar
+  function toggleSidebar() {
+    var sidebar = document.getElementById("sidebar");
+    if (sidebar.style.right === "" || sidebar.style.right === "-250px") {
+      sidebar.style.right = "0";
+    } else {
+      sidebar.style.right = "-250px";
+    }
+  }
 
-    <script>
-        // toggle side bar
-        function toggleSidebar() {
-            var sidebar = document.getElementById("sidebar");
-            if (sidebar.style.right === '' || sidebar.style.right === '-250px') {
-                sidebar.style.right = "0";
-            } else {
-                sidebar.style.right = "-250px";
-            }
-        }
+  function updateWishlistCount(change) {
+    const wishlistCountEl = document.getElementById("wishlist-count");
+    if (wishlistCountEl) {
+      let current = parseInt(wishlistCountEl.innerText) || 0;
+      const updated = current + change;
 
-    </script>
+      if (updated <= 0) {
+        wishlistCountEl.style.display = "none";
+        wishlistCountEl.innerText = "0";
+      } else {
+        wishlistCountEl.style.display = "inline-block";
+        wishlistCountEl.innerText = updated;
+      }
+    } else if (change > 0) {
+      // If the element doesn't exist, create and insert it dynamically
+      const wishlistLink = document.querySelector('a[href="/wishlist"]');
+      const span = document.createElement("span");
+      span.id = "wishlist-count";
+      span.className =
+        "cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger";
+      span.innerText = change;
+      wishlistLink.appendChild(span);
+    }
+  }
+</script>

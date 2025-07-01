@@ -151,7 +151,7 @@
                         </div>
                         <!-- product description with text overflow as ... -->
                         <div class="product-description-box">
-                            <a href="/user/product-view/<%= product.id %>" class="product-name-link">
+                            <a href="/product-view/<%= product.id %>" class="product-name-link">
                             <h6 class="product-text-row">
                                 <%= product.productName %>
                             </h6>
@@ -208,7 +208,7 @@
   async function addToCart(productId, price, user) {
 
 
-const URL = `/user/add-to-cart/${productId}/?price=${price}`;
+const URL = `/add-to-cart/${productId}/?price=${price}`;
 
 try {
     if (user) {
@@ -256,7 +256,7 @@ try {
 
 
     async function addToWishlist(productId, user, wishlistIcon) {
-        const URL = `/user/addtowishlist`;
+        const URL = `/addtowishlist`;
 
         try {
             if (user) {

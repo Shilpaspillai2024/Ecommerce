@@ -83,7 +83,7 @@
 
             </b>
             <small>Enter the otp below to verify</small>
-            <form action="/user/otp" method="post">
+            <form action="/otp" method="post">
                 <input type="text" name="otp" minlength="6" maxlength="6" required>
 
                 <small id="otp-timer-box">OTP is valid for <input type="text" id="otp-timer"></input></small>
@@ -149,7 +149,7 @@
                     if (result.isConfirmed) {
                         console.log(otpEmail.innerHTML);
 
-                        const URL = `/user/resend-otp/${otpEmail.innerHTML.trim()}`;
+                        const URL = `/resend-otp/${otpEmail.innerHTML.trim()}`;
                         fetch(URL, {
                             method: "GET"
                         }).then((response) => {
@@ -166,7 +166,7 @@
                                     title: "Oops...",
                                     text: "Something went wrong!",
                                 }).then(() => {
-                                    window.location = "/user/signup";
+                                    window.location = "/signup";
                                 });
                             }
                         });
@@ -174,7 +174,7 @@
 
                     // If the user cancels the OTP resend request, redirect to the signup page
                     if (result.isDismissed) {
-                        window.location = "/user/signup";
+                        window.location = "/signup";
                     }
                 });
 

@@ -154,7 +154,7 @@ a {
             <form action="" method="post" id="edit-order-status-form">
             <div class="card-body">
                
-                <a href="/user/order" class="btn btn-secondary me-5 ms-2">Go Back</a>
+                <a href="/order" class="btn btn-secondary me-5 ms-2">Go Back</a>
             </div>
             </form>
           </div>
@@ -177,7 +177,7 @@ a {
 
 
 function downloadInvoice(orderId) {
-                const URL = `/user/invoice/${orderId}`
+                const URL = `/invoice/${orderId}`
                 fetch(URL, {
                     method: "POST",
                     headers: {

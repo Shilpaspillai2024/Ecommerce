@@ -329,11 +329,11 @@
             <span>/</span>
             <% if (referrer==='productSeemore' ) { %>
 
-                <li><a href="/user/product">Product </a></li>
+                <li><a href="/product">Product </a></li>
                 <% } else { %>
-                    <li><a href="/user/productSeemore">productSeemore</a></li>
+                    <li><a href="/productSeemore">productSeemore</a></li>
                     <span>/</span>
-                    <li><a href="/user/product">Product</a></li>
+                    <li><a href="/product">Product</a></li>
                     <% } %>
         </ul>
     </nav>
@@ -416,7 +416,7 @@
                 <% if (product.productQuantity> 0) { %>
                     <% if (itemInCart) { %>
                         <!-- If the product is already in the cart, show "Go to Cart" button -->
-                        <a href="/user/cart" class="btn btn-danger go-to-cart" id="go-to-cart-btn">Go to Cart <i
+                        <a href="/cart" class="btn btn-danger go-to-cart" id="go-to-cart-btn">Go to Cart <i
                                 class="fa-solid fa-cart-shopping"></i></a>
                         <% } else { %>
 
@@ -554,7 +554,7 @@
                         // add to cart
                         // Improved addToCart function
                         async function addToCart(productId, price, user) {
-                            const URL = `/user/add-to-cart/${productId}/?price=${price}`;
+                            const URL = `/add-to-cart/${productId}/?price=${price}`;
 
                             try {
                                 if (user) {
@@ -610,7 +610,7 @@
 // add to wishlist
 
                         async function addToWishlist(productId, user, wishlistIcon) {
-            const URL = `/user/addtowishlist`;
+            const URL = `/addtowishlist`;
 
             try {
                 if (user) {
@@ -636,7 +636,9 @@
                                 title: data.message || "Product added to wishlist",
                                 showConfirmButton: false,
                                 timer: 700,
-                            })
+                            }).then(()=>{
+                                updateWishlistCount(1)
+                            });
 
 
 
@@ -651,6 +653,8 @@
                                 title: data.message || "Product removed from wishlist",
                                 showConfirmButton: false,
                                 timer: 700,
+                            }).then(()=>{
+                                updateWishlistCount(-1)
                             })
 
 

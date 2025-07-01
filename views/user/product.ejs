@@ -295,7 +295,7 @@
                                 </div>
 
                                 <div class="product-name-box">
-                                    <a href="/user/product-view/<%= product.id %>?from=productSeemore"
+                                    <a href="/product-view/<%= product.id %>?from=productSeemore"
                                         class="product-name-link">
                                         <h6 class="product-text-row">
                                             <%=product.productName%>
@@ -356,7 +356,7 @@
 
 <div class="Book-more">
 
-    <a href="/user/productSeemore">See More</a>
+    <a href="/productSeemore">See More</a>
 </div>
 
 <script>
@@ -366,7 +366,7 @@
     async function addToCart(productId, price, user) {
 
 
-        const URL = `/user/add-to-cart/${productId}/?price=${price}`;
+        const URL = `/add-to-cart/${productId}/?price=${price}`;
 
         try {
             if (user) {
@@ -414,7 +414,7 @@
 
 
     async function addToWishlist(productId, user, wishlistIcon) {
-        const URL = `/user/addtowishlist`;
+        const URL = `/addtowishlist`;
 
         try {
             if (user) {
@@ -440,6 +440,8 @@
                         title: data.message || "Product added to wishlist",
                         showConfirmButton: false,
                         timer: 700,
+                    }).then(()=>{
+                        updateWishlistCount(1)
                     })
 
 
@@ -455,7 +457,9 @@
                         title: data.message || "Product removed from wishlist",
                         showConfirmButton: false,
                         timer: 700,
-                    })
+                    }).then(() => {
+    updateWishlistCount(-1); // decrement count
+  });
                         
                    }
 

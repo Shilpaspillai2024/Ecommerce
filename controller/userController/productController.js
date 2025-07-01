@@ -20,7 +20,7 @@ const productView = async (req, res) => {
         // Check if the product exists
         if (!product) {
             req.flash("errorMessage", "Product is currently unavailable");
-            return res.redirect('/user/home');
+            return res.redirect('/home');
         }
 
 
@@ -87,7 +87,7 @@ const productView = async (req, res) => {
 
         if (product.length === 0) {
             req.flash("errorMessage", "product is currently unavailable")
-            res.redirect('/user/home')
+            res.redirect('/home')
         }
 
         let wishlist = { products: [] };

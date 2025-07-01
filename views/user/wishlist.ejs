@@ -1,379 +1,346 @@
 <style>
-    body {
-        background-color: #000000;
-        color: #ffffff
-    }
+  body {
+    background-color: #000000;
+    color: #ffffff;
+  }
 
-    .products-container {
-        padding: 2rem 0;
-        margin-bottom: 5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-    }
+  .products-container {
+    padding: 2rem 0;
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
 
-    .products-list-box {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-    }
+  .products-list-box {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
 
-    .product-box {
-        text-decoration: none;
-        color: #ffffff;
-        border: 1px solid #b2b2b2;
-        border-radius: 10px;
-        width: 300px;
-        padding: 1rem;
-        margin-top: 2rem;
-        /* overflow: hidden; */
-        text-overflow: ellipsis;
-        position: relative;
-        text-align: center;
-    }
+  .product-box {
+    text-decoration: none;
+    color: #ffffff;
+    border: 1px solid #b2b2b2;
+    border-radius: 10px;
+    width: 300px;
+    padding: 1rem;
+    margin-top: 2rem;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    position: relative;
+    text-align: center;
+  }
 
-    .product-image-box {
-        /* height: 250px;
+  .product-image-box {
+    /* height: 250px;
         width: 100%; */
-        height: auto;
-        position: relative;
-    }
+    height: auto;
+    position: relative;
+  }
 
-    .product-image-box img {
-        margin: auto;
-        width: 100%;
-        height: 250px;
-        object-fit: scale-down;
+  .product-image-box img {
+    margin: auto;
+    width: 100%;
+    height: 250px;
+    object-fit: scale-down;
+  }
 
-    }
+  .product-text-row {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-    .product-text-row {
-        max-width: 250px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+  .product-discount-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 2rem;
+    color: #ffffff;
+    background-color: red;
+    border-radius: 5px 0;
+    z-index: 10;
+  }
 
-    .product-discount-box {
-        position: absolute;
-        top: 0;
-        left: 0;
-        padding: 0 2rem;
-        color: #ffffff;
-        background-color: red;
-        border-radius: 5px 0;
-        z-index: 10;
-    }
+  .product-new-arrival-box {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    width: 20px;
+  }
 
-    .product-new-arrival-box {
-        position: absolute;
-        top: -10px;
-        right: 10px;
-        width: 20px;
-    }
+  .product-new-arrival-box img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+  }
 
-    .product-new-arrival-box img {
-        width: 50px;
-        height: 50px;
-        object-fit: contain;
+  .product-price {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 6rem;
+  }
 
-    }
-
-    .product-price {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 0.5rem;
-        padding-left: 6rem;
-    }
-
-    .product-star-rating {
-        /* position: absolute; */
-        position: relative;
-        /* bottom: 0;
+  .product-star-rating {
+    /* position: absolute; */
+    position: relative;
+    /* bottom: 0;
         right: -1rem; */
-        top: 0;
-        /* Reset positioning */
-        margin-top: 0.5rem;
-    }
+    top: 0;
+    /* Reset positioning */
+    margin-top: 0.5rem;
+  }
 
-    .product-star-icon {
-        color: orange;
-    }
+  .product-star-icon {
+    color: orange;
+  }
 
-    .product-availability {
-        position: absolute;
-        top: 40%;
-        left: 0;
-        width: 100%;
-        background-color: rgba(255, 255, 255, 0.499);
-        padding: 1rem 0;
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: red;
-        text-align: center;
-        z-index: 200;
-    }
+  .product-availability {
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.499);
+    padding: 1rem 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: red;
+    text-align: center;
+    z-index: 200;
+  }
 
-    .no-product-banner {
-        /* background-color: red; */
-        background: url("../../image/noproduct.jpg");
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        height: 50vh;
-        width: 100%;
-    }
+  .no-product-banner {
+    /* background-color: red; */
+    background: url("../../image/noproduct.jpg");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50vh;
+    width: 100%;
+  }
 
-    .product-description-box {
-        text-decoration: none;
-        color: #ffffff;
+  .product-description-box {
+    text-decoration: none;
+    color: #ffffff;
+  }
 
-    }
+  .like-btn {
+    display: none;
+    scale: 1.5;
+  }
 
-    .like-btn {
-        display: none;
-        scale: 1.5;
-    }
+  .wishlist-header {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+  }
 
-    .wishlist-header {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        width: 100%;
+  .remove-icon {
+    font-size: 20px;
+    color: #e4d9d9;
+    cursor: pointer;
 
-    }
+    padding-left: 3rem;
+  }
 
-    .remove-icon {
-        font-size: 20px;
-        color: #e4d9d9;
-        cursor: pointer;
-
-        padding-left: 3rem;
-
-
-    }
-
-
-
-
-    .cart-icon {
-        font-size: 24px;
-        color: #e4d9d9;
-        margin-right: 10rem;
-    }
+  .cart-icon {
+    font-size: 24px;
+    color: #e4d9d9;
+    margin-right: 10rem;
+  }
 </style>
 <%-include('navbar') %>
-    <div class="products-container container">
-        <div class="wishlist-header">
-            <h3>WishList</h3>
-            <h3 class="btn btn-danger rounded-circle">
-                <%= products.length%>
-            </h3>
+<div class="products-container container">
+  <div class="wishlist-header">
+    <h3>WishList</h3>
+    <h3 class="btn btn-danger rounded-circle"><%= products.length%></h3>
+  </div>
+  <div class="products-list-box container">
+    <!-- check if any product exist -->
+    <% if(products.length!=0){ %>
+
+    <!-- this will render each product on the product collection which is not blocked -->
+    <% products.forEach((product)=>{ %> <% if (product.productId) { %>
+    <!-- this is the product container and when it is clicked it redirect to product detail page -->
+    <div class="product-box">
+      <!-- if product discount is available then it is shown as a banner in product top  -->
+      <% if(product.productId.productDiscount!=0){ %>
+      <div class="product-discount-box">
+        <h6><%= product.productId.productDiscount %>&percnt; OFF</h6>
+      </div>
+
+      <!-- if the product is added which one day then new arrival banner is shown on top of the product box -->
+      <% } %> <% if (new Date(product.productId.createdAt).getTime()>
+      (Date.now() - (3 * 24 * 60 * 60 * 1000))) { %>
+      <div class="product-new-arrival-box">
+        <img src="../../image/new.jpg" alt="" />
+      </div>
+      <% } %>
+
+      <!-- image of product which is stored in uploads folder -->
+      <div class="product-image-box">
+        <img src="/<%= product.productId.productImage[0] %>" loading="lazy" />
+
+        <!-- product review -->
+        <h6 class="product-star-rating">
+          4 <span class="product-star-icon">&starf;</span>
+          <span class="product-star-icon">&starf;</span>
+          <span class="product-star-icon">&starf;</span>
+          <span class="product-star-icon">&starf;</span>
+        </h6>
+      </div>
+      <!-- product description with text overflow as ... -->
+      <a
+        href="/product-view/<%= product.productId.id %>"
+        class="product-description-box"
+      >
+        <h6 class="product-text-row"><%= product.productId.productName %></h6>
+        <p class="product-name product-text-row">
+          <%= product.productId.productAuthor %>
+        </p>
+        <h5 class="product-price">
+          <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
+          <%= product.productId.productPrice.toLocaleString() %>
+        </h5>
+      </a>
+      <div>
+        <div class="d-flex flex-row-reverse gap-3">
+          <a
+            onclick="removeWishlist('<%= product.productId.id %>','<%=user %>')"
+            class="remove-icon"
+            ><i class="fa-solid fa-trash-can"></i
+          ></a>
+
+          <a
+            onclick="addToCart('<%= product.productId.id %>','<%= product.productId.productPrice %>','<%=user %>')"
+            class="cart-icon"
+            ><i class="fas fa-shopping-cart"></i
+          ></a>
         </div>
-        <div class="products-list-box container">
-            <!-- check if any product exist -->
-            <% if(products.length!=0){ %>
 
-
-                <!-- this will render each product on the product collection which is not blocked -->
-                <% products.forEach((product)=>{ %>
-
-
-                     <% if (product.productId) { %>
-                    <!-- this is the product container and when it is clicked it redirect to product detail page -->
-                    <div class="product-box">
-                        <!-- if product discount is available then it is shown as a banner in product top  -->
-                        <% if(product.productId.productDiscount!=0){ %>
-                            <div class="product-discount-box">
-                                <h6>
-                                    <%= product.productId.productDiscount %>&percnt; OFF
-                                </h6>
-                            </div>
-
-                            <!-- if the product is added which one day then new arrival banner is shown on top of the product box -->
-                            <% } %>
-                                <% if (new Date(product.productId.createdAt).getTime()> (Date.now() - (3 * 24 * 60 * 60
-                                    * 1000))) { %>
-                                    <div class="product-new-arrival-box">
-                                        <img src="../../image/new.jpg" alt="">
-                                    </div>
-                                    <% } %>
-
-                                        <!-- image of product which is stored in uploads folder -->
-                                        <div class="product-image-box">
-                                            <img src="/<%= product.productId.productImage[0] %>" loading="lazy" />
-
-
-                                            <!-- product review -->
-                                            <h6 class="product-star-rating">
-                                                4 <span class="product-star-icon">&starf;</span>
-                                                <span class="product-star-icon">&starf;</span>
-                                                <span class="product-star-icon">&starf;</span>
-                                                <span class="product-star-icon">&starf;</span>
-                                            </h6>
-                                        </div>
-                                        <!-- product description with text overflow as ... -->
-                                        <a href="/user/product-view/<%= product.productId.id %>"
-                                            class="product-description-box">
-                                            <h6 class="product-text-row">
-                                                <%= product.productId.productName %>
-                                            </h6>
-                                            <p class="product-name product-text-row">
-                                                <%= product.productId.productAuthor %>
-                                            </p>
-                                            <h5 class="product-price">
-                                                <i class="fa-solid fa-indian-rupee-sign product-text-row"></i>
-                                                <%= product.productId.productPrice.toLocaleString() %>
-                                            </h5>
-                                        </a>
-                                        <div>
-
-                                            <div class="d-flex flex-row-reverse gap-3">
-
-
-                                                <a onclick="removeWishlist('<%= product.productId.id %>','<%=user %>')"
-                                                    class="remove-icon"><i class="fa-solid fa-trash-can"></i></a>
-
-
-
-                                                <a onclick="addToCart('<%= product.productId.id %>','<%= product.productId.productPrice %>','<%=user %>')"
-                                                    class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
-
-
-                                            </div>
-
-                                            <!-- product availability -->
-                                            <% if(product.productId.productQuantity<=0){ %>
-                                                <h6 class="product-availability">Product Out of stock</h6>
-                                                <% } %>
-                                        </div>
-
-
-                    </div>
-                   <%}%>
-                    <% }) %>
-                        <% }else{ %>
-                            <div class="no-product-banner"></div>
-                            <% } %>
-        </div>
+        <!-- product availability -->
+        <% if(product.productId.productQuantity<=0){ %>
+        <h6 class="product-availability">Product Out of stock</h6>
+        <% } %>
+      </div>
     </div>
-    <%-include('footer') %>
+    <%}%> <% }) %> <% }else{ %>
+    <div class="no-product-banner"></div>
+    <% } %>
+  </div>
+</div>
+<%-include('footer') %>
 
-        <script>
+<script>
+  async function addToCart(productId, price, user) {
+    const addToCartURL = `/add-to-cart/${productId}/?price=${price}`;
+    const removeFromWishlistURL = `/remove-wishlist/${productId}`;
 
+    try {
+      if (user) {
+        const response = await fetch(addToCartURL, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
+        if (response.ok) {
+          const data = await response.json();
 
+          // Remove the product from the wishlist after adding it to the cart
+          const removeResponse = await fetch(removeFromWishlistURL, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
 
-            async function addToCart(productId, price, user) {
-                const addToCartURL = `/user/add-to-cart/${productId}/?price=${price}`;
-                const removeFromWishlistURL = `/user/remove-wishlist/${productId}`;
+          if (removeResponse.ok) {
+            Swal.fire({
+              icon: "success",
+              title:
+                data.message ||
+                "Product added to cart and removed from wishlist",
+              showConfirmButton: false,
+              timer: 700,
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            const errorData = await removeResponse.json();
+            throw new Error(
+              errorData.error || "Failed to remove product from wishlist"
+            );
+          }
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to add product to cart");
+        }
+      } else {
+        Swal.fire({
+          icon: "warning",
+          title: "Not logged in",
+          text: "Please log in to add products to cart",
+        });
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: "warning",
+        title: "Cannot add product to cart",
+        text: err.message,
+      });
+    }
+  }
 
-                try {
-                    if (user) {
-                        const response = await fetch(addToCartURL, {
-                            method: "GET",
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        });
+  // for remove product from wishlist
 
-                        if (response.ok) {
-                            const data = await response.json();
+  async function removeWishlist(productId, user) {
+    const URL = `/remove-wishlist/${productId}`;
 
-                            // Remove the product from the wishlist after adding it to the cart
-                            const removeResponse = await fetch(removeFromWishlistURL, {
-                                method: "GET",
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            });
+    try {
+      if (user) {
+        const response = await fetch(URL, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-                            if (removeResponse.ok) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: data.message || "Product added to cart and removed from wishlist",
-                                    showConfirmButton: false,
-                                    timer: 700,
-                                }).then(() => {
-                                    window.location.reload();
-                                });
-                            } else {
-                                const errorData = await removeResponse.json();
-                                throw new Error(errorData.error || "Failed to remove product from wishlist");
-                            }
-                        } else {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || "Failed to add product to cart");
-                        }
-                    } else {
-                        Swal.fire({
-                            icon: "warning",
-                            title: "Not logged in",
-                            text: "Please log in to add products to cart"
-                        });
-                    }
-                } catch (err) {
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Cannot add product to cart",
-                        text: err.message
-                    });
-                }
-            }
-
-
-
-
-            // for remove product from wishlist
-
-            async function removeWishlist(productId, user) {
-
-
-                const URL = `/user/remove-wishlist/${productId}`;
-
-                try {
-                    if (user) {
-                        const response = await fetch(URL, {
-                            method: "GET",
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            Swal.fire({
-                                icon: "success",
-                                title: data.message || "Product removed from wishlist",
-                                showConfirmButton: false,
-                                timer: 700,
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                        } else {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || "Failed to remove product ");
-                        }
-                    }
-
-                    else {
-                        Swal.fire({
-                            icon: "warning",
-                            title: "Not logged in",
-                            text: "Please log in to remove products from wishlist"
-                        });
-                    }
-                } catch (err) {
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Cannot remove product from wishlist",
-                        text: err.message
-                    });
-                }
-            }
-
-
-        </script>
+        if (response.ok) {
+          const data = await response.json();
+          Swal.fire({
+            icon: "success",
+            title: data.message || "Product removed from wishlist",
+            showConfirmButton: false,
+            timer: 700,
+          }).then(() => {
+            window.location.reload();
+          });
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to remove product ");
+        }
+      } else {
+        Swal.fire({
+          icon: "warning",
+          title: "Not logged in",
+          text: "Please log in to remove products from wishlist",
+        });
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: "warning",
+        title: "Cannot remove product from wishlist",
+        text: err.message,
+      });
+    }
+  }
+</script>
