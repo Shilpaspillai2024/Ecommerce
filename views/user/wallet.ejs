@@ -67,7 +67,7 @@
                             <tr>
                                 <td><%= (currentPage - 1) * 5 + index + 1 %></td>
                                 <td><%= transaction.formattedDate %></td>
-                                <td><%= transaction.orderId %></td>
+                                <td><%= transaction.orderID %></td>
                                 <td>
                                     <span class="badge <%= transaction.typeOfPayment === 'credit' ? 'bg-success' : 'bg-danger' %>">
                                         <%= transaction.typeOfPayment %>

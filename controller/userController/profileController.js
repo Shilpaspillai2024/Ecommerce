@@ -1,31 +1,24 @@
 const userSchema=require('../../model/userSchema')
 const addressSchema=require('../../model/addressSchema')
 const bcrypt=require('bcrypt')
+const catchAsync=require('../../utils/catchAsync')
 
 
 
 // for profile Get
 
-const profile= async (req,res) =>{
-    try {
+const profile= catchAsync(async (req,res) =>{
+    
 
         const userDetail=await userSchema.findById(req.session.user)
 
 
         res.render('user/profile',{title:'profile-view',alertMessage:req.flash("errorMessage"),user:req.session.user,userDetail})
-        
-    } catch (err) {
 
-       console.log(`error during profile page load ${err}`)
-        req.flash('errorMessage', 'Failed to load profile page.');
-        res.redirect('/home'); 
-        
-    }
+})
 
-}
-
-const personalInformation = async(req,res)=>{
-    try {
+const personalInformation =catchAsync(async(req,res)=>{
+  
         const userId = req.session.user; // User ID from session
         const userDetail = await userSchema.findByIdAndUpdate(userId, {
             name:req.body.name,
@@ -35,18 +28,13 @@ const personalInformation = async(req,res)=>{
         console.log(userDetail);
         req.flash('errorMessage', 'Personal information updated successfully.');
         res.redirect('/profile');
-    } catch (err) {
-        console.log(`Error updating personal information: ${err}`);
-        req.flash('errorMessage', 'Failed to update personal information. Please try again later.');
-        res.redirect('/profile');
-    }
-}
+   
+})
 
 // for change password post
 
-const changePassword = async(req,res)=>{
-    try {
-
+const changePassword =catchAsync(async(req,res)=>{
+   
         const userId =req.session.user
 
         const {currentPassword,newPassword,confirmPassword}=req.body;
@@ -77,17 +65,13 @@ const changePassword = async(req,res)=>{
 
         req.flash('errorMessage', 'Password changed successfully.');
         res.redirect('/profile'); // Redirect to profile page with success message
-    } catch (err) {
-        console.error(`Error changing password: ${err}`);
-        req.flash('errorMessage', 'Failed to change password. Please try again later.');
-        res.redirect('/profile'); // Redirect to profile page with error message
-    }
+    
 
-}
+})
 
 
-const address= async(req,res)=>{
-     try {
+const address= catchAsync(async(req,res)=>{
+     
         const userId=req.session.user
 
         
@@ -105,17 +89,18 @@ const address= async(req,res)=>{
          res.render('user/address',{title:"user-address",alertMessage:req.flash('errorMessage'),user:req.session.user,userAddress})
         
         
-     } catch (err) {
-        console.log(`Error when loading the address page ${err}`)
-        req.flash('errorMessage','Failed to load address page')
-        res.redirect('/profile')
+    //  } catch (err) {
+    //     console.log(`Error when loading the address page ${err}`)
+    //     req.flash('errorMessage','Failed to load address page')
+    //     res.redirect('/profile')
         
-     }
-}
+    //  }
+
+})
 
 
-const addAddress= async(req,res)=>{
-    try {
+const addAddress= catchAsync(async(req,res)=>{
+    
         const userId=req.session.user
         const newAddress={
             userId: userId,
@@ -135,19 +120,13 @@ const addAddress= async(req,res)=>{
       
         res.redirect('/address');
         
-    } catch (err) {
-        console.error(`Error during adding address to DB: ${err}`);
-        req.flash('errorMessage', err.message || 'Failed to add address. Please try again later.');
-        res.redirect('/address');
-        
-    }
-}
+   
+});
 
 
 
-const deleteAddress= async(req,res)=>{
-    try {
-
+const deleteAddress= catchAsync(async(req,res)=>{
+   
         const userId=req.session.user;
         const addressId=req.params.id;
 
@@ -164,23 +143,13 @@ const deleteAddress= async(req,res)=>{
         req.flash('errorMessage', 'Address deleted successfully');
         res.redirect('/address');
 
-        
-    } catch (err) {
-        console.error(`Error during deleting address from DB: ${err}`);
-        req.flash('errorMessage', err.message || 'Failed to delete address. Please try again later.');
-        res.redirect('/address');
-        
-    }
-}
+})
 
 
 
 
-    const editAddress =async (req,res)=>{
-    try {
-
-
-           const userId=req.session.user;
+    const editAddress =catchAsync(async (req,res)=>{
+        const userId=req.session.user;
             const addressId = req.params.id;
 
             const address = await addressSchema.findOne({ _id: addressId, userId: userId })
@@ -192,19 +161,19 @@ const deleteAddress= async(req,res)=>{
 
             res.render('user/editAddress',{title:"user-editAddress",alertMessage:req.flash('errorMessage'),user:req.session.user,address})
         
-    } catch (err) {
+    // } catch (err) {
 
-        console.log(`Error when loading the address page ${err}`)
-        req.flash('errorMessage','Failed to load editaddress page')
-        res.redirect('/address')
+    //     console.log(`Error when loading the address page ${err}`)
+    //     req.flash('errorMessage','Failed to load editaddress page')
+    //     res.redirect('/address')
         
         
-    }
-      }
+    // }
+      });
 
 
-      const editAddressPost = async (req, res) => {
-        try {
+      const editAddressPost = catchAsync(async (req, res) => {
+       
             const userId = req.session.user;
             const addressId = req.params.id;
     
@@ -232,12 +201,8 @@ const deleteAddress= async(req,res)=>{
             // Redirect to the address page with success message
             req.flash('errorMessage', 'Address updated successfully');
             res.redirect('/address');
-        } catch (err) {
-            console.log(`Error when updating the address: ${err}`);
-            req.flash('errorMessage', 'Failed to update address');
-            res.redirect('/address');
-        }
-    }
+      
+    });
     
             
        

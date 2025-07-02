@@ -1,12 +1,12 @@
-
 const productSchema=require('../../model/productSchema')
 const wishlistSchema = require('../../model/wishlistSchema')
+const catchAsync=require('../../utils/catchAsync')
 
 
 
 
-const wishList=async(req,res)=>{
-    try {
+const wishList= catchAsync ( async(req,res)=>{
+ 
         userId=req.session.user
 
         const wishlist=await wishlistSchema.findOne({userId}).populate('products.productId')
@@ -22,19 +22,13 @@ const wishList=async(req,res)=>{
 
         }
 
-
-        
-    } catch (err) {
-        console.log(`Error on rendering the wishlist ${err}`)
-        
-    }
-}
+})
 
 
 
 
-const addToWishlist=async(req,res)=>{
-    try {
+const addToWishlist=catchAsync(async(req,res)=>{
+   
         const userId=req.session.user
         const {productId}=req.body
 
@@ -59,15 +53,12 @@ const addToWishlist=async(req,res)=>{
         await wishlist.save()
         res.status(200).json({inwishlist:!inwishlist})
         
-    } catch (err) {
-        console.log(`error while adding to wishlist ${err}`)
-        
-    }
-}
+   
+})
 
 
-const removeWishlist=async (req,res)=>{
-    try {
+const removeWishlist=catchAsync(async (req,res)=>{
+    
        const productId=req.params.id
        const userId=req.session.user
        const wishlist=await wishlistSchema.findOne({userId}).populate('products.productId')
@@ -90,11 +81,8 @@ const removeWishlist=async (req,res)=>{
         
     return res.status(200).json({message:"Product removed from wishlist"})
         
-    } catch (err) {
-        console.log(`Error on removing the products from wishlist ${err}`)
-        return res.status(404).json({error:"Error on removing the products from wishlist"})
-    }
-}
+   
+});
 
 
 

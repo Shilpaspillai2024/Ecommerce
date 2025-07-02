@@ -1,566 +1,480 @@
-const cartSchema = require('../../model/cartSchema')
-const productSchema = require('../../model/productSchema')
-const userSchema = require('../../model/userSchema')
-const addressSchema = require('../../model/addressSchema')
-const orderSchema = require('../../model/orderSchema')
-const couponSchema = require('../../model/couponSchema')
-const walletSchema = require('../../model/walletSchema')
-const Razorpay = require('razorpay')
-const mongoose = require('mongoose')
-const dotenv = require('dotenv').config()
-
-
+const cartSchema = require("../../model/cartSchema");
+const productSchema = require("../../model/productSchema");
+const userSchema = require("../../model/userSchema");
+const addressSchema = require("../../model/addressSchema");
+const orderSchema = require("../../model/orderSchema");
+const couponSchema = require("../../model/couponSchema");
+const walletSchema = require("../../model/walletSchema");
+const Razorpay = require("razorpay");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv").config();
+const catchAsync = require("../../utils/catchAsync");
 
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
+const checkout = catchAsync(async (req, res) => {
+  const address = await addressSchema
+    .find({ userId: req.session.user })
+    .populate("userId");
 
+  const cartDetails = await cartSchema
+    .findOne({ userId: req.session.user })
+    .populate("items.productId")
+    .populate("userId");
+  const wallet = await walletSchema.findOne({ userId: req.session.user });
+  let balance = 0;
 
+  if (!cartDetails) {
+    req.flash("errorMessage", "The cart is empty, please go to the shop");
 
-const checkout = async (req, res) => {
+    return res.redirect("/cart");
+  }
+
+  const cartItems = cartDetails.items;
+
+  if (wallet) {
+    balance = wallet.balance;
+  }
+  let total = 0;
+
+  for (product of cartItems) {
+    let currentProduct = await productSchema.findById(product.productId);
+
+    // total += product.productCount * product.productId.productDiscountPrice
+
+    total += Math.round(
+      product.productPrice *
+        (1 - product.productId.productDiscount / 100) *
+        product.productCount
+    );
+
+    if (currentProduct.productQuantity <= 0) {
+      return res.redirect("/cart");
+    }
+  }
+
+  // add shipping charge if total lessthan 500
+  const shippingCharge = total < 500 ? 50 : 0;
+
+  // const shippingCharge=total>500 ? 0 :50;
+  // const payableAmount=Math.round(total+shippingCharge);
+
+  total = Math.round(total + shippingCharge);
+
+  res.render("user/checkout", {
+    title: "checkout-page",
+    cartDetails,
+    cartItems,
+    user: req.session.user,
+    alertMessage: req.flash("errorMessage"),
+    address,
+    balance,
+    total,
+    shippingCharge,
+  });
+});
+
+const addcheckoutAddress = catchAsync(async (req, res) => {
+  const userId = req.session.user;
+
+  const newAddress = {
+    userId: userId,
+    addressType: req.body.addressType,
+    contactName: req.body.contactName,
+    doorNo: req.body.doorNo,
+    Address: req.body.homeAddress,
+    areaAddress: req.body.areaAddress,
+    landmark: req.body.landmark,
+    phone: req.body.phone,
+    pincode: req.body.pincode,
+  };
+
+  await addressSchema.insertMany(newAddress);
+
+  req.flash("errorMessage", " address added successfully");
+
+  res.redirect("/checkout");
+
+  // }
+  // catch (err) {
+  //     console.error(`Error during adding address to DB: ${err}`);
+  //     req.flash('errorMessage', err.message || 'Failed to add address. Please try again later.');
+  //     res.redirect('/checkout');
+
+  // }
+});
+
+const deletecheckoutAddress = catchAsync(async (req, res) => {
+  const userId = req.session.user;
+  const addressId = req.params.id;
+
+  // Check if the address belongs to the user
+
+  const address = await addressSchema.findOne({
+    _id: addressId,
+    userId: userId,
+  });
+
+  if (!address) {
+    req.flash("errorMessage", "Address not found or not authorized to delete");
+    return res.redirect("/checkoutaddress");
+  }
+  await addressSchema.deleteOne({ _id: addressId });
+
+  req.flash("errorMessage", "Address deleted successfully");
+  res.redirect("/checkout");
+
+  // } catch (err) {
+  //     console.error(`Error during deleting address from DB: ${err}`);
+  //     req.flash('errorMessage', err.message || 'Failed to delete address. Please try again later.');
+  //     res.redirect('/checkout');
+
+  // }
+});
+
+const OrderPlaced = catchAsync(async (req, res) => {
+  const userId = req.session.user;
+
+  let {
+    name,
+    email,
+    phone,
+    address,
+    paymentMethod,
+    razorpayOrderId,
+    couponCode,
+  } = req.body;
+
+  const cart = await cartSchema.findOne({ userId }).populate("items.productId");
+
+  if (!cart || cart.items.length === 0) {
+    return res.status(404).send("Cart is empty or not found ");
+  }
+  let totalPrice = 0;
+  let couponDiscount = 0;
+  const orderProducts = cart.items.map((product) => {
+    const price = Math.round(
+      product.productPrice * (1 - product.productId.productDiscount / 100)
+    );
+
+    //okay
+    // const price = product.productPrice
+
+    totalPrice += price * product.productCount;
+    return {
+      productId: product.productId._id,
+      quantity: product.productCount,
+      price: price,
+    };
+  });
+
+  if (couponCode) {
+    const coupon = await couponSchema.findOne({ couponName: couponCode });
+
+    couponDiscount = coupon.discount;
+    totalPrice -= couponDiscount;
+
+    // Mark the coupon as used by the user
+    coupon.appliedUsers.push(userId);
+    await coupon.save();
+  }
+
+  // Add shipping charge if total price is less than 500
+  const shippingCharge = totalPrice < 500 ? 50 : 0;
+  totalPrice += shippingCharge;
+
+  // in addressSchema i refer userschema,and in orderschema the address stored as a string(it contain objectid ) ,it take as a object need this for address
+
+  let addressObj = {};
+
+  let patterns = {
+    contactName: /contactName: '([^']+)'/,
+    doorNo: /doorNo: (\d+)/,
+    Address: /Address: '([^']+)'/,
+    areaAddress: /areaAddress: '([^']+)'/,
+    pincode: /pincode: (\d+)/,
+    landmark: /landmark: '([^']+)'/,
+    phone: /phone: (\d+)/,
+    addressType: /addressType: '([^']+)'/,
+  };
+
+  for (let key in patterns) {
+    let match = address.match(patterns[key]);
+    if (match) {
+      addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
+    }
+  }
+  const orderID = generateRandomOrderId();
+
+  //  payment method is wallet
+
+  if (paymentMethod === "Wallet") {
+    const order = new orderSchema({
+      userId,
+      orderID,
+      contactInfo: { name, email, phone },
+      address: addressObj,
+      products: orderProducts,
+      totalPrice,
+      couponDiscount,
+      paymentMethod: paymentMethod,
+      status: "processing",
+    });
+    await order.save();
+    const wallet = await walletSchema.findOne({ userId });
+    if (wallet) {
+      wallet.balance -= totalPrice.toFixed(2);
+      wallet.transaction.push({
+        typeOfPayment: "debit",
+        date: Date.now(),
+        amount: totalPrice.toFixed(2),
+        orderId: order.id,
+      });
+
+      await wallet.save();
+    }
+
+    for (let product of orderProducts) {
+      await productSchema.findByIdAndUpdate(product.productId, {
+        $inc: { productQuantity: -product.quantity },
+      });
+    }
+    cart.items = [];
+    await cart.save();
+
+    res.json({ success: true });
+  } else if (paymentMethod === "COD") {
+    const order = new orderSchema({
+      userId,
+      orderID,
+      contactInfo: { name, email, phone },
+      address: addressObj,
+      products: orderProducts,
+      totalPrice,
+      couponDiscount,
+      paymentMethod: paymentMethod,
+      status: "processing",
+    });
+
+    await order.save();
+
+    for (let product of orderProducts) {
+      await productSchema.findByIdAndUpdate(product.productId, {
+        $inc: { productQuantity: -product.quantity },
+      });
+    }
+
+    cart.items = [];
+    await cart.save();
+
+    res.json({ success: true });
+  } else if (paymentMethod === "razorpay" && razorpayOrderId) {
     try {
+      const order = new orderSchema({
+        userId,
+        orderID,
+        contactInfo: { name, email, phone },
+        address: addressObj,
+        products: orderProducts,
+        totalPrice,
+        couponDiscount,
+        paymentMethod: paymentMethod,
+        razorpayOrderId, // Save the Razorpay order ID
+        status: "processing",
+      });
 
-        const address = await addressSchema.find({ userId: req.session.user }).populate('userId');;
+      await order.save();
 
-        const cartDetails = await cartSchema.findOne({ userId: req.session.user }).populate('items.productId').populate('userId')
-        const wallet = await walletSchema.findOne({ userId: req.session.user })
-        let balance = 0;
+      for (let product of orderProducts) {
+        await productSchema.findByIdAndUpdate(product.productId, {
+          $inc: { productQuantity: -product.quantity },
+        });
+      }
 
-        if (!cartDetails) {
-            req.flash('errorMessage', "The cart is empty, please go to the shop");
-
-            return res.redirect('/cart')
-
-        }
-
-        const cartItems = cartDetails.items
-
-
-        if (wallet) {
-            balance = wallet.balance
-        }
-        let total = 0;
-
-        for (product of cartItems) {
-
-            let currentProduct = await productSchema.findById(product.productId)
-
-            // total += product.productCount * product.productId.productDiscountPrice
-
-          
-         
-
-            total += Math.round(product.productPrice * (1 - product.productId.productDiscount / 100) * product.productCount);
-
-
-            if (currentProduct.productQuantity <= 0) {
-                return res.redirect('/cart')
-
-            }
-        }
-
-        // add shipping charge if total lessthan 500
-        const shippingCharge = total < 500 ? 50 : 0;
-
-        // const shippingCharge=total>500 ? 0 :50;
-        // const payableAmount=Math.round(total+shippingCharge);
-
-         total=Math.round(total+shippingCharge);
-
-
-        res.render('user/checkout', { title: "checkout-page", cartDetails, cartItems, user: req.session.user, alertMessage: req.flash('errorMessage'), address, balance, total,shippingCharge })
-
+      cart.items = [];
+      await cart.save();
+      res.status(200).json(order);
     } catch (err) {
-
-        console.error(`Error when rendering the checkout pager: ${err}`);
-
+      console.error(`Error creating Razorpay order: ${JSON.stringify(err)}`);
+      res.status(500).send("Error creating Razorpay order");
     }
-}
-
-
-
-const addcheckoutAddress = async (req, res) => {
+  } else if (paymentMethod === "razorpay") {
     try {
-        const userId = req.session.user
+      const razorpayOrder = await razorpay.orders.create({
+        amount: totalPrice * 100,
+        currency: "INR",
+        receipt: "receipt#1",
+      });
 
-
-        const newAddress = {
-            userId: userId,
-            addressType: req.body.addressType,
-            contactName: req.body.contactName,
-            doorNo: req.body.doorNo,
-            Address: req.body.homeAddress,
-            areaAddress: req.body.areaAddress,
-            landmark: req.body.landmark,
-            phone: req.body.phone,
-            pincode: req.body.pincode
-        }
-
-        await addressSchema.insertMany(newAddress)
-
-        req.flash('errorMessage', ' address added successfully');
-
-        res.redirect('/checkout');
-
-    }
-    catch (err) {
-        console.error(`Error during adding address to DB: ${err}`);
-        req.flash('errorMessage', err.message || 'Failed to add address. Please try again later.');
-        res.redirect('/checkout');
-
-    }
-}
-
-
-
-
-
-
-
-
-const deletecheckoutAddress = async (req, res) => {
-    try {
-
-        const userId = req.session.user;
-        const addressId = req.params.id;
-
-        // Check if the address belongs to the user
-
-        const address = await addressSchema.findOne({ _id: addressId, userId: userId })
-
-        if (!address) {
-            req.flash('errorMessage', 'Address not found or not authorized to delete');
-            return res.redirect('/checkoutaddress');
-        }
-        await addressSchema.deleteOne({ _id: addressId });
-
-        req.flash('errorMessage', 'Address deleted successfully');
-        res.redirect('/checkout');
-
-
+      return res.status(200).json({ razorpayOrderId: razorpayOrder.id });
     } catch (err) {
-        console.error(`Error during deleting address from DB: ${err}`);
-        req.flash('errorMessage', err.message || 'Failed to delete address. Please try again later.');
-        res.redirect('/checkout');
-
+      console.error(`Error creating Razorpay order: ${JSON.stringify(err)}`);
+      res.status(500).send("Error creating Razorpay order");
     }
-}
-
-const OrderPlaced = async (req, res) => {
-    try {
-        const userId = req.session.user
-
-        let { name, email, phone, address, paymentMethod, razorpayOrderId, couponCode } = req.body
-
-        const cart = await cartSchema.findOne({ userId }).populate('items.productId');
-
-        if (!cart || cart.items.length === 0) {
-            return res.status(404).send('Cart is empty or not found ')
-        }
-        let totalPrice = 0;
-        let couponDiscount = 0;
-        const orderProducts = cart.items.map(product => {
-           
-
-            const price =Math.round(product.productPrice * (1-product.productId.productDiscount / 100))
-
-
-            //okay
-            // const price = product.productPrice
-
-            totalPrice += price * product.productCount
-            return {
-                productId: product.productId._id,
-                quantity: product.productCount,
-                price: price
-            }
-        })
-
-
-        if (couponCode) {
-
-            const coupon = await couponSchema.findOne({ couponName: couponCode })
-
-
-            couponDiscount = coupon.discount
-            totalPrice -= couponDiscount;
-
-
-            // Mark the coupon as used by the user
-            coupon.appliedUsers.push(userId);
-            await coupon.save();
-
-
-        }
-
-         // Add shipping charge if total price is less than 500
-         const shippingCharge = totalPrice < 500 ? 50 : 0;
-         totalPrice += shippingCharge;
-         
- 
-        // in addressSchema i refer userschema,and in orderschema the address stored as a string(it contain objectid ) ,it take as a object need this for address
-
-        let addressObj = {}
-
-        let patterns = {
-            contactName: /contactName: '([^']+)'/,
-            doorNo: /doorNo: (\d+)/,
-            Address: /Address: '([^']+)'/,
-            areaAddress: /areaAddress: '([^']+)'/,
-            pincode: /pincode: (\d+)/,
-            landmark: /landmark: '([^']+)'/,
-            phone: /phone: (\d+)/,
-            addressType: /addressType: '([^']+)'/
-        };
-
-        for (let key in patterns) {
-            let match = address.match(patterns[key]);
-            if (match) {
-                addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
-            }
-        }
-        const orderID = generateRandomOrderId()
-
-        //  payment method is wallet
-
-        if (paymentMethod === 'Wallet') {
-            const order = new orderSchema({
-                userId,
-                orderID,
-                contactInfo: { name, email, phone },
-                address: addressObj,
-                products: orderProducts,
-                totalPrice,
-                couponDiscount,
-                paymentMethod: paymentMethod,
-                status: 'processing',
-            })
-            await order.save();
-            const wallet = await walletSchema.findOne({ userId })
-            if (wallet) {
-                wallet.balance -= totalPrice.toFixed(2);
-                wallet.transaction.push({
-                    typeOfPayment: 'debit',
-                    date: Date.now(),
-                    amount: totalPrice.toFixed(2),
-                    orderId: order.id
-
-                })
-
-                await wallet.save();
-            }
-
-            for (let product of orderProducts) {
-                await productSchema.findByIdAndUpdate(product.productId, {
-                    $inc: { productQuantity: -product.quantity }
-                })
-            }
-            cart.items = [];
-            await cart.save();
-
-
-
-            res.json({ success: true });
-        }
-        else if (paymentMethod === 'COD') {
-            const order = new orderSchema({
-                userId,
-                orderID,
-                contactInfo: { name, email, phone },
-                address: addressObj,
-                products: orderProducts,
-                totalPrice,
-                couponDiscount,
-                paymentMethod: paymentMethod,
-                status: 'processing',
-            })
-
-
-            await order.save();
-
-            for (let product of orderProducts) {
-                await productSchema.findByIdAndUpdate(product.productId, {
-                    $inc: { productQuantity: -product.quantity }
-                })
-            }
-
-            cart.items = [];
-            await cart.save();
-
-            res.json({ success: true });
-        }
-        else if (paymentMethod === 'razorpay' && razorpayOrderId) {
-            try {
-                const order = new orderSchema({
-                    userId,
-                    orderID,
-                    contactInfo: { name, email, phone },
-                    address: addressObj,
-                    products: orderProducts,
-                    totalPrice,
-                    couponDiscount,
-                    paymentMethod: paymentMethod,
-                    razorpayOrderId, // Save the Razorpay order ID
-                    status: 'processing',
-                });
-
-                await order.save();
-
-                for (let product of orderProducts) {
-                    await productSchema.findByIdAndUpdate(product.productId, {
-                        $inc: { productQuantity: -product.quantity }
-                    });
-                }
-
-                cart.items = [];
-                await cart.save();
-                res.status(200).json(order);
-
-            } catch (err) {
-                console.error(`Error creating Razorpay order: ${JSON.stringify(err)}`);
-                res.status(500).send('Error creating Razorpay order');
-            }
-        }
-        else if (paymentMethod === 'razorpay') {
-            try {
-
-                const razorpayOrder = await razorpay.orders.create({
-                    amount: totalPrice * 100,
-                    currency: "INR",
-                    receipt: "receipt#1",
-
-
-                })
-
-
-                return res.status(200).json({ razorpayOrderId: razorpayOrder.id })
-
-            } catch (err) {
-                console.error(`Error creating Razorpay order: ${JSON.stringify(err)}`);
-                res.status(500).send('Error creating Razorpay order');
-            }
-        }
-    }
-    catch (error) {
-        console.log(`error from checkoutproceed ${error}`)
-        res.status(404).send('cannot procceed checkout')
-    }
-}
-
+  }
+});
 
 // function generateRandomOrderId() {
-//     const timestamp = Date.now().toString(36); 
-//     const randomString = Math.random().toString(36).substring(2, 8); 
-//     return timestamp + randomString; 
+//     const timestamp = Date.now().toString(36);
+//     const randomString = Math.random().toString(36).substring(2, 8);
+//     return timestamp + randomString;
 // }
 
 function generateRandomOrderId() {
-    const min = 100000; // Minimum 6-digit number
-    const max = 999999; // Maximum 6-digit number
-    const orderID = Math.floor(Math.random() * (max - min + 1)) + min;
-    return orderID.toString();
+  const min = 100000; // Minimum 6-digit number
+  const max = 999999; // Maximum 6-digit number
+  const orderID = Math.floor(Math.random() * (max - min + 1)) + min;
+  return orderID.toString();
 }
 
+// if razorpay payment fail
 
-// if razorpay payment fail 
+const paymentFailRazorpay = catchAsync(async (req, res) => {
+  const userId = req.session.user;
 
-const paymentFailRazorpay = async (req, res) => {
+  let {
+    name,
+    email,
+    phone,
+    address,
+    paymentMethod,
+    razorpayOrderId,
+    couponCode,
+  } = req.body;
 
+  const cart = await cartSchema.findOne({ userId }).populate("items.productId");
 
-    try {
+  if (!cart || cart.items.length === 0) {
+    return res.status(404).send("Cart is empty or not found ");
+  }
+  let totalPrice = 0;
+  let couponDiscount = 0;
+  const orderProducts = cart.items.map((product) => {
+    // const price = product.productId.productDiscountPrice;
 
-        const userId = req.session.user
+    const price = Math.round(
+      product.productPrice * (1 - product.productId.productDiscount / 100)
+    );
 
-        let { name, email, phone, address, paymentMethod, razorpayOrderId, couponCode } = req.body
+    totalPrice += price * product.productCount;
+    return {
+      productId: product.productId._id,
+      quantity: product.productCount,
+      price: price,
+    };
+  });
 
+  if (couponCode) {
+    const coupon = await couponSchema.findOne({ couponName: couponCode });
 
+    couponDiscount = coupon.discount;
+    totalPrice -= couponDiscount;
 
-        const cart = await cartSchema.findOne({ userId }).populate('items.productId');
+    // Mark the coupon as used by the user
+    coupon.appliedUsers.push(userId);
+    await coupon.save();
+  }
 
-        if (!cart || cart.items.length === 0) {
-            return res.status(404).send('Cart is empty or not found ')
-        }
-        let totalPrice = 0;
-        let couponDiscount = 0;
-        const orderProducts = cart.items.map(product => {
+  // Add shipping charge if total price is less than 500
+  const shippingCharge = totalPrice < 500 ? 50 : 0;
+  totalPrice += shippingCharge;
 
-            // const price = product.productId.productDiscountPrice;
-            
-            const price =Math.round(product.productPrice * (1-product.productId.productDiscount / 100))
+  let addressObj = {};
 
-            totalPrice += price * product.productCount
-            return {
-                productId: product.productId._id,
-                quantity: product.productCount,
-                price: price
-            }
-        })
+  let patterns = {
+    contactName: /contactName: '([^']+)'/,
+    doorNo: /doorNo: (\d+)/,
+    Address: /Address: '([^']+)'/,
+    areaAddress: /areaAddress: '([^']+)'/,
+    pincode: /pincode: (\d+)/,
+    landmark: /landmark: '([^']+)'/,
+    phone: /phone: (\d+)/,
+    addressType: /addressType: '([^']+)'/,
+  };
 
-
-        if (couponCode) {
-
-            const coupon = await couponSchema.findOne({ couponName: couponCode })
-
-
-            couponDiscount = coupon.discount
-            totalPrice -= couponDiscount;
-
-
-            // Mark the coupon as used by the user
-            coupon.appliedUsers.push(userId);
-            await coupon.save();
-
-
-        }
-
-         // Add shipping charge if total price is less than 500
-         const shippingCharge = totalPrice < 500 ? 50 : 0;
-         totalPrice += shippingCharge;
-         
-
-
-
-        let addressObj = {}
-
-        let patterns = {
-            contactName: /contactName: '([^']+)'/,
-            doorNo: /doorNo: (\d+)/,
-            Address: /Address: '([^']+)'/,
-            areaAddress: /areaAddress: '([^']+)'/,
-            pincode: /pincode: (\d+)/,
-            landmark: /landmark: '([^']+)'/,
-            phone: /phone: (\d+)/,
-            addressType: /addressType: '([^']+)'/
-        };
-
-        for (let key in patterns) {
-            let match = address.match(patterns[key]);
-            if (match) {
-                addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
-            }
-        }
-        const orderID = generateRandomOrderId()
-        const order = new orderSchema({
-            userId,
-            orderID,
-            contactInfo: { name, email, phone },
-            address: addressObj,
-            products: orderProducts,
-            totalPrice,
-            couponDiscount,
-            paymentMethod: paymentMethod,
-            status: 'pending',
-        })
-
-
-        await order.save();
-
-        cart.items = [];
-        await cart.save();
-    
-
-        res.status(200).json(order)
-
-
-    } catch (error) {
-        console.log(`error from payment route ${error}`)
-        res.status(500).send('Internal Server Error');
+  for (let key in patterns) {
+    let match = address.match(patterns[key]);
+    if (match) {
+      addressObj[key] = isNaN(match[1]) ? match[1] : parseInt(match[1]);
     }
+  }
+  const orderID = generateRandomOrderId();
+  const order = new orderSchema({
+    userId,
+    orderID,
+    contactInfo: { name, email, phone },
+    address: addressObj,
+    products: orderProducts,
+    totalPrice,
+    couponDiscount,
+    paymentMethod: paymentMethod,
+    status: "pending",
+  });
 
-}
+  await order.save();
 
+  cart.items = [];
+  await cart.save();
 
+  res.status(200).json(order);
+});
 
+const applycoupon = catchAsync(async (req, res) => {
+  const couponName = req.body.couponCode;
+  const userId = req.session.user;
 
+  const coupon = await couponSchema.findOne({ couponName });
 
+  // check the cupon is avilable
+  if (!coupon) {
+    return res.status(404).json({ error: "Coupon not found" });
+  }
+  // check the coupon is expired
 
-const applycoupon = async (req, res) => {
-    try {
+  if (!coupon.isActive || coupon.expiryDate < new Date()) {
+    return res.status(404).json({ error: "coupon expired" });
+  }
 
-        const couponName = req.body.couponCode
-        const userId = req.session.user
+  // check the coupon is already used by user
 
+  if (coupon.appliedUsers.includes(userId)) {
+    return res.status(400).json({ error: "Coupon already used" });
+  }
 
-        const coupon = await couponSchema.findOne({ couponName })
+  const cart = await cartSchema.findOne({ userId });
 
-// check the cupon is avilable
-        if (!coupon) {
-            return res.status(404).json({ error: "Coupon not found" });
-        }
-        // check the coupon is expired
+  let totalPrice = cart.payableAmount;
 
-        if (!coupon.isActive || coupon.expiryDate < new Date()) {
-            return res.status(404).json({ error: "coupon expired" })
-        }
+  if (totalPrice < coupon.minAmount) {
+    return res
+      .status(404)
+      .json({
+        error:
+          "Minimum purchase limit not reached. Please add more items to your cart.",
+      });
+  }
 
+  // apply the discount
 
-        // check the coupon is already used by user
+  const couponDiscount = coupon.discount;
+  const discountedTotal = totalPrice - couponDiscount;
 
-        if (coupon.appliedUsers.includes(userId)) {
-            return res.status(400).json({ error: "Coupon already used" });
+  res.status(200).json({ totalPrice: discountedTotal, couponDiscount });
+});
 
-
-        }
-
-        const cart = await cartSchema.findOne({ userId })
-
-        let totalPrice = cart.payableAmount
-
-
-
-        if (totalPrice < coupon.minAmount) {
-            return res.status(404).json({ error: "Minimum purchase limit not reached. Please add more items to your cart." })
-        }
-
-        // apply the discount
-
-        const couponDiscount = coupon.discount
-        const discountedTotal = totalPrice - couponDiscount;
-
-
-
-        res.status(200).json({ totalPrice: discountedTotal, couponDiscount })
-
-
-
-
-    } catch (err) {
-        console.log(`error in apply coupon ${err}`)
-
-    }
-}
-
-
-
-
-
-const orderConfirm = async (req, res) => {
-
-    try {
-
-
-
-        res.render('user/orderConfirm', { title: "order-confirm-page" })
-
-    } catch (err) {
-
-        console.log(`error in render the confirm order page..! ${err}`)
-
-    }
-}
-
-
-
+const orderConfirm = catchAsync(async (req, res) => {
+  res.render("user/orderConfirm", { title: "order-confirm-page" });
+});
 
 module.exports = {
-    checkout,
-    addcheckoutAddress,
-    deletecheckoutAddress,
-    OrderPlaced,
-    applycoupon,
-    orderConfirm,
-    paymentFailRazorpay
-
-}
+  checkout,
+  addcheckoutAddress,
+  deletecheckoutAddress,
+  OrderPlaced,
+  applycoupon,
+  orderConfirm,
+  paymentFailRazorpay,
+};

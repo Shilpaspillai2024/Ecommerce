@@ -3,6 +3,8 @@ const generateOTP = require('../../services/generateOTP')
 const sendOtpMail = require('../../services/emailSender')
 const bcrypt=require('bcrypt')
 
+const catchAsync=require('../../utils/catchAsync')
+
 const forgetPassword=(req,res)=>{
     try {
           req.session.user=""
@@ -16,12 +18,10 @@ const forgetPassword=(req,res)=>{
     }
 }
  
-const forgetPasswordPost=async (req,res)=>{
-
-   try {
+const forgetPasswordPost=catchAsync(async (req,res)=>{
 
     const checkEmail= await userSchema.findOne({email:req.body.email})
-    if(checkEmail.isBlocked){
+    if(checkEmail?.isBlocked){
         req.flash('errorMessage','Access to this account has been restricted !!!!!')
         return res.redirect('/login')
     } 
@@ -45,11 +45,8 @@ const forgetPasswordPost=async (req,res)=>{
     }
 
     
-   } catch (err) {
-    console.log(`Error during forgot password page ${err}`);
-    
-   }
-}
+   
+});
 
 
 const forgetPasswordOtp= (req,res)=>{
@@ -69,14 +66,13 @@ const forgetPasswordOtp= (req,res)=>{
 
 }
 
-const forgetPasswordOtpPost = async(req,res)=>{
-    try{
-        if(req.session.user){
+const forgetPasswordOtpPost = catchAsync(async(req,res)=>{
+    if(req.session.user){
             res.redirect('/home')
         } 
         else{
             if(req.session.otp !==undefined){
-               if( req.body.otp= req.session.otp){
+               if( req.body.otp === req.session.otp){
                 res.render('user/newpassword',{title:"NEW Password",alertMessage:req.flash('errorMessage'),user:req.session.user})
                }
                else{
@@ -89,16 +85,12 @@ const forgetPasswordOtpPost = async(req,res)=>{
             }
         }
 
-    }
-    catch(err){
-        console.log(`error during forget page ${err}`)
 
-    }
-}
+});
 
 
-const upadtePassword= async (req,res)=>{
-    try {
+const upadtePassword=catchAsync(async (req,res)=>{
+ 
         if(req.session.email !==undefined){
             if(req.body.newPassword===req.body.confirmPassword){
                 const newpassword=await bcrypt.hash(req.body.newPassword, 10)
@@ -123,11 +115,8 @@ const upadtePassword= async (req,res)=>{
         }
 
         
-    } catch (err) {
-        console.log(`error in update password rendering ${err}`)
-        
-    }
-}
+    
+})
 
 
 module.exports={

@@ -13,11 +13,12 @@ const passportSetup = require('../../config/passport-setup')
 
 
 
-const user=(req,res)=>{
+const user=(req,res,next)=>{
     try{
         res.redirect('/home')
     }catch(err){
         console.log('Error During user route');
+        next(err)
     }
 }
 
@@ -36,7 +37,7 @@ const login= (req,res)=>{
         res.render('user/login',{ user: req.session.user,title:"Login",alertMessage:req.flash('errorMessage')})
     }
 }
- const loginPost= async (req,res)=>{
+ const loginPost= async (req,res,next)=>{
     try {
         const checkUser =await userSchema.findOne({email: req.body.username})
         if(checkUser != null){
@@ -58,7 +59,9 @@ const login= (req,res)=>{
             }
         }   
     } catch (err) {
-        console.log(`error in login post ${err}`)
+
+       // console.log(`error in login post ${err}`)
+       next(err)
         
     }
 
@@ -102,7 +105,7 @@ const login= (req,res)=>{
 
 
 
- const signup=(req,res)=>{
+ const signup=(req,res,next)=>{
     try {
         if(req.session.user){
             res.redirect('/home')
@@ -111,13 +114,14 @@ const login= (req,res)=>{
          }
         
     } catch (err) {
-        console.log(`this signup page render error ${err}`)
+       // console.log(`this signup page render error ${err}`)
+       next(err)
         
     }
  }
 
 
- const signpost= async (req,res)=>{
+ const signpost= async (req,res,next)=>{
     try {
         // getting data from input box of the register form
         const userData={
@@ -159,24 +163,25 @@ const login= (req,res)=>{
     }
 
     catch (err) {
-        console.log(`Error during signup post ${err}`);
+       // console.log(`Error during signup post ${err}`);
+       next(err)
     }
 }
 
 
-const otp= (req,res)=>{
+const otp= (req,res,next)=>{
     try {
         res.render('user/OTP',{title:"OTP verification",emailAddress:req.session.email,alertMessage:req.flash('errorMessage'),otpExpireTime:req.session.otpExpireTime,user:req.session.user})
         
     } catch (err) {
-        console.log(`error in otp page render ${err}`)
-        
+       // console.log(`error in otp page render ${err}`)
+        next(err)
     }
 }
 
 
 
-const otpPost = async (req,res)=>{
+const otpPost = async (req,res,next)=>{
     try {
         if(req.session.otp !==undefined){
             const userdata={
@@ -204,12 +209,13 @@ const otpPost = async (req,res)=>{
         }
 
     } catch (err) {
-        console.log(`error occured in otp verification ${err}`)
+       // console.log(`error occured in otp verification ${err}`)
+       next(err)
         
     }
 }
 
-const otpResend = (req,res)=>{
+const otpResend = (req,res,next)=>{
     try {
         const emailAddress= req.params.email
         const otp=generateOtp()
@@ -221,12 +227,13 @@ const otpResend = (req,res)=>{
         res.redirect('/otp')
         
     } catch (err) {
-        console.log(`error during otp sended ${err}`)
+       // console.log(`error during otp sended ${err}`)
+       next(err)
         
     }
 }
     
-const home= async (req,res)=>{
+const home= async (req,res,next)=>{
     try {
         const selectCategory=req.query.category || 'All'
         let product;
@@ -252,7 +259,8 @@ const home= async (req,res)=>{
         }
     } catch (err) {
 
-        console.log(`error in home page rendering ${err}`)
+        //console.log(`error in home page rendering ${err}`)
+        next(err)
         
     }
 }

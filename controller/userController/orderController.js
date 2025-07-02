@@ -3,6 +3,7 @@ const walletSchema = require('../../model/walletSchema')
 const productSchema = require('../../model/productSchema')
 const userSchema = require('../../model/userSchema')
 const reviewSchema = require('../../model/reviewSchema')
+const catchAsync=require('../../utils/catchAsync')
 const mongoose = require('mongoose')
 const PDFDocument = require('pdfkit-table')
 const fs = require('fs')
@@ -16,13 +17,9 @@ const razorpay = new Razorpay({
 
 
 
-const order = async (req, res) => {
+const order = catchAsync(async (req, res) => {
 
-
-    try {
-
-
-        // const order = await orderSchema.find({ userId: req.session.user, isCancelled: false }).populate('products.productId').sort({ createdAt: -1 })
+// const order = await orderSchema.find({ userId: req.session.user, isCancelled: false }).populate('products.productId').sort({ createdAt: -1 })
 
     //pagination
 
@@ -42,18 +39,13 @@ const order = async (req, res) => {
             currentPage,
             totalProducts })
 
-    } catch (err) {
-
-        console.log(`error in rendering the orderDetail page ${err}`)
-
-    }
-}
+   
+})
 
 
 
-const cancelOrder = async (req, res) => {
+const cancelOrder =catchAsync(async (req, res) => {
 
-    try {
 
         const productpage = 10;
         const currentPage = parseInt(req.query.page) || 1;
@@ -84,16 +76,12 @@ const cancelOrder = async (req, res) => {
              currentPage,
              totalCancelledOrders, })
 
-    } catch (err) {
-
-        console.log(`error in rendering the cancel the order page ${err}`)
-
-    }
-}
+   
+});
 
 
-const cancellOrderPost = async (req, res) => {
-    try {
+const cancellOrderPost =catchAsync( async (req, res) => {
+   
         const orderId = req.params.orderId;
         const userId = req.session.user;
         const order = await orderSchema.findByIdAndUpdate(orderId, { status: "cancelled", isCancelled: true })
@@ -151,20 +139,13 @@ const cancellOrderPost = async (req, res) => {
             res.redirect('/order')
         }
 
-
-    } catch (err) {
-
-        console.log(`there is an error occuring cancelling the orde ${err}`)
-
-    }
-}
+})
 
 
 
-const returnOrder = async (req, res) => {
-    try {
-
-        const { orderId } = req.body
+const returnOrder =catchAsync( async (req, res) => {
+   
+    const { orderId } = req.body
 
         const order = await orderSchema.findByIdAndUpdate(orderId,
             {
@@ -186,18 +167,15 @@ const returnOrder = async (req, res) => {
             res.redirect("/order");
         }
 
-    } catch (err) {
-        console.log(`Error on returning the order  ${err}`);
-
-    }
-}
+   
+})
 
 
 
 
 
-const orderDetail = async (req, res) => {
-    try {
+const orderDetail = catchAsync(async (req, res) => {
+   
 
         const orderId = req.params.orderId
         const order = await orderSchema.findById(orderId).populate('products.productId')
@@ -209,19 +187,15 @@ const orderDetail = async (req, res) => {
 
         res.render('user/orderDetail', { user: req.session.user, order, title: "OrderDetail", alertMessage: req.flash('errorMessage') })
 
-    } catch (err) {
-
-        console.log(`error in rendering orderDetailPage`)
-
-    }
+   
 
 
-}
+})
 
 
 
-const addReview = async (req, res) => {
-    try {
+const addReview = catchAsync(async (req, res) => {
+   
 
         const productId = req.params.productId
 
@@ -307,13 +281,8 @@ const addReview = async (req, res) => {
         }
 
 
-    } catch (err) {
-
-        console.error(`Error on adding review via fetch post: ${err}`);
-        return res.status(500).json({ error: "Internal server error" });
-
-    }
-}
+    
+})
 
 
 
@@ -321,8 +290,8 @@ const addReview = async (req, res) => {
 
 // download the invoice of the order
 
-const downloadInvoice = async (req, res) => {
-    try {
+const downloadInvoice =catchAsync( async (req, res) => {
+   
         const orderId = req.params.orderId;
         const orderDetails = await orderSchema.findById(orderId).populate('products.productId')
         const doc = new PDFDocument();
@@ -436,19 +405,14 @@ const downloadInvoice = async (req, res) => {
 
         // Finalize the PDF document
         doc.end();
-    } catch (err) {
-        console.log(`Error on downloading the invoice pdf ${err}`);
-        res.status(500).send("Error generating invoice");
-
-    }
-}
+   
+})
 
 
 //payment retyr with razorpay
 
-const retryRazorPay = async (req, res) => {
+const retryRazorPay =catchAsync( async (req, res) => {
 
-    try {
         const { orderId } = req.body
 
 
@@ -484,23 +448,17 @@ const retryRazorPay = async (req, res) => {
             return res.status(404).send('Retry Payment Failed')
         }
 
-    } catch (err) {
+   
 
-        console.log(`Error from Razorpay retry: ${err}`);
-
-    }
-
-}
+})
 
 
 
 
 
-const proceedPayment = async (req, res) => {
+const proceedPayment =catchAsync( async (req, res) => {
 
-    try {
-
-        const { orderId, razorpayOrderId } = req.body
+      const { orderId, razorpayOrderId } = req.body
 
 
         //update status of order
@@ -518,17 +476,12 @@ const proceedPayment = async (req, res) => {
 
         res.status(200).json(order)
 
-    } catch (err) {
-        console.log(`error from retry payment ${err}`)
-
-    }
-
-}
+   
+})
 
 
 
-const removeOrder = async (req, res) => {
-    try {
+const removeOrder =catchAsync(async (req, res) => {
 
         const orderId = req.params.id
         const order = await orderSchema.findByIdAndDelete(orderId)
@@ -537,11 +490,8 @@ const removeOrder = async (req, res) => {
             res.redirect('/order')
         }
 
-    } catch (err) {
-        console.log(`error from remove order ${err}`)
-
-    }
-}
+  
+});
 
 
 

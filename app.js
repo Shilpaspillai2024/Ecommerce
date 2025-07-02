@@ -11,9 +11,10 @@ const flash = require("connect-flash");
 const { v4: uuidv4 } = require("uuid");
 const passport = require("passport");
 const passportSetup = require("./config/passport-setup");
-// const setCartItemCount = require('./middleware/cartItemCount')
 const setUserData = require("./middleware/setUserDataMiddleware");
 const homeController = require("./controller/userController/userController");
+const errorHandler=require('./middleware/errorHandlingMiddleware')
+
 
 // env port
 const port = process.env.PORT || 3000;
@@ -77,9 +78,23 @@ app.use("/admin", adminRouter);
 
 app.get("/", homeController.user);
 
-app.get("*", (req, res) => {
-  res.render("pageNotfound", { title: "page Not Found" });
-});
+
+// app.get("*", (req, res) => {
+//   res.render("pageNotfound", { title: "page Not Found" });
+// });
+
+
+app.use((req,res,next)=>{
+   const err = new Error("Page Not Found");
+   err.status = 404;
+   next(err);
+})
+// app.use((req, res) => {
+//   res.status(404).render("pageNotfound", { title: "Page Not Found" });
+// });
+
+
+app.use(errorHandler);
 
 app.listen(port, (err) => {
   if (err) {
