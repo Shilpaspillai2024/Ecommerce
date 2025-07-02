@@ -4,6 +4,7 @@ const categorySchema = require('../../model/categorySchema')
 const offerSchema = require('../../model/offerSchema')
 const multer = require('../../middleware/multer')
 const fs = require('fs')
+const path=require("path")
 
 
 const product = async (req, res) => {
@@ -260,12 +261,24 @@ const productDelete = async (req, res) => {
     console.log("productId",productId)
     const img = await productSchema.findById(productId)
     
+      if (!img) {
+      req.flash("errorMessage", "Product not found");
+      return res.redirect("/admin/product");
+    }
     console.log("Images to delete:", img.productImage);
 
 
     img.productImage.forEach((image) => {
-      fs.unlinkSync(image)
-    })
+      const fullPath = path.join(__dirname, "../../", image);
+      console.log("Deleting:", fullPath);
+
+      if (fs.existsSync(fullPath)) {
+        fs.unlinkSync(fullPath);
+      } else {
+        console.log("File not found:", fullPath);
+      }
+    });
+
     const deleteProduct = await productSchema.findByIdAndDelete(productId)
 
     if (deleteProduct) {
