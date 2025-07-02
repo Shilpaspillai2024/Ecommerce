@@ -11,11 +11,11 @@ async function checkUserSession(req,res,next){
         }
     else{
         req.session.user=""
-        res.redirect('/user/login')
+        res.redirect('/login')
     }
 }
     else{
-        res.redirect('/user/login')
+        res.redirect('/login')
     }
 }
    catch (err) {
