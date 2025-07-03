@@ -9,6 +9,7 @@ const Razorpay = require("razorpay");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const catchAsync = require("../../utils/catchAsync");
+const STATUS_CODES=require("../../constants/statusCodes")
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -296,10 +297,10 @@ const OrderPlaced = catchAsync(async (req, res) => {
 
       cart.items = [];
       await cart.save();
-      res.status(200).json(order);
+      res.status(STATUS_CODES.OK).json(order);
     } catch (err) {
       console.error(`Error creating Razorpay order: ${JSON.stringify(err)}`);
-      res.status(500).send("Error creating Razorpay order");
+      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Error creating Razorpay order");
     }
   } else if (paymentMethod === "razorpay") {
     try {
@@ -309,10 +310,10 @@ const OrderPlaced = catchAsync(async (req, res) => {
         receipt: "receipt#1",
       });
 
-      return res.status(200).json({ razorpayOrderId: razorpayOrder.id });
+      return res.status(STATUS_CODES.OK).json({ razorpayOrderId: razorpayOrder.id });
     } catch (err) {
       console.error(`Error creating Razorpay order: ${JSON.stringify(err)}`);
-      res.status(500).send("Error creating Razorpay order");
+      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Error creating Razorpay order");
     }
   }
 });
@@ -419,7 +420,7 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
   cart.items = [];
   await cart.save();
 
-  res.status(200).json(order);
+  res.status(STATUS_CODES.OK).json(order);
 });
 
 const applycoupon = catchAsync(async (req, res) => {
@@ -430,18 +431,18 @@ const applycoupon = catchAsync(async (req, res) => {
 
   // check the cupon is avilable
   if (!coupon) {
-    return res.status(404).json({ error: "Coupon not found" });
+    return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Coupon not found" });
   }
   // check the coupon is expired
 
   if (!coupon.isActive || coupon.expiryDate < new Date()) {
-    return res.status(404).json({ error: "coupon expired" });
+    return res.status(STATUS_CODES.NOT_FOUND).json({ error: "coupon expired" });
   }
 
   // check the coupon is already used by user
 
   if (coupon.appliedUsers.includes(userId)) {
-    return res.status(400).json({ error: "Coupon already used" });
+    return res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Coupon already used" });
   }
 
   const cart = await cartSchema.findOne({ userId });
@@ -450,7 +451,7 @@ const applycoupon = catchAsync(async (req, res) => {
 
   if (totalPrice < coupon.minAmount) {
     return res
-      .status(404)
+      .status(STATUS_CODES.BAD_REQUEST)
       .json({
         error:
           "Minimum purchase limit not reached. Please add more items to your cart.",
@@ -462,7 +463,7 @@ const applycoupon = catchAsync(async (req, res) => {
   const couponDiscount = coupon.discount;
   const discountedTotal = totalPrice - couponDiscount;
 
-  res.status(200).json({ totalPrice: discountedTotal, couponDiscount });
+  res.status(STATUS_CODES.OK).json({ totalPrice: discountedTotal, couponDiscount });
 });
 
 const orderConfirm = catchAsync(async (req, res) => {

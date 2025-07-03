@@ -9,6 +9,7 @@ const productSchema=require('../../model/productSchema')
 const categorySchema=require('../../model/categorySchema')
 const passport=require('passport')
 const passportSetup = require('../../config/passport-setup')
+const STATUS_CODES = require('../../constants/statusCodes')
 
 
 
@@ -222,7 +223,7 @@ const otpResend = (req,res,next)=>{
         sendOtpMail(emailAddress,otp)
         req.session.otp=otp
         req.session.otpExpireTime=Date.now()
-        res.status(200)
+        res.status(STATUS_CODES.OK)
         req.flash('errorMessage','Otp resend successfully')
         res.redirect('/otp')
         

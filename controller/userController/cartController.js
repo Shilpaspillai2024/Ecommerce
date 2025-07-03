@@ -1,6 +1,7 @@
 const cartSchema = require("../../model/cartSchema");
 const productSchema = require("../../model/productSchema");
 const catchAsync = require("../../utils/catchAsync");
+const STATUS_CODES=require("../../constants/statusCodes")
 
 const cart = catchAsync(async (req, res, next) => {
   const cart = await cartSchema
@@ -104,7 +105,7 @@ const addToCartPost = catchAsync(async (req, res,next) => {
     await newCart.save();
   }
 
-  return res.status(200).json({ message: "Product added to cart" });
+  return res.status(STATUS_CODES.OK).json({ message: "Product added to cart" });
 });
 
 // remove product from cart
@@ -117,7 +118,7 @@ const removeCartItem = catchAsync(async (req, res,next) => {
     .populate("items.productId");
 
   if (cartItems === null) {
-    return res.status(404).json({ success: false, error: "Cart not found" });
+    return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, error: "Cart not found" });
   }
 
   // filter out the cart products without the removed products
@@ -131,7 +132,7 @@ const removeCartItem = catchAsync(async (req, res,next) => {
   await cartItems.save();
 
   return res
-    .status(200)
+    .status(STATUS_CODES.OK)
     .json({ success: true, message: "Product removed from cart" });
 });
 
@@ -145,12 +146,12 @@ const incrementProduct = catchAsync(async (req, res,next) => {
     const product = await productSchema.findById(productId);
 
     if (!productQuantity) {
-      return res.status(404).json({ error: "Product quantity not found" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Product quantity not found" });
     }
 
     if (productQuantity >= product.productQuantity) {
       return res
-        .status(404)
+        .status(STATUS_CODES.NOT_FOUND)
         .json({ error: "Product is not in that much count, please decrement" });
     }
 
@@ -194,7 +195,7 @@ const incrementProduct = catchAsync(async (req, res,next) => {
 
       let savings = totalPriceWithoutDiscount - totalPrice;
 
-      return res.status(200).json({
+      return res.status(STATUS_CODES.OK).json({
         productCount: productCart.productCount,
         productTotal: productTotal,
 
@@ -203,7 +204,7 @@ const incrementProduct = catchAsync(async (req, res,next) => {
         savings: savings,
       });
     } else {
-      return res.status(404).json({ error: "Product not found in cart" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Product not found in cart" });
     }
  
 });
@@ -215,7 +216,7 @@ const decrementProduct =catchAsync(async (req, res,next) => {
     const productQuantity = req.body.quantity;
 
     if (!productQuantity) {
-      return res.status(404).json({ error: "Product quantity not found" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Product quantity not found" });
     }
 
     const cart = await cartSchema
@@ -259,7 +260,7 @@ const decrementProduct =catchAsync(async (req, res,next) => {
 
         let savings = totalPriceWithoutDiscount - totalPrice;
 
-        return res.status(200).json({
+        return res.status(STATUS_CODES.OK).json({
           productCount: productCart.productCount,
           productTotal: productTotal,
 
@@ -269,11 +270,11 @@ const decrementProduct =catchAsync(async (req, res,next) => {
         });
       } else {
         return res
-          .status(404)
+          .status(STATUS_CODES.NOT_FOUND)
           .json({ error: "Cannot decrement, only one product left" });
       }
     } else {
-      return res.status(404).json({ error: "Product not found in cart" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Product not found in cart" });
     }
  
 });

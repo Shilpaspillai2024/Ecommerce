@@ -7,6 +7,7 @@ const fs = require('fs')
 const PDFDocument = require('pdfkit-table')
 const path = require('path')
 const ExcelJS = require('exceljs')
+const STATUS_CODES=require("../../constants/statusCodes")
 
 
 
@@ -169,7 +170,7 @@ const dashboard = async (req, res) => {
         // console.log(`error in dashbord page`)
 
         console.error(`Error in dashboard page: ${error.message}`);
-        res.status(500).send('Internal Server Error');
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Internal Server Error');
 
     }
 }
@@ -194,7 +195,7 @@ const generateCustomSales = async (req, res) => {
 
         // Validate start and end dates
         if (!startDate || !endDate) {
-            return res.status(400).json({ error: "Start date and end date are required" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Start date and end date are required" });
         }
 
         const start = new Date(startDate);
@@ -206,10 +207,10 @@ const generateCustomSales = async (req, res) => {
 
         // Calculate total sales
         const sale = orders.reduce((acc, order) => acc + order.totalPrice, 0);
-        return res.status(200).json({ message: "Report Generated", sale });
+        return res.status(STATUS_CODES.OK).json({ message: "Report Generated", sale });
     } catch (err) {
         console.error(`Error on generating custom sales report: ${err}`);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "Internal server error" });
     }
 };
 
@@ -221,7 +222,7 @@ const downloadPdfReport = async (req, res) => {
 
         // Validate start and end dates
         if (!startDate || !endDate) {
-            return res.status(400).json({ error: "Start date and end date are required" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Start date and end date are required" });
         }
 
         const start = new Date(startDate);
@@ -307,7 +308,7 @@ const downloadPdfReport = async (req, res) => {
 
     } catch (err) {
         console.error(`Error on downloading PDF sales report: ${err}`);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
     }
 };
 
@@ -322,7 +323,7 @@ const downloadExcelReport = async (req, res) => {
 
         // Validate start and end dates
         if (!startDate || !endDate) {
-            return res.status(400).json({ error: "Start date and end date are required" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Start date and end date are required" });
         }
 
         const start = new Date(startDate);
@@ -571,7 +572,7 @@ const deactivateCategory = async (req, res) => {
 
             res.redirect('/admin/category');
         } else {
-            res.status(404).send("Category not found");
+            res.status(STATUS_CODES.NOT_FOUND).send("Category not found");
         }
 
 
@@ -599,11 +600,11 @@ const activateCategory = async (req, res) => {
 
             res.redirect('/admin/category');
         } else {
-            res.status(404).send("Category not found");
+            res.status(STATUS_CODES.NOT_FOUND).send("Category not found");
         }
     } catch (err) {
         console.log(`Error during activating the category: ${err}`);
-        res.status(500).send("Server Error");
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Server Error");
     }
 }
 

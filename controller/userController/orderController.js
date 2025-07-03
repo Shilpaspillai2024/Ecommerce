@@ -9,6 +9,7 @@ const PDFDocument = require('pdfkit-table')
 const fs = require('fs')
 const path = require('path')
 const Razorpay = require('razorpay')
+const STATUS_CODES=require("../../constants/statusCodes")
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
@@ -181,7 +182,7 @@ const orderDetail = catchAsync(async (req, res) => {
         const order = await orderSchema.findById(orderId).populate('products.productId')
 
         if (!order) {
-            return res.status(404).send('Order not found');
+            return res.status(STATUS_CODES.NOT_FOUND).send('Order not found');
         }
 
 
@@ -191,8 +192,6 @@ const orderDetail = catchAsync(async (req, res) => {
 
 
 })
-
-
 
 const addReview = catchAsync(async (req, res) => {
    
@@ -206,7 +205,7 @@ const addReview = catchAsync(async (req, res) => {
 
         // Check if rating is a valid number
         if (isNaN(rating)) {
-            return res.status(400).json({ error: "Invalid rating provided" });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ error: "Invalid rating provided" });
         }
 
 
@@ -214,7 +213,7 @@ const addReview = catchAsync(async (req, res) => {
         const product = await productSchema.findById(productId)
 
         if (!product) {
-            return res.status(404).json({ error: "Product not found" });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Product not found" });
         }
 
 
@@ -256,7 +255,7 @@ const addReview = catchAsync(async (req, res) => {
             // Save the updated review
             await review.save();
             return res
-                .status(200)
+                .status(STATUS_CODES.OK)
                 .json({ success: "Review updated", averageRating: review.rating });
         } else {
             // If no review exists, create a new one
@@ -276,7 +275,7 @@ const addReview = catchAsync(async (req, res) => {
             await newReview.save();
 
             return res
-                .status(200)
+                .status(STATUS_CODES.OK)
                 .json({ success: "Review added", averageRating: newReview.rating });
         }
 
@@ -420,14 +419,14 @@ const retryRazorPay =catchAsync( async (req, res) => {
 
         // Check if orderId is a valid ObjectId
         if (!mongoose.Types.ObjectId.isValid(orderId)) {
-            return res.status(400).send('Invalid orderId');
+            return res.status(STATUS_CODES.BAD_REQUEST).send('Invalid orderId');
         }
 
         const order = await orderSchema.findById(orderId)
 
         // Check if the order exists
         if (!order) {
-            return res.status(404).send('Order not found');
+            return res.status(STATUS_CODES.NOT_FOUND).send('Order not found');
         }
         // razorpay order created
 
@@ -443,9 +442,9 @@ const retryRazorPay =catchAsync( async (req, res) => {
         if (razorpayOrder) {
 
 
-            return res.status(200).json({ ...order.toObject(), razorpayOrderId: razorpayOrder.id })
+            return res.status(STATUS_CODES.OK).json({ ...order.toObject(), razorpayOrderId: razorpayOrder.id })
         } else {
-            return res.status(404).send('Retry Payment Failed')
+            return res.status(STATUS_CODES.NOT_FOUND).send('Retry Payment Failed')
         }
 
    
@@ -474,7 +473,7 @@ const proceedPayment =catchAsync( async (req, res) => {
             });
         }
 
-        res.status(200).json(order)
+        res.status(STATUS_CODES.OK).json(order)
 
    
 })

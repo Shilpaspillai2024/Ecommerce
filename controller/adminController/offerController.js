@@ -2,6 +2,7 @@ const offerSchema = require('../../model/offerSchema')
 const productSchema = require('../../model/productSchema')
 const categorySchema = require('../../model/categorySchema')
 const mongoose = require('mongoose')
+const STATUS_CODES=require("../../constants/statusCodes")
 
 
 const OfferRender = async (req, res) => {
@@ -157,13 +158,13 @@ const deleteOffer = async (req, res) => {
         const offerID = req.params.offerID
 
         if (!offerID) {
-            return res.status(400).json({ error: "offer Id is required" })
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ error: "offer Id is required" })
         }
 
         const offerDetails = await offerSchema.findById(offerID).populate('offerProductId').populate('offerCategoryId')
 
         if (!offerDetails) {
-            return res.status(404).json({ error: "Offer not found" });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Offer not found" });
 
         }
         // if the product is deleted then make the discount of the products to zero
@@ -191,15 +192,15 @@ const deleteOffer = async (req, res) => {
         }
         const deletedOffer = await offerSchema.findByIdAndDelete(offerID)
         if (!deletedOffer) {
-            return res.status(409).json({ error: "Cannot delete the offer at the moment. Please try again later" });
+            return res.status(STATUS_CODES.CONFLICT).json({ error: "Cannot delete the offer at the moment. Please try again later" });
         }
 
-        return res.status(200).json({ success: "Offer deleted successfully" });
+        return res.status(STATUS_CODES.OK).json({ success: "Offer deleted successfully" });
 
 
     } catch (err) {
         console.log("error on delete the offer", err)
-        return res.status(500).json({ error: "An error occurred while deleting the offer" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "An error occurred while deleting the offer" });
 
     }
 }
@@ -213,7 +214,7 @@ const offerCheckCategory = async (req, res) => {
 
 
         if (!categoryID) {
-            return res.status(404).json({ error: "category id not found" })
+            return res.status(STATUS_CODES.NOT_FOUND).json({ error: "category id not found" })
         }
 
         // convert the string into object id
@@ -225,12 +226,12 @@ const offerCheckCategory = async (req, res) => {
 
         // if offer exist then give the response
         if (offerCheck) {
-            return res.status(200).json({ message: "Offer exist already." })
+            return res.status(STATUS_CODES.OK).json({ message: "Offer exist already." })
         }
 
     } catch (err) {
         console.log("Error on checking the offer exist and alert using fetch ", err);
-        return res.status(500).json({ error: "An error occurred while checking the offer exist" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "An error occurred while checking the offer exist" });
     }
 }
 
@@ -245,7 +246,7 @@ const offerCheckProduct = async (req, res) => {
 
 
         if (!productID) {
-            return res.status(404).json({ error: "product id not found" })
+            return res.status(STATUS_CODES.NOT_FOUND).json({ error: "product id not found" })
         }
 
         // convert the string into object id
@@ -257,12 +258,12 @@ const offerCheckProduct = async (req, res) => {
 
         // if offer exist then give the response
         if (offerCheck) {
-            return res.status(200).json({ message: "Offer exist already." })
+            return res.status(STATUS_CODES.OK).json({ message: "Offer exist already." })
         }
 
     } catch (err) {
         console.log("Error on checking the offer exist and alert using fetch ", err);
-        return res.status(500).json({ error: "An error occurred while checking the offer exist" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "An error occurred while checking the offer exist" });
     }
 }
 
@@ -276,7 +277,7 @@ const getOfferDetails = async (req, res) => {
 
         const { offerID } = req.params
         if (!offerID) {
-            return res.status(404).json({ error: "invalid offer id" })
+            return res.status(STATUS_CODES.NOT_FOUND).json({ error: "invalid offer id" })
         }
 
         const offerDetails = await offerSchema.findById(offerID).populate('offerCategoryId').populate('offerProductId')
@@ -291,10 +292,10 @@ const getOfferDetails = async (req, res) => {
         }
 
         if (!offerDetails) {
-            return res.status(404).json({ error: "can't get the offer details" })
+            return res.status(STATUS_CODES.NOT_FOUND).json({ error: "can't get the offer details" })
         }
 
-        return res.status(200).json({ offerTarget: offerTarget, offerFor: offerDetails.offerFor, offerValue: offerDetails.offerValue, Message: "Offer details fetched", status: true })
+        return res.status(STATUS_CODES.OK).json({ offerTarget: offerTarget, offerFor: offerDetails.offerFor, offerValue: offerDetails.offerValue, Message: "Offer details fetched", status: true })
 
     } catch (err) {
 

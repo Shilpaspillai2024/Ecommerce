@@ -1,5 +1,6 @@
 const voucher_code = require("voucher-code-generator");
 const couponSchema = require("../../model/couponSchema");
+const STATUS_CODES=require("../../constants/statusCodes")
 
 const coupon = async (req, res) => {
   try {
@@ -155,7 +156,7 @@ const deleteCoupon = async (req, res) => {
 
     if (!couponID) {
       return res
-        .status(404)
+        .status(STATUS_CODES.NOT_FOUND)
         .json({
           error: "Cannot delete the coupon right now please try again later",
         });
@@ -164,16 +165,16 @@ const deleteCoupon = async (req, res) => {
     const coupon = await couponSchema.findByIdAndDelete(couponID);
 
     if (coupon) {
-      return res.status(200).json({ message: "Coupon deleted successfully" });
+      return res.status(STATUS_CODES.OK).json({ message: "Coupon deleted successfully" });
     } else {
       return res
-        .status(403)
+        .status(STATUS_CODES.FORBIDDEN)
         .json({ error: "cannot delete the coupon please try again later" });
     }
   } catch (err) {
     console.log(`Error on deleting the coupon ${err}`);
     return res
-      .status(403)
+      .status(STATUS_CODES.FORBIDDEN)
       .json({ error: "cannot delete the coupon please try again later" });
   }
 };
@@ -183,7 +184,7 @@ const blockCoupon = async (req, res) => {
     const couponID = req.params.id;
     if (!couponID) {
       return res
-        .status(404)
+        .status(STATUS_CODES.NOT_FOUND)
         .json({
           error: "Cannot block the coupon right now please try again later",
         });
@@ -194,10 +195,10 @@ const blockCoupon = async (req, res) => {
     });
 
     if (coupon) {
-      return res.status(200).json({ message: "Coupon blocked successfully" });
+      return res.status(STATUS_CODES.OK).json({ message: "Coupon blocked successfully" });
     } else {
       return res
-        .status(403)
+        .status(STATUS_CODES.FORBIDDEN)
         .json({ error: "cannot block the coupon please try again later" });
     }
   } catch (err) {
@@ -210,7 +211,7 @@ const unblockCoupon = async (req, res) => {
     const couponID = req.params.id;
     if (!couponID) {
       return res
-        .status(404)
+        .status(STATUS_CODES.NOT_FOUND)
         .json({
           error: "Cannot unblock the coupon right now please try again later",
         });
@@ -221,10 +222,10 @@ const unblockCoupon = async (req, res) => {
     });
 
     if (coupon) {
-      return res.status(200).json({ message: "Coupon unblocked successfully" });
+      return res.status(STATUS_CODES.OK).json({ message: "Coupon unblocked successfully" });
     } else {
       return res
-        .status(403)
+        .status(STATUS_CODES.FORBIDDEN)
         .json({ error: "cannot unblock the coupon please try again later" });
     }
   } catch (err) {

@@ -1,7 +1,9 @@
+const STATUS_CODES=require("../constants/statusCodes")
+
 module.exports = (err, req, res, next) => {
   
-  const status = err.status || 500;
-  const is404 = status === 404;
+  const status = err.status || STATUS_CODES.INTERNAL_SERVER_ERROR;
+  const is404 = status === STATUS_CODES.NOT_FOUND;
 
   try {
     res.status(status).render(is404 ? "pageNotfound" : "error", {
@@ -10,6 +12,6 @@ module.exports = (err, req, res, next) => {
     });
   } catch (renderError) {
     console.error("Error rendering error page:", renderError.message);
-    res.status(500).send("Something went wrong.");
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Something went wrong.");
   }
 };

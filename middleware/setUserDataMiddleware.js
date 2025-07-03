@@ -32,7 +32,5 @@ const setUserData=async(req,res,next)=>{
     }
 }
 
-// module.exports = setCartItemCount;
-
 module.exports =setUserData;
 

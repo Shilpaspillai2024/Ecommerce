@@ -1,3 +1,4 @@
+const STATUS_CODES = require('../../constants/statusCodes')
 const productSchema=require('../../model/productSchema')
 const wishlistSchema = require('../../model/wishlistSchema')
 const catchAsync=require('../../utils/catchAsync')
@@ -51,7 +52,7 @@ const addToWishlist=catchAsync(async(req,res)=>{
 
         }
         await wishlist.save()
-        res.status(200).json({inwishlist:!inwishlist})
+        res.status(STATUS_CODES.OK).json({inwishlist:!inwishlist})
         
    
 })
@@ -65,7 +66,7 @@ const removeWishlist=catchAsync(async (req,res)=>{
        
 
        if(wishlist===null){
-        return res.status(404).json({error:"Product not found in wishlist"})
+        return res.status(STATUS_CODES.NOT_FOUND).json({error:"Product not found in wishlist"})
        }
 
        const newWishList=wishlist.products.filter((ele)=>{
@@ -79,7 +80,7 @@ const removeWishlist=catchAsync(async (req,res)=>{
     await wishlist.save()
 
         
-    return res.status(200).json({message:"Product removed from wishlist"})
+    return res.status(STATUS_CODES.OK).json({message:"Product removed from wishlist"})
         
    
 });

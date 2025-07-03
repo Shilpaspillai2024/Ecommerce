@@ -1,6 +1,7 @@
 const userSchema = require('../../model/userSchema')
 const walletSchema = require('../../model/walletSchema')
 const productSchema = require('../../model/productSchema')
+const STATUS_CODES=require('../../constants/statusCodes')
 
 const orderSchema = require('../../model/orderSchema')
 
@@ -112,7 +113,7 @@ const returnOrder = async (req, res) => {
 
 
         if (!userId) {
-            return res.status(400).send('User ID not found in session');
+            return res.status(STATUS_CODES.BAD_REQUEST).send('User ID not found in session');
         }
 
 
@@ -125,7 +126,7 @@ const returnOrder = async (req, res) => {
 
 
         if (!order) {
-            return res.status(404).send('Order not found');
+            return res.status(STATUS_CODES.NOT_FOUND).send('Order not found');
         }
 
 
@@ -179,7 +180,7 @@ const returnOrder = async (req, res) => {
 
     } catch (err) {
         console.log(`Error: ${err}`);
-        res.status(500).send('Failed to submit return order request');
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Failed to submit return order request');
 
     }
 }
