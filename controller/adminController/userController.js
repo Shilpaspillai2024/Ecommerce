@@ -1,4 +1,5 @@
 const userSchema=require('../../model/userSchema')
+const STATUS_CODES=require('../../constants/statusCodes')
 
 //render user page
  const user=async (req,res)=>{
@@ -36,9 +37,10 @@ const userSchema=require('../../model/userSchema')
  const blockUser= async (req,res)=>{
     try {
         const blockUserId=req.params.id
-        const blockUser=await userSchema.findByIdAndUpdate(blockUserId,{isBlocked:true})
-        req.flash('errorMessage',"user is blocked")
-        res.redirect('/admin/user')   
+        await userSchema.findByIdAndUpdate(blockUserId,{isBlocked:true})
+       // req.flash('errorMessage',"user is blocked")
+       // res.redirect('/admin/user')   
+         res.status(STATUS_CODES.OK).json({ success: true, message: "User has been blocked" });
     } catch (err) {
         console.log(`error is user block ${err}`)
         
@@ -51,12 +53,14 @@ const userSchema=require('../../model/userSchema')
     try {
 
         const unblockUserId=req.params.id
-        const unBlockUser= await userSchema.findByIdAndUpdate(unblockUserId,{isBlocked:false})
-        req.flash('errorMessage',"user is unblocked")
-        res.redirect('/admin/user')
+        await userSchema.findByIdAndUpdate(unblockUserId,{isBlocked:false})
+       // req.flash('errorMessage',"user is unblocked")
+        // res.redirect('/admin/user')
+        res.status(STATUS_CODES.OK).json({ success: true, message: "User has been unblocked" });
 
     } catch (err) {
         console.log(`error in user unblock ${err}`)
+         res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Server error while unblocking user" });
     }
  }
 

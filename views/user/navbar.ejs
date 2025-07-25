@@ -221,7 +221,7 @@
       ></i>
 
       <% if (cartItemCount > 0) { %>
-      <span
+      <span id="cart-count"
         class="cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
       >
         <%= cartItemCount %>
@@ -307,4 +307,33 @@
       wishlistLink.appendChild(span);
     }
   }
+
+  // update cart count
+  function updateCartCount(change) {
+    const cartCountEl = document.getElementById("cart-count");
+
+    if (cartCountEl) {
+      let count = parseInt(cartCountEl.innerText) || 0;
+      const updated = count + change;
+
+      if (updated <= 0) {
+        cartCountEl.style.display = "none";
+        cartCountEl.innerText = "0";
+      } else {
+        cartCountEl.style.display = "inline-block";
+        cartCountEl.innerText = updated;
+      }
+    } else if (change > 0) {
+      // If badge doesn't exist, create it
+      const cartLink = document.querySelector('a[href="/cart"]');
+      const span = document.createElement("span");
+      span.id = "cart-count";
+      span.className =
+        "cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger";
+      span.innerText = change;
+      cartLink.appendChild(span);
+    }
+  }
+
+
 </script>

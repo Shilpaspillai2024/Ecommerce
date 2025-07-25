@@ -10,47 +10,72 @@ const cart = catchAsync(async (req, res, next) => {
 
   let totalPrice = 0;
   let totalPriceWithoutDiscount = 0;
+  let totalPriceWithDiscount = 0;
   let cartItemCount = 0;
 
   if (cart) {
-    // Iterate over each cart item to calculate total prices and item count
+    
     cart.items.forEach((ele) => {
       const productPrice = ele.productId.productPrice;
       const productCount = ele.productCount;
-      const productDiscount = ele.productId.productDiscount;
+      const productDiscount = ele.productId.productDiscount || 0;
 
-      const discountPrice =
-        productDiscount > 0
-          ? productPrice * productCount * (1 - productDiscount / 100)
-          : productPrice * productCount;
+      // Calculate price without discount
+      const priceWithoutDiscount = productPrice * productCount;
+      totalPriceWithoutDiscount += priceWithoutDiscount;
 
-      totalPrice += discountPrice;
-      totalPriceWithoutDiscount += productPrice * ele.productCount;
-      cartItemCount += ele.productCount;
+      // Calculate price with discount
+      const priceWithDiscount = productPrice * productCount * (1 - productDiscount / 100);
+      totalPriceWithDiscount += priceWithDiscount;
+
+      // Add to cart item count
+      cartItemCount += productCount;
     });
 
-    // Check if the calculated total prices differ from the stored values, update if necessary
+// Calculate total discount amount
+    totalDiscount = totalPriceWithoutDiscount - totalPriceWithDiscount;
+
+    // Calculate shipping charge (based on discounted total)
+    const shippingCharge = totalPriceWithDiscount < 500 ? 50 : 0;
+    
+    // Final payable amount = discounted total + shipping
+    const finalPayableAmount = totalPriceWithDiscount + shippingCharge;
+
+    // Round all values
+    totalPriceWithoutDiscount = Math.round(totalPriceWithoutDiscount);
+    totalPriceWithDiscount = Math.round(totalPriceWithDiscount);
+    totalDiscount = Math.round(totalDiscount);
+    const finalAmount = Math.round(finalPayableAmount);
+
+    // Update cart if values have changed
     if (
-      cart.payableAmount !== Math.round(totalPrice) ||
-      cart.totalPrice !== Math.round(totalPriceWithoutDiscount)
+      cart.payableAmount !== finalAmount ||
+      cart.totalPrice !== totalPriceWithoutDiscount
     ) {
-      cart.payableAmount = Math.round(totalPrice);
-      cart.totalPrice = Math.round(totalPriceWithoutDiscount);
+      cart.totalPrice = totalPriceWithoutDiscount;
+      cart.payableAmount = finalAmount;
+      // Store additional fields for better display
+      cart.discountAmount = totalDiscount;
+      cart.shippingCharge = shippingCharge;
       await cart.save();
     }
+
+    // Add calculated values to cart object for template
+    cart.discountAmount = totalDiscount;
+    cart.shippingCharge = shippingCharge;
+    cart.subtotalAfterDiscount = Math.round(totalPriceWithDiscount);
   }
 
   res.render("user/cart", {
     title: "cart",
     cart,
-    totalPrice,
+    totalPrice: totalPriceWithoutDiscount,
     cartItemCount,
     totalPriceWithoutDiscount,
     alertMessage: req.flash("errorMessage"),
     user: req.session.user,
   });
 });
-
 // add product to cart
 
 const addToCartPost = catchAsync(async (req, res,next) => {
@@ -63,13 +88,18 @@ const addToCartPost = catchAsync(async (req, res,next) => {
   const actualProductDetails = await productSchema.findById(productId);
 
   if (actualProductDetails.productQuantity <= 0) {
-    return res.status(404).json({ error: "Product is out of stock" });
+    return res.status(STATUS_CODES.NOT_FOUND).json({ error: "Product is out of stock" });
   }
 
   // Check if the user already has a cart
   const checkUserCart = await cartSchema
     .findOne({ userId: req.session.user })
     .populate("items.productId");
+
+
+    if (checkUserCart && checkUserCart.isLocked) {
+  return res.status(STATUS_CODES.LOCKED).json({ error: "Cart is locked during checkout. Please wait." });
+}
 
   if (checkUserCart) {
     let productExist = false;
@@ -121,6 +151,11 @@ const removeCartItem = catchAsync(async (req, res,next) => {
     return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, error: "Cart not found" });
   }
 
+  if (cartItems.lock) {
+  return res.status(STATUS_CODES.LOCKED).json({ error: "Cart is locked. Cannot remove products." });
+}
+
+
   // filter out the cart products without the removed products
   const newCart = cartItems.items.filter((ele) => {
     if (ele.productId.id != productId) {
@@ -141,7 +176,7 @@ const removeCartItem = catchAsync(async (req, res,next) => {
 const incrementProduct = catchAsync(async (req, res,next) => {
   
     const productId = req.params.productId;
-    const productQuantity = req.body.quantity;
+    const productQuantity =req.body.quantity;
 
     const product = await productSchema.findById(productId);
 
@@ -158,6 +193,12 @@ const incrementProduct = catchAsync(async (req, res,next) => {
     const cart = await cartSchema
       .findOne({ userId: req.session.user })
       .populate("items.productId");
+
+
+      if (cart.isLocked) {
+  return res.status(STATUS_CODES.LOCKED).json({ error: "Cart is locked. Cannot increment product." });
+}
+
 
     const productCart = cart.items.find(
       (ele) => ele.productId.id === productId
@@ -222,6 +263,12 @@ const decrementProduct =catchAsync(async (req, res,next) => {
     const cart = await cartSchema
       .findOne({ userId: req.session.user })
       .populate("items.productId");
+
+
+      if (cart.isLocked) {
+  return res.status(STATUS_CODES.LOCKED).json({ error: "Cart is locked. Cannot decrement product." });
+}
+
 
     const productCart = cart.items.find(
       (ele) => ele.productId.id === productId
