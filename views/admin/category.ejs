@@ -1,327 +1,373 @@
 <style>
-    .admin-category {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4rem;
-        margin-top: 4rem;
-        /* // for sidebar */
-        padding-left: 250px;
+  .admin-category {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    margin-top: 4rem;
+    /* // for sidebar */
+    padding-left: 250px;
 
-        padding-bottom: 4rem;
-       
-    }
+    padding-bottom: 4rem;
+  }
 
-    .search-container {
-        align-items: center;
-        margin: 3rem, 0;
+  .search-container {
+    align-items: center;
+    margin: 3rem, 0;
+  }
 
-    }
+  .admin-category-search-container {
+    border: 1px solid #3a3939;
+    border-radius: 10px;
+    padding: 0.2rem 0.3rem;
+    margin-top: 2rem;
+    margin-left: 4rem;
 
+    background-color: #e4dada;
+  }
 
-    .admin-category-search-container {
-        border: 1px solid #3a3939;
-        border-radius: 10px;
-        padding: .2rem .3rem;
-        margin-top: 2rem;
-        margin-left: 4rem;
+  .admin-category-search-container input {
+    border: none;
+    background-color: #e4dada;
+  }
 
-        background-color: #e4dada;
-    }
+  .category-list-box {
+    margin-top: 2rem;
 
-    .admin-category-search-container input {
-        border: none;
-        background-color: #e4dada;
-    }
-
-    .category-list-box {
-
-        margin-top: 2rem;
-       
-        width:70vw
-
-
-    }
-   
+    width: 70vw;
+  }
 </style>
 
+<%- include('navbar') %> <%- include('sidebar') %>
 
-<%- include('navbar') %>
-<%- include('sidebar') %>
+<div class="admin-category">
+  <div class="search-container d-flex">
+    <h2 class="text-white mt-4">Category</h2>
 
+    <!-- category search -->
+    <form
+      action="/admin/category"
+      method="get"
+      class="admin-category-search-container d-flex"
+    >
+      <input
+        type="text"
+        placeholder="search for categories"
+        name="categorySearch"
+        id="user-search"
+      />
+      <button class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <!-- <input class="btn btn-primary" type="button" value="Search"> -->
+    </form>
+  </div>
 
+  <div class="d-flex align-center">
+    <input
+      type="button"
+      class="btn btn-success"
+      value="Add Category"
+      data-bs-toggle="modal"
+      data-bs-target="#addCategory"
+    />
+  </div>
 
-    <div class="admin-category">
+  <!-- add category -->
 
-
-        <div class="search-container d-flex">
-            <h2 class="text-white mt-4 ">Category</h2>
-
-            <!-- category search -->
-            <form action="/admin/category" method="get" class="admin-category-search-container d-flex">
-                <input type="text" placeholder="search for categories" name="categorySearch" id="user-search">
-                <button class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <!-- <input class="btn btn-primary" type="button" value="Search"> -->
-            </form>
+  <div class="modal fade" id="addCategory">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Category</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
-
-
-
-
-        <div class="d-flex align-center">
-            <input type="button" class="btn btn-success" value="Add Category" data-bs-toggle="modal"
-                data-bs-target="#addCategory">
+        <div class="modal-body">
+          <form action="/admin/category" method="post">
+            <label class="form-label">Category</label>
+            <input
+              type="text"
+              class="form-control"
+              name="Newcategory"
+              id="categoryInput"
+              minlength="3"
+              maxlength="30"
+              required
+            />
+            <span id="category-error" class="text-danger"></span>
+            <input
+              type="submit"
+              class="btn btn-primary mt-2"
+              value="Add Category"
+              id="categorySubmit"
+            />
+          </form>
         </div>
-
-        <!-- add category -->
-
-        <div class="modal fade" id="addCategory">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title"> Add New Category</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="/admin/category" method="post">
-                            <label class="form-label">Category</label>
-                            <input type="text" class="form-control" name="Newcategory" id="categoryInput" minlength="3"
-                                maxlength="30" required>
-                                <span id="category-error" class="text-danger"></span>
-                            <input type="submit" class="btn btn-primary mt-2" value="Add Category" id="categorySubmit">
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="category-list-box">
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">Si.No</th>
-                        <th scope="col">CategoryName</th>
-                        <th scope="col">Added Date</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <% category.forEach((category,index)=>{ %>
-                        <tr>
-                            <td>
-                                <%= index +1 %>
-                            </td>
-                            <td>
-                                <%= category.categoryName %>
-                            </td>
-                            <td>
-                                <%= new Date(category.categoryAddedOn).toLocaleDateString() %>
-                            </td>
-                            <td>
-                                <% if(category.isActive){ %>
-                                    <b style="color: green">ACTIVE</b>
-                                    <% } else { %>
-                                        <b style="color: red">IN ACTIVE</b>
-                                        <% } %>
-                            </td>
-                            <td>
-                                <!-- <a class="btn btn-warning"href="admin/edit-category/<%=category.id %>">Edit</a> -->
-                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCategory"
-                                    id="editCategory-btn" data-category="<%= category.categoryName%>"
-                                    data-id="<%=category.id%>">Edit</button>
-
-                                <% if(category.isActive) {%>
-
-                                    <a class="btn btn-outline-danger category-hide"
-                                        href="/admin/hide-category/<%= category.id %>">Inactive</a>
-
-                                    <% } else { %>
-
-                                        <a class="btn btn-outline-success category-unhide"
-                                            href="/admin/unhide-category/<%= category.id %>">Active</a>
-
-                                        <% } %>
-
-                                            <a class="btn btn-danger category-delete"
-                                                href="/admin/delete-category/<%= category.id %>">Delete</a>
-                            </td>
-
-                        </tr>
-                        <% }) %>
-
-                </tbody>
-
-            </table>
-        </div>
-        <%- include('pagination') %>
-
+      </div>
     </div>
+  </div>
+  <div class="category-list-box">
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Si.No</th>
+          <th scope="col">CategoryName</th>
+          <th scope="col">Added Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
 
-    <!-- edit category  -->
+      <tbody>
+        <% category.forEach((category,index)=>{ %>
+        <tr>
+          <td><%= index +1 %></td>
+          <td><%= category.categoryName %></td>
+          <td>
+            <%= new Date(category.categoryAddedOn).toLocaleDateString() %>
+          </td>
+          <td>
+            <% if(category.isActive){ %>
+            <b style="color: green">ACTIVE</b>
+            <% } else { %>
+            <b style="color: red">IN ACTIVE</b>
+            <% } %>
+          </td>
+          <td>
+            <!-- <a class="btn btn-warning"href="admin/edit-category/<%=category.id %>">Edit</a> -->
+            <button
+              class="btn btn-warning"
+              data-bs-toggle="modal"
+              data-bs-target="#editCategory"
+              id="editCategory-btn"
+              data-category="<%= category.categoryName%>"
+              data-id="<%=category.id%>"
+            >
+              Edit
+            </button>
 
-    <div class="modal fade" id="editCategory">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Category</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/admin/editcategory" method="post">
-                        <label for="">Category Name</label>
-                        <input type="text" id="editCategoryId" class="d-none" name="catid">
-                        <input type="text" id="editCategoryName" name="catname">
-                        <input type="submit" class="btn btn-success">
-                    </form>
-                </div>
-            </div>
-        </div>
+            <% if(category.isActive) {%>
+
+            <a
+              class="btn btn-outline-danger category-hide"
+              href="/admin/hide-category/<%= category.id %>"
+              >Inactive</a
+            >
+
+            <% } else { %>
+
+            <a
+              class="btn btn-outline-success category-unhide"
+              href="/admin/unhide-category/<%= category.id %>"
+              >Active</a
+            >
+
+            <% } %>
+
+            <a
+              class="btn btn-danger category-delete"
+              href="/admin/delete-category/<%= category.id %>"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('pagination') %>
+</div>
+
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategory">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Category</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label for="">Category Name</label>
+        <input type="hidden" id="editCategoryId" />
+        <input type="text" id="editCategoryName" />
+        <button id="submitEditCategory" class="btn btn-success">Update</button>
+      </div>
     </div>
+  </div>
+</div>
 
-    <%- include('footer') %>
+<%- include('footer') %>
 
-        <script>
-            document.querySelectorAll('#editCategory-btn').forEach((x) => {
-                x.addEventListener('click', function () {
-                    const category = this.getAttribute('data-category')
-                    const id = this.getAttribute('data-id')
-                    document.getElementById('editCategoryName').value = category;
-                    document.getElementById('editCategoryId').value = id;
-                })
-            })
+<script>
+  document.querySelectorAll('#editCategory-btn').forEach((x) => {
+      x.addEventListener('click', function () {
+          const category = this.getAttribute('data-category')
+          const id = this.getAttribute('data-id')
+          document.getElementById('editCategoryName').value = category;
+          document.getElementById('editCategoryId').value = id;
+      })
+  })
 
+  document
+    .getElementById("submitEditCategory")
+    .addEventListener("click", async () => {
+      const id = document.getElementById("editCategoryId").value;
+      const name = document.getElementById("editCategoryName").value.trim();
 
-            // delete category sweet alert
+      if (!name ||!isNaN(name)|| name.length < 3 || name.length > 30) {
+        Swal.fire(
+          "Validation Error",
+          "Category name must be a non-numeric string between 3 and 30 characters.",
+          "error"
+        );
+        return;
+      }
 
-            document.querySelectorAll('.category-delete').forEach((x) => {
-                x.addEventListener('click', function (event) {
-                    event.preventDefault() //prevent the  default action
+      try {
+        const response = await fetch("/admin/editcategory", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ catid: id, catname: name }),
+        });
 
-                    Swal.fire({
-                        title: "Delete Category !",
-                        text: "Are you sure do you want to permanently delete this category?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes, delete it!"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            if (result.isConfirmed) {
-                                // If confirmed, redirect to the delete URL
-                                window.location.href = event.target.href;
-                            }
+        if (response.ok) {
+          // Success - reload or redirect
+          Swal.fire(
+            "Success",
+            "Category updated successfully!",
+            "success"
+          ).then(() => {
+            window.location.href = "/admin/category";
+          });
+        } else {
+          const data = await response.text();
+          Swal.fire("Error", data || "Failed to update category", "error");
+        }
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "Something went wrong!", "error");
+      }
+    });
 
-                        }
-                    });
+  // delete category sweet alert
 
-                })
-            })
+  document.querySelectorAll(".category-delete").forEach((x) => {
+    x.addEventListener("click", function (event) {
+      event.preventDefault(); //prevent the  default action
 
-            // DeActivating the category
+      Swal.fire({
+        title: "Delete Category !",
+        text: "Are you sure do you want to permanently delete this category?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (result.isConfirmed) {
+            // If confirmed, redirect to the delete URL
+            window.location.href = event.target.href;
+          }
+        }
+      });
+    });
+  });
 
-            document.querySelectorAll('.category-hide').forEach((x) => {
-                x.addEventListener('click', function (event) {
-                    event.preventDefault()
-                    Swal.fire({
-                        title: "Deactivate Category !",
-                        text: "Are you sure do you want to deactivate this category?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes, deactivate it!"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            if (result.isConfirmed) {
-                                // If confirmed, redirect to the delete URL
-                                window.location.href = event.target.href;
-                            }
+  // DeActivating the category
 
-                        }
-                    });
-                })
-            })
+  document.querySelectorAll(".category-hide").forEach((x) => {
+    x.addEventListener("click", function (event) {
+      event.preventDefault();
+      Swal.fire({
+        title: "Deactivate Category !",
+        text: "Are you sure do you want to deactivate this category?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, deactivate it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (result.isConfirmed) {
+            // If confirmed, redirect to the delete URL
+            window.location.href = event.target.href;
+          }
+        }
+      });
+    });
+  });
 
+  //Activate the Category
 
-            //Activate the Category
+  document.querySelectorAll(".category-unhide").forEach((x) => {
+    x.addEventListener("click", function (event) {
+      event.preventDefault();
+      Swal.fire({
+        title: "activate Category !",
+        text: "Are you sure do you want to activate this category?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, activate it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (result.isConfirmed) {
+            // If confirmed, redirect to the delete URL
+            window.location.href = event.target.href;
+          }
+        }
+      });
+    });
+  });
 
-            document.querySelectorAll('.category-unhide').forEach((x) => {
-                x.addEventListener('click', function (event) {
-                    event.preventDefault()
-                    Swal.fire({
-                        title: "activate Category !",
-                        text: "Are you sure do you want to activate this category?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes, activate it!"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            if (result.isConfirmed) {
-                                // If confirmed, redirect to the delete URL
-                                window.location.href = event.target.href;
-                            }
+  //validation  category add
 
-                        }
-                    });
+  const categoryInput = document.getElementById("categoryInput");
+  const categorySubmitBtn = document.getElementById("categorySubmit");
+  const categoryError = document.getElementById("category-error");
 
+  categorySubmitBtn.disabled = true; // Initially disable the submit button
 
+  // Function to trim extra spaces and remove special characters
+  function trimExtraSpaces(str) {
+    return str.replace(/\s+/g, " ").replace(/[^a-zA-Z0-9\s\-&]/gi, "");
 
+    // Excludes special characters '&' and '-' from being replaced
+  }
 
+  // Event listener for input in the add category modal
+  categoryInput.addEventListener("input", () => {
+    const trimmedValue = categoryInput.value.trim();
 
-                })
-            })
+    // If the input is only whitespace or empty, disable the submit button and show error
+    if (trimmedValue === "") {
+      categorySubmitBtn.disabled = true;
+      categoryError.textContent =
+        "Category name cannot be empty or only whitespace.";
+    } else {
+      const sanitizedValue = trimExtraSpaces(trimmedValue);
+      categoryInput.value = sanitizedValue;
 
-            //validation  category add  
-
-            const categoryInput = document.getElementById('categoryInput');
-            const categorySubmitBtn = document.getElementById('categorySubmit');
-            const categoryError = document.getElementById('category-error');
-
-            categorySubmitBtn.disabled = true; // Initially disable the submit button
-
-            // Function to trim extra spaces and remove special characters
-            function trimExtraSpaces(str) {
-
-                return str.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-9\s\-&]/gi, '');
-
-
-
-                // Excludes special characters '&' and '-' from being replaced
-            }
-
-            // Event listener for input in the add category modal
-            categoryInput.addEventListener('input', () => {
-                const trimmedValue = categoryInput.value.trim();
-
-                // If the input is only whitespace or empty, disable the submit button and show error
-                if (trimmedValue === '') {
-                    categorySubmitBtn.disabled = true;
-                    categoryError.textContent = "Category name cannot be empty or only whitespace.";
-                } else {
-                    const sanitizedValue = trimExtraSpaces(trimmedValue);
-                    categoryInput.value = sanitizedValue;
-
-                    // Additional validation: length and content checks
-                    if (sanitizedValue.length < 3 || sanitizedValue.length > 30) {
-                        categorySubmitBtn.disabled = true;
-                        categoryError.textContent = "Category name must be between 3 and 30 characters long.";
-                    } else if (/^\d+$/.test(sanitizedValue)) {
-                        categorySubmitBtn.disabled = true;
-                        categoryError.textContent = "Category name cannot be only numbers.";
-                    } else {
-                        categorySubmitBtn.disabled = false;
-                        categoryError.textContent = ""; // Clear any existing error message
-                    }
-                }
-            });
-
-
-
-
-        </script>
+      // Additional validation: length and content checks
+      if (sanitizedValue.length < 3 || sanitizedValue.length > 30) {
+        categorySubmitBtn.disabled = true;
+        categoryError.textContent =
+          "Category name must be between 3 and 30 characters long.";
+      } else if (/^\d+$/.test(sanitizedValue)) {
+        categorySubmitBtn.disabled = true;
+        categoryError.textContent = "Category name cannot be only numbers.";
+      } else {
+        categorySubmitBtn.disabled = false;
+        categoryError.textContent = ""; // Clear any existing error message
+      }
+    }
+  });
+</script>

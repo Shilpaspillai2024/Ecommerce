@@ -43,7 +43,7 @@ admin.post('/category', dashboardController.addCategoryPost)
 
 //edit category
 
-admin.post('/editcategory', dashboardController.editCategoryPost)
+admin.patch('/editcategory', dashboardController.editCategoryPost)
 
 // delete category
 admin.get('/delete-category/:id', checkAdminSession, dashboardController.deleteCategory)

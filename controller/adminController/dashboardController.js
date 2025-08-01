@@ -505,30 +505,27 @@ const addCategoryPost = async (req, res) => {
 
 // edit cateory from model 
 
+
 const editCategoryPost = async (req, res) => {
-    try {
+  try {
+    const { catid: id, catname: name } = req.body;
+    const lowerCaseCategoryName = name.toLowerCase();
+    const checkCat = await categorySchema.findOne({
+      categoryName: { $regex: new RegExp('^' + lowerCaseCategoryName + '$', 'i') }
+    });
 
-        const id = req.body.catid
-        const name = req.body.catname
-
-        const lowerCaseCategoryName = name.toLowerCase();
-
-
-        const checkCat = await categorySchema.findOne({ categoryName: { $regex: new RegExp('^' + lowerCaseCategoryName + '$', 'i') } })
-
-        if (checkCat == null) {
-            await categorySchema.findByIdAndUpdate(id, { categoryName: name })
-            req.flash('errorMessage', 'Success: Category update successfully')
-            res.redirect('/admin/category')
-        } else {
-            req.flash('errorMessage', 'Warning: Category already exists. Please ensure no duplicates are being added.')
-            res.redirect("/admin/category")
-        }
-
-    } catch (err) {
-        console.log(`error in editing category ${err}`)
+    if (!checkCat || checkCat._id.toString() === id) {
+      await categorySchema.findByIdAndUpdate(id, { categoryName: name });
+      return res.status(STATUS_CODES.OK).send("Category updated successfully");
+    } else {
+      return res.status(STATUS_CODES.CONFLICT).send("Category already exists");
     }
-}
+
+  } catch (err) {
+    console.log(`Error in editing category: ${err}`);
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Internal server error");
+  }
+};
 
 //delete category
 

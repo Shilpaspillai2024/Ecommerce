@@ -53,11 +53,11 @@
                                 </td>
                                 <% if(offer.offerFor.toLowerCase()==="category" ) { %>
                                     <td class="offer-for-td">
-                                        <%= offer.offerCategoryId.categoryName %>
+                                          <%= offer.offerCategoryId?.categoryName || "N/A" %>
                                     </td>
                                     <% }else{ %>
                                         <td class="offer-for-td">
-                                            <%= offer.offerProductId.productName %>
+                                             <%= offer.offerProductId?.productName || "N/A" %>
                                         </td>
                                         <% } %>
                                             <td class="text-center">
