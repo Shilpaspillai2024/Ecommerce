@@ -25,9 +25,9 @@ const checkout = catchAsync(async (req, res) => {
     .findOne({ userId: req.session.user })
     .populate("items.productId")
     .populate("userId");
-    
+
   const wallet = await walletSchema.findOne({ userId: req.session.user });
-  console.log("wallet",wallet)
+  console.log("wallet", wallet);
   let balance = 0;
 
   // FIXED: Check for empty cart items as well
@@ -41,18 +41,23 @@ const checkout = catchAsync(async (req, res) => {
   if (wallet) {
     balance = wallet.balance;
   }
-  
+
   let total = 0;
 
   // FIXED: Added proper stock validation and error handling
   for (const product of cartItems) {
     // FIXED: Check if product exists and is populated
     if (!product.productId) {
-      req.flash("errorMessage", "Some products in your cart are no longer available");
+      req.flash(
+        "errorMessage",
+        "Some products in your cart are no longer available"
+      );
       return res.redirect("/cart");
     }
 
-    const currentProduct = await productSchema.findById(product.productId._id || product.productId);
+    const currentProduct = await productSchema.findById(
+      product.productId._id || product.productId
+    );
 
     // FIXED: Better stock validation
     if (!currentProduct) {
@@ -61,7 +66,10 @@ const checkout = catchAsync(async (req, res) => {
     }
 
     if (currentProduct.productQuantity < product.productCount) {
-      req.flash("errorMessage", `${currentProduct.productName} has insufficient stock (Available: ${currentProduct.productQuantity}, Requested: ${product.productCount})`);
+      req.flash(
+        "errorMessage",
+        `${currentProduct.productName} has insufficient stock (Available: ${currentProduct.productQuantity}, Requested: ${product.productCount})`
+      );
       return res.redirect("/cart");
     }
 
@@ -93,7 +101,13 @@ const addcheckoutAddress = catchAsync(async (req, res) => {
   const userId = req.session.user;
 
   // FIXED: Added input validation
-  if (!req.body.contactName || !req.body.doorNo || !req.body.homeAddress || !req.body.phone || !req.body.pincode) {
+  if (
+    !req.body.contactName ||
+    !req.body.doorNo ||
+    !req.body.homeAddress ||
+    !req.body.phone ||
+    !req.body.pincode
+  ) {
     req.flash("errorMessage", "All required fields must be filled");
     return res.redirect("/checkout");
   }
@@ -129,12 +143,11 @@ const deletecheckoutAddress = catchAsync(async (req, res) => {
     req.flash("errorMessage", "Address not found or not authorized to delete");
     return res.redirect("/checkout");
   }
-  
+
   await addressSchema.deleteOne({ _id: addressId });
   req.flash("errorMessage", "Address deleted successfully");
   res.redirect("/checkout");
 });
-
 
 const OrderPlaced = catchAsync(async (req, res) => {
   const userId = req.session.user;
@@ -143,10 +156,10 @@ const OrderPlaced = catchAsync(async (req, res) => {
   await cartSchema.updateMany(
     {
       isLocked: true,
-      lockedAt: { $lt: new Date(Date.now() - 10 * 60 * 1000) }
+      lockedAt: { $lt: new Date(Date.now() - 10 * 60 * 1000) },
     },
     {
-      $unset: { isLocked: 1, lockedAt: 1, pendingOrderData: 1 }
+      $unset: { isLocked: 1, lockedAt: 1, pendingOrderData: 1 },
     }
   );
 
@@ -173,21 +186,24 @@ const OrderPlaced = catchAsync(async (req, res) => {
 
       // FIXED: Different lock acquisition logic for Razorpay completion vs new checkout
       let cart;
-      
-      if (paymentMethod === "razorpay" && razorpayOrderId && razorpayPaymentId) {
+
+      if (
+        paymentMethod === "razorpay" &&
+        razorpayOrderId &&
+        razorpayPaymentId
+      ) {
         // For Razorpay payment completion - find the cart with pending order data
         console.log("🔍 Looking for cart with pending Razorpay order...");
         cart = await cartSchema
           .findOne({
             userId,
             isLocked: true,
-            'pendingOrderData.razorpayOrderId': razorpayOrderId
+            "pendingOrderData.razorpayOrderId": razorpayOrderId,
           })
           .populate("items.productId")
           .session(session);
-          
+
         console.log("📋 Found cart with pending order:", cart?._id);
-        
       } else {
         // For new checkout (first call) - acquire lock as before
         console.log("🆕 Acquiring new cart lock...");
@@ -222,10 +238,11 @@ const OrderPlaced = catchAsync(async (req, res) => {
 
       // If cart is null, it means another checkout is in progress OR invalid payment session
       if (!cart) {
-        const errorMessage = (paymentMethod === "razorpay" && razorpayOrderId && razorpayPaymentId) 
-          ? "Invalid or expired payment session. Please try again."
-          : "Another checkout is already in progress. Please wait and try again.";
-          
+        const errorMessage =
+          paymentMethod === "razorpay" && razorpayOrderId && razorpayPaymentId
+            ? "Invalid or expired payment session. Please try again."
+            : "Another checkout is already in progress. Please wait and try again.";
+
         return res.status(STATUS_CODES.TOO_MANY_REQUESTS).json({
           success: false,
           message: errorMessage,
@@ -233,7 +250,10 @@ const OrderPlaced = catchAsync(async (req, res) => {
       }
 
       // Check if cart is empty (only for new checkouts, not payment completion)
-      if ((!razorpayOrderId || !razorpayPaymentId) && (!cart.items || cart.items.length === 0)) {
+      if (
+        (!razorpayOrderId || !razorpayPaymentId) &&
+        (!cart.items || cart.items.length === 0)
+      ) {
         // Release lock before returning
         await cartSchema.findByIdAndUpdate(
           cart._id,
@@ -272,7 +292,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
           const currentProduct = await productSchema
             .findById(product.productId)
             .session(session);
-            
+
           if (!currentProduct) {
             await cartSchema.findByIdAndUpdate(
               cart._id,
@@ -286,7 +306,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
               message: "Some products are no longer available.",
             });
           }
-          
+
           if (currentProduct.productQuantity < product.quantity) {
             await cartSchema.findByIdAndUpdate(
               cart._id,
@@ -307,7 +327,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
           const coupon = await couponSchema
             .findOne({ couponName: couponCode })
             .session(session);
-            
+
           if (coupon && coupon.isActive && coupon.expiryDate >= new Date()) {
             if (!coupon.appliedUsers.includes(userId)) {
               if (totalPrice >= coupon.minAmount) {
@@ -352,7 +372,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
       // Handle Razorpay Payment - First Call (Create Order)
       if (paymentMethod === "razorpay" && !razorpayOrderId) {
         console.log("🏦 Creating Razorpay order...");
-        
+
         if (cart.pendingOrderData?.razorpayOrderId) {
           console.log("⚠️ Payment already initiated");
           return res.status(STATUS_CODES.CONFLICT).json({
@@ -369,39 +389,41 @@ const OrderPlaced = catchAsync(async (req, res) => {
           });
 
           // Store pending order data in cart for later completion
-          await cartSchema.findByIdAndUpdate(
-            cart._id,
-            {
-              $set: {
-                pendingOrderData: {
-                  orderID,
-                  contactInfo: { name, email, phone },
-                  address: addressObj,
-                  products: orderProducts,
-                  totalPrice,
-                  couponDiscount,
-                  paymentMethod,
-                  razorpayOrderId: razorpayOrder.id,
-                  createdAt: new Date(),
+            await cartSchema.findByIdAndUpdate(
+              cart._id,
+              {
+                $set: {
+                  pendingOrderData: {
+                    orderID,
+                    contactInfo: { name, email, phone },
+                    address: addressObj,
+                    products: orderProducts,
+                    totalPrice,
+                    couponDiscount,
+                    paymentMethod,
+                    razorpayOrderId: razorpayOrder.id,
+                    createdAt: new Date(),
+                  },
                 },
               },
-            },
-            { session }
-          );
+              { session }
+            );
 
-          console.log("📝 Stored pendingOrderData:", {
-            orderID,
-            razorpayOrderId: razorpayOrder.id,
-            totalPrice,
-          });
+            console.log("📝 Stored pendingOrderData:", {
+              orderID,
+              razorpayOrderId: razorpayOrder.id,
+              totalPrice,
+            });
 
-          return res.status(STATUS_CODES.OK).json({
-            success: true,
-            razorpayOrderId: razorpayOrder.id,
-            amount: totalPrice * 100,
-            message: "Razorpay order created successfully"
-          });
-        } catch (error) {
+            return res.status(STATUS_CODES.OK).json({
+              success: true,
+              razorpayOrderId: razorpayOrder.id,
+              amount: totalPrice * 100,
+              message: "Razorpay order created successfully"
+            });
+          }
+
+         catch (error) {
           console.error("❌ Razorpay order creation failed:", error);
           // Release lock on Razorpay error
           await cartSchema.findByIdAndUpdate(
@@ -414,10 +436,17 @@ const OrderPlaced = catchAsync(async (req, res) => {
       }
 
       // Handle Razorpay Payment - Second Call (Complete Payment)
-      if (paymentMethod === "razorpay" && razorpayOrderId && razorpayPaymentId) {
+      if (
+        paymentMethod === "razorpay" &&
+        razorpayOrderId &&
+        razorpayPaymentId
+      ) {
         console.log("💳 Processing Razorpay payment completion...");
-        
-        if (!cart.pendingOrderData || cart.pendingOrderData.razorpayOrderId !== razorpayOrderId) {
+
+        if (
+          !cart.pendingOrderData ||
+          cart.pendingOrderData.razorpayOrderId !== razorpayOrderId
+        ) {
           console.log("❌ Invalid or expired payment session");
           await cartSchema.findByIdAndUpdate(
             cart._id,
@@ -432,11 +461,14 @@ const OrderPlaced = catchAsync(async (req, res) => {
 
         // FIXED: Add Razorpay signature verification (recommended)
         if (razorpaySignature) {
-          const crypto = require('crypto');
+          const crypto = require("crypto");
           const expectedSignature = crypto
-            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'your_razorpay_secret')
-            .update(razorpayOrderId + '|' + razorpayPaymentId)
-            .digest('hex');
+            .createHmac(
+              "sha256",
+              process.env.RAZORPAY_KEY_SECRET || "your_razorpay_secret"
+            )
+            .update(razorpayOrderId + "|" + razorpayPaymentId)
+            .digest("hex");
 
           if (expectedSignature !== razorpaySignature) {
             console.log("❌ Razorpay signature verification failed");
@@ -461,8 +493,11 @@ const OrderPlaced = catchAsync(async (req, res) => {
           const currentProduct = await productSchema
             .findById(product.productId)
             .session(session);
-            
-          if (!currentProduct || currentProduct.productQuantity < product.quantity) {
+
+          if (
+            !currentProduct ||
+            currentProduct.productQuantity < product.quantity
+          ) {
             await cartSchema.findByIdAndUpdate(
               cart._id,
               { $unset: { isLocked: 1, lockedAt: 1, pendingOrderData: 1 } },
@@ -470,7 +505,8 @@ const OrderPlaced = catchAsync(async (req, res) => {
             );
             return res.status(STATUS_CODES.BAD_REQUEST).json({
               success: false,
-              message: "Product availability changed during payment. Please try again.",
+              message:
+                "Product availability changed during payment. Please try again.",
             });
           }
         }
@@ -500,7 +536,9 @@ const OrderPlaced = catchAsync(async (req, res) => {
             { $inc: { productQuantity: -product.quantity } },
             { session }
           );
-          console.log(`📦 Updated stock for product ${product.productId}: -${product.quantity}`);
+          console.log(
+            `📦 Updated stock for product ${product.productId}: -${product.quantity}`
+          );
         }
 
         // FIXED: Clear cart and release lock properly
@@ -517,14 +555,14 @@ const OrderPlaced = catchAsync(async (req, res) => {
         return res.status(STATUS_CODES.OK).json({
           success: true,
           order: { orderID: order.orderID },
-          message: "Order placed successfully!"
+          message: "Order placed successfully!",
         });
       }
 
       // Handle Wallet Payment
       if (paymentMethod === "Wallet") {
         console.log("💰 Processing wallet payment...");
-        
+
         const wallet = await walletSchema.findOne({ userId }).session(session);
         if (!wallet || wallet.balance < totalPrice) {
           await cartSchema.findByIdAndUpdate(
@@ -534,11 +572,13 @@ const OrderPlaced = catchAsync(async (req, res) => {
           );
           return res.status(STATUS_CODES.BAD_REQUEST).json({
             success: false,
-            message: `Insufficient wallet balance. Available: ₹${wallet?.balance || 0}, Required: ₹${totalPrice}`,
+            message: `Insufficient wallet balance. Available: ₹${
+              wallet?.balance || 0
+            }, Required: ₹${totalPrice}`,
           });
         }
 
- // Create the order
+        // Create the order
         const order = new orderSchema({
           userId,
           orderID,
@@ -550,10 +590,9 @@ const OrderPlaced = catchAsync(async (req, res) => {
           paymentMethod: paymentMethod,
           status: "processing",
         });
-        console.log("order:",order)
+        console.log("order:", order);
 
         await order.save({ session });
-
 
         // Deduct from wallet
         await walletSchema.findByIdAndUpdate(
@@ -572,7 +611,6 @@ const OrderPlaced = catchAsync(async (req, res) => {
           { session }
         );
 
-        
         // Update product quantities
         for (let product of orderProducts) {
           await productSchema.findByIdAndUpdate(
@@ -595,14 +633,14 @@ const OrderPlaced = catchAsync(async (req, res) => {
         return res.status(STATUS_CODES.OK).json({
           success: true,
           order: { orderID: order.orderID },
-          message: "Order placed successfully with wallet payment!"
+          message: "Order placed successfully with wallet payment!",
         });
       }
 
       // Handle COD Payment
       if (paymentMethod === "COD") {
         console.log("📦 Processing COD payment...");
-        
+
         // Added COD amount limit check
         if (totalPrice > 5000) {
           await cartSchema.findByIdAndUpdate(
@@ -612,7 +650,8 @@ const OrderPlaced = catchAsync(async (req, res) => {
           );
           return res.status(400).json({
             success: false,
-            message: "COD is not available for orders above ₹5000. Please use other payment methods.",
+            message:
+              "COD is not available for orders above ₹5000. Please use other payment methods.",
           });
         }
 
@@ -653,7 +692,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
         return res.status(STATUS_CODES.OK).json({
           success: true,
           order: { orderID: order.orderID },
-          message: "COD order placed successfully!"
+          message: "COD order placed successfully!",
         });
       }
 
@@ -667,7 +706,6 @@ const OrderPlaced = catchAsync(async (req, res) => {
         success: false,
         message: "Invalid payment method selected.",
       });
-
     }); // End transaction
   } catch (error) {
     console.error("❌ Order placement error:", error);
@@ -685,7 +723,8 @@ const OrderPlaced = catchAsync(async (req, res) => {
 
     return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "An error occurred while processing your order. Please try again.",
+      message:
+        "An error occurred while processing your order. Please try again.",
     });
   } finally {
     await session.endSession();
@@ -710,13 +749,15 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
 
     // FIXED: Use pending order data if available from the main OrderPlaced function
     let orderData;
-    
+
     if (cart.pendingOrderData) {
       console.log("📊 Using stored pending order data for failure handling");
       orderData = cart.pendingOrderData;
     } else {
-      console.log("⚠️ No pending order data found, calculating from request body");
-      
+      console.log(
+        "⚠️ No pending order data found, calculating from request body"
+      );
+
       // Fallback to calculating from request body and cart
       let {
         name,
@@ -726,7 +767,7 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
         paymentMethod,
         razorpayOrderId,
         couponCode,
-        errorReason
+        errorReason,
       } = req.body;
 
       if (!cart.items || cart.items.length === 0) {
@@ -740,7 +781,8 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
       let couponDiscount = 0;
       const orderProducts = cart.items.map((product) => {
         const price = Math.round(
-          product.productPrice * (1 - (product.productId.productDiscount || 0) / 100)
+          product.productPrice *
+            (1 - (product.productId.productDiscount || 0) / 100)
         );
         totalPrice += price * product.productCount;
         return {
@@ -752,16 +794,20 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
 
       // FIXED: Better coupon handling with validation
       if (couponCode) {
-        const coupon = await couponSchema.findOne({ 
+        const coupon = await couponSchema.findOne({
           couponName: couponCode,
           isActive: true,
-          expiryDate: { $gte: new Date() }
+          expiryDate: { $gte: new Date() },
         });
-        
-        if (coupon && !coupon.appliedUsers.includes(userId) && totalPrice >= coupon.minAmount) {
+
+        if (
+          coupon &&
+          !coupon.appliedUsers.includes(userId) &&
+          totalPrice >= coupon.minAmount
+        ) {
           couponDiscount = coupon.discount;
           totalPrice -= couponDiscount;
-          
+
           // FIXED: Only mark coupon as used if we're creating a failed order
           // This is debatable - you might not want to consume coupon for failed payments
           coupon.appliedUsers.push(userId);
@@ -803,7 +849,7 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
         couponDiscount,
         paymentMethod,
         razorpayOrderId,
-        errorReason: errorReason || 'Payment failed'
+        errorReason: errorReason || "Payment failed",
       };
     }
 
@@ -822,8 +868,8 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
       razorpayOrderId: orderData.razorpayOrderId,
       status: "pending", // or "failed" - depending on your order status system
       paymentStatus: "failed",
-      failureReason: orderData.errorReason || 'Razorpay payment failed',
-      createdAt: new Date()
+      failureReason: orderData.errorReason || "Razorpay payment failed",
+      createdAt: new Date(),
     });
 
     await order.save();
@@ -846,17 +892,17 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
     // FIXED: Return proper JSON response
     res.status(STATUS_CODES.OK).json({
       success: true,
-      order: { 
+      order: {
         orderID: order.orderID,
         status: order.status,
-        paymentStatus: order.paymentStatus
+        paymentStatus: order.paymentStatus,
       },
-      message: "Payment failed but order has been saved. You can retry payment later."
+      message:
+        "Payment failed but order has been saved. You can retry payment later.",
     });
-
   } catch (error) {
     console.error("❌ Payment failure handling error:", error);
-    
+
     // FIXED: Ensure lock is released even if error occurs
     try {
       await cartSchema.findOneAndUpdate(
@@ -864,19 +910,18 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
         { $unset: { isLocked: 1, lockedAt: 1, pendingOrderData: 1 } }
       );
     } catch (unlockError) {
-      console.error("❌ Error releasing lock during payment failure:", unlockError);
+      console.error(
+        "❌ Error releasing lock during payment failure:",
+        unlockError
+      );
     }
-    
+
     res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Error handling payment failure",
     });
   }
 });
-
-
-
-
 
 function generateRandomOrderId() {
   const min = 100000; // Minimum 6-digit number
@@ -892,8 +937,8 @@ const applycoupon = catchAsync(async (req, res) => {
 
   // FIXED: Added input validation
   if (!couponName) {
-    return res.status(STATUS_CODES.BAD_REQUEST).json({ 
-      error: "Coupon code is required" 
+    return res.status(STATUS_CODES.BAD_REQUEST).json({
+      error: "Coupon code is required",
     });
   }
 
@@ -908,8 +953,8 @@ const applycoupon = catchAsync(async (req, res) => {
 
   // check if coupon is expired or inactive
   if (!coupon.isActive || coupon.expiryDate < new Date()) {
-    return res.status(STATUS_CODES.BAD_REQUEST).json({ 
-      error: "Coupon has expired or is inactive" 
+    return res.status(STATUS_CODES.BAD_REQUEST).json({
+      error: "Coupon has expired or is inactive",
     });
   }
 
@@ -924,7 +969,7 @@ const applycoupon = catchAsync(async (req, res) => {
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return res.status(STATUS_CODES.BAD_REQUEST).json({
-      error: "Your cart is empty"
+      error: "Your cart is empty",
     });
   }
 
@@ -940,10 +985,10 @@ const applycoupon = catchAsync(async (req, res) => {
   const couponDiscount = Math.min(coupon.discount, totalPrice);
   const discountedTotal = totalPrice - couponDiscount;
 
-  res.status(STATUS_CODES.OK).json({ 
-    totalPrice: discountedTotal, 
+  res.status(STATUS_CODES.OK).json({
+    totalPrice: discountedTotal,
     couponDiscount,
-    message: "Coupon applied successfully"
+    message: "Coupon applied successfully",
   });
 });
 
