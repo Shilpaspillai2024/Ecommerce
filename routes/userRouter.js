@@ -121,7 +121,7 @@ user.post('/paymentfailrazorpay',checkUserSession,checkoutController.paymentFail
 
 
 user.post('/applycoupon',checkUserSession,checkoutController.applycoupon)
-
+user.post('/removecoupon',checkUserSession,checkoutController.removecoupon)
 
 
 

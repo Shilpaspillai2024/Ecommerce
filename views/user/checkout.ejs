@@ -460,10 +460,7 @@
                                                 </div>
                                             </div>
 
-
-
-
-                                            <div class="col-lg-3 col-sm-6">
+                                               <div class="col-lg-3 col-sm-6">
                                                 <div>
                                                     <label class="card-radio-label">
                                                         <input type="radio" name="paymentMethod" value="COD"
@@ -588,6 +585,7 @@
                             </div>
                         </div>
 
+                     
                         <!-- Action Buttons -->
                         <div class="text-center">
                             <button class="btn btn-dark me-2" id="cancelButton">Cancel</button>
@@ -842,12 +840,51 @@ async function initializeRazorpay(result, originalData) {
             color: "#3399cc"
         },
         modal: {
-            ondismiss: function () {
-                console.log('⚠️ Payment modal dismissed by user');
-                // When user closes the payment modal
-                isCheckoutInProgress = false;
-                setCheckoutButtonState(false, 'Place Order');
-                showWarning('Payment was cancelled. You can try again.');
+               ondismiss: async function () {
+                console.log('⚠️ Payment modal dismissed/cancelled by user');
+                
+                try {
+                    // FIXED: Call payment failure handler when user cancels
+                    const failureRes = await fetch('/paymentfailrazorpay', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                            ...originalData, 
+                            paymentStatus: 'Cancelled',
+                            razorpayOrderId: result.razorpayOrderId,
+                            errorReason: 'Payment cancelled by user'
+                        })
+                    });
+
+                    const failureData = await failureRes.json();
+                    console.log('📥 Payment cancellation handled:', failureData);
+
+                    if (failureRes.ok && failureData.success) {
+                        showWarning('Payment was cancelled. Your cart is preserved - you can try again.');
+                       
+                        setTimeout(() => {
+                           
+                            window.location.href = '/cart';
+                            
+                        }, 2000);
+                    } else {
+                        showError('Error handling payment cancellation. Please refresh and try again.');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                } catch (error) {
+                    console.error('❌ Error handling payment cancellation:', error);
+                    showError('Payment was cancelled. Please refresh the page and try again.');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } finally {
+                    isCheckoutInProgress = false;
+                    setCheckoutButtonState(false, 'Place Order');
+                }
             }
         }
     };
@@ -895,7 +932,7 @@ async function initializeRazorpay(result, originalData) {
 
 
 
-    // FIXED: Enhanced checkout submit function
+   
 async function checkoutSubmit(event) {
     try {
         event.preventDefault();
@@ -940,7 +977,7 @@ async function checkoutSubmit(event) {
             console.log('⏳ Concurrent checkout detected:', result);
             showWarning(result.message || 'Another checkout is already in progress. Please wait and try again.');
             
-            // Optionally reload page after a delay
+         
             setTimeout(() => {
                 window.location.reload();
             }, 3000);
@@ -1108,8 +1145,15 @@ async function checkoutSubmit(event) {
                 return;
             }
 
-            updateTotal(couponData.totalPrice, couponData.couponDiscount);
-            showCouponBadge(couponCode);
+          
+            updateTotal(
+            couponData.totalPrice,           // Final total with shipping
+            couponData.couponDiscount,       // Coupon discount amount
+            couponData.subtotalAfterCoupon,  // Subtotal after coupon (before shipping)
+            couponData.shippingCharge        // Shipping charge
+        );
+          
+           showCouponBadge(couponCode);
             showSuccess('Coupon applied successfully!');
 
         } catch (error) {
@@ -1120,18 +1164,51 @@ async function checkoutSubmit(event) {
     }
 
 
-    function updateTotal(total, discount) {
+  function updateTotal(finalTotal, discount, subtotalAfterCoupon, shippingCharge) {
     const totalElement = document.getElementById('totalPriceCheckout');
     const discountElement = document.getElementById('couponDiscount');
-
+    
     if (totalElement && discountElement) {
-       
-        totalElement.textContent = total.toFixed(2);
+        totalElement.textContent = finalTotal.toFixed(2);
         discountElement.textContent = discount.toFixed(2);
-    } else {
-        console.error('One or both elements not found:', totalElement, discountElement);
+        
+        
+        updateShippingDisplay(subtotalAfterCoupon, shippingCharge);
     }
 }
+
+  function updateShippingDisplay(subtotalAfterCoupon, shippingCharge) {
+    const shippingRows = document.querySelectorAll('td');
+    const alertDiv = document.querySelector('.alert-success, .alert-warning');
+    
+   
+    shippingRows.forEach((td) => {
+        if (td.textContent.includes('Shipping Charge')) {
+            const shippingValueTd = td.parentElement.querySelector('td:last-child');
+            if (shippingCharge === 0) {
+                shippingValueTd.innerHTML = 'FREE';
+            } else {
+                shippingValueTd.innerHTML = `&#8377; ${shippingCharge}`;
+            }
+        }
+    });
+    
+    // Update the alert message
+    if (alertDiv) {
+        const alertText = alertDiv.querySelector('.flex-grow-1') || alertDiv;
+        
+        if (subtotalAfterCoupon >= 500) {
+            alertText.innerHTML = 'Your order qualifies for FREE Delivery!';
+            alertDiv.className = 'alert alert-success mb-3';
+        } else {
+            const needed = (500 - subtotalAfterCoupon).toFixed(2);
+            alertText.innerHTML = `Add &#8377;${needed} more for FREE Delivery.`;
+            alertDiv.className = 'alert alert-warning mb-3';
+        }
+    }
+}
+
+
 
 
     function showCouponBadge(couponCode) {
@@ -1143,14 +1220,35 @@ async function checkoutSubmit(event) {
         }
     }
 
-    function removeCoupon() {
-        document.getElementById('couponCode').value = '';
-        const couponBadge = document.getElementById('couponBadge');
-        if (couponBadge) {
-            couponBadge.style.display = 'none';
+
+    async function removeCoupon() {
+    try {
+        const res = await fetch('/removecoupon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (res.ok) {
+           
+            document.getElementById('couponCode').value = '';
+            const couponBadge = document.getElementById('couponBadge');
+            if (couponBadge) {
+                couponBadge.style.display = 'none';
+            }
+            
+          
+            location.reload();
+        } else {
+            showError('Failed to remove coupon');
         }
+    } catch (error) {
+        console.error('Remove coupon error:', error);
+        // Fallback to page reload
         location.reload();
     }
+}
 
     // Add event listener to form submission
  document.addEventListener('DOMContentLoaded', function() {

@@ -3,6 +3,7 @@ const walletSchema = require('../../model/walletSchema')
 const productSchema = require('../../model/productSchema')
 const userSchema = require('../../model/userSchema')
 const reviewSchema = require('../../model/reviewSchema')
+const cartSchema =require('../../model/cartSchema')
 const catchAsync=require('../../utils/catchAsync')
 const mongoose = require('mongoose')
 const PDFDocument = require('pdfkit-table')
@@ -410,74 +411,156 @@ const downloadInvoice =catchAsync( async (req, res) => {
 
 //payment retyr with razorpay
 
-const retryRazorPay =catchAsync( async (req, res) => {
 
-        const { orderId } = req.body
+const retryRazorPay = catchAsync(async (req, res) => {
+    const { orderId } = req.body;
+    const userId = req.session.user;
 
+    
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(STATUS_CODES.BAD_REQUEST).send('Invalid orderId');
+    }
 
+    const order = await orderSchema.findById(orderId);
 
+    if (!order) {
+        return res.status(STATUS_CODES.NOT_FOUND).send('Order not found');
+    }
 
-        // Check if orderId is a valid ObjectId
-        if (!mongoose.Types.ObjectId.isValid(orderId)) {
-            return res.status(STATUS_CODES.BAD_REQUEST).send('Invalid orderId');
+    
+    if (order.userId.toString() !== userId.toString()) {
+        return res.status(STATUS_CODES.UNAUTHORIZED).send('Unauthorized access');
+    }
+
+    // Release any existing lock on the user's cart
+    await cartSchema.findOneAndUpdate(
+        { userId },
+        { 
+            $unset: { 
+                isLocked: 1, 
+                lockedAt: 1, 
+                pendingOrderData: 1 
+            } 
         }
+    );
 
-        const order = await orderSchema.findById(orderId)
+    // Find the user's current cart
+    const cart = await cartSchema.findOne({ userId });
+    
+    if (!cart) {
+        return res.status(STATUS_CODES.BAD_REQUEST).send('Cart not found');
+    }
 
-        // Check if the order exists
-        if (!order) {
-            return res.status(STATUS_CODES.NOT_FOUND).send('Order not found');
-        }
-        // razorpay order created
-
+    // Create new Razorpay order using the order's total price
+    try {
         const razorpayOrder = await razorpay.orders.create({
-            amount: order.totalPrice * 100,
+            amount: order.totalPrice * 100, 
             currency: "INR",
-            receipt: "receipt#1",
-        })
+            receipt: `receipt_retry_${order.orderID}`,
+        });
+
+        // Lock the cart and store pending order data
+        await cartSchema.findByIdAndUpdate(
+            cart._id,
+            {
+                $set: {
+                    isLocked: true,
+                    lockedAt: new Date(),
+                    pendingOrderData: {
+                        orderID: order.orderID,
+                        contactInfo: order.contactInfo,
+                        address: order.address,
+                        products: order.products, 
+                        totalPrice: order.totalPrice, 
+                        couponDiscount: order.couponDiscount, 
+                        paymentMethod: "razorpay",
+                        razorpayOrderId: razorpayOrder.id,
+                        createdAt: new Date(),
+                    },
+                },
+            }
+        );
+
+        return res.status(STATUS_CODES.OK).json({ 
+            ...order.toObject(), 
+            razorpayOrderId: razorpayOrder.id,
+            amount: order.totalPrice * 100 
+        });
+    } catch (error) {
+        console.error("❌ Razorpay order creation failed:", error);
+        
+        await cartSchema.findByIdAndUpdate(
+            cart._id,
+            { $unset: { isLocked: 1, lockedAt: 1, pendingOrderData: 1 } }
+        );
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Failed to create payment order. Please try again.",
+        });
+    }
+});
 
 
-
-
-        if (razorpayOrder) {
-
-
-            return res.status(STATUS_CODES.OK).json({ ...order.toObject(), razorpayOrderId: razorpayOrder.id })
-        } else {
-            return res.status(STATUS_CODES.NOT_FOUND).send('Retry Payment Failed')
-        }
+const proceedPayment = catchAsync(async (req, res) => {
+    const { orderId, razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
+    const userId = req.session.user;
 
    
+    if (razorpaySignature) {
+        const crypto = require("crypto");
+        const expectedSignature = crypto
+            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+            .update(razorpayOrderId + "|" + razorpayPaymentId)
+            .digest("hex");
 
-})
-
-
-
-
-
-const proceedPayment =catchAsync( async (req, res) => {
-
-      const { orderId, razorpayOrderId } = req.body
-
-
-        //update status of order
-
-        const update = {
-            razorpayOrderId: razorpayOrderId,
-            status: 'processing'
-        }
-        const order = await orderSchema.findByIdAndUpdate(orderId, update);
-        for (let product of order.products) {
-            await productSchema.findByIdAndUpdate(product.productId, {
-                $inc: { productQuantity: -product.quantity }
+        if (expectedSignature !== razorpaySignature) {
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
+                success: false,
+                message: "Payment verification failed. Invalid signature.",
             });
         }
+    }
 
-        res.status(STATUS_CODES.OK).json(order)
+    const update = {
+        razorpayOrderId: razorpayOrderId,
+        razorpayPaymentId: razorpayPaymentId,
+        status: 'processing'
+    };
+    
+    const order = await orderSchema.findByIdAndUpdate(orderId, update, { new: true });
+    
+    if (!order) {
+        return res.status(STATUS_CODES.NOT_FOUND).json({
+            success: false,
+            message: "Order not found",
+        });
+    }
+   for (let product of order.products) {
+        await productSchema.findByIdAndUpdate(
+            product.productId, 
+            { $inc: { productQuantity: -product.quantity } }
+        );
+    }
 
-   
-})
+    await cartSchema.findOneAndUpdate(
+        { userId },
+        { 
+            $set: { items: [] },
+            $unset: { 
+                isLocked: 1, 
+                lockedAt: 1, 
+                pendingOrderData: 1,
+                payableAmount: 1
+            } 
+        }
+    );
 
+    res.status(STATUS_CODES.OK).json({
+        success: true,
+        order: order,
+        message: "Payment successful! Order is now processing."
+    });
+});
 
 
 const removeOrder =catchAsync(async (req, res) => {
@@ -491,8 +574,6 @@ const removeOrder =catchAsync(async (req, res) => {
 
   
 });
-
-
 
 
 const orderFailure = (req, res) => {
