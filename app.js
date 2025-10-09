@@ -43,6 +43,7 @@ app.set("layout", "./layouts/layout");
 //ejs setup
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.set('trust proxy', 1);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -51,8 +52,13 @@ app.use(
   session({
     secret: uuidv4(),
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
+    saveUninitialized:false,
+     cookie: {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000
+    },
   })
 );
 
