@@ -20,6 +20,12 @@ const profile= catchAsync(async (req,res) =>{
 const personalInformation =catchAsync(async(req,res)=>{
   
         const userId = req.session.user; // User ID from session
+
+        if (!req.body.name || req.body.name.trim() === "") {
+                req.flash('errorMessage', 'Name cannot be empty.');
+                return res.redirect('/profile');
+              }
+
         const userDetail = await userSchema.findByIdAndUpdate(userId, {
             name:req.body.name,
             number:req.body.number
