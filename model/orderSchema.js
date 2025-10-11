@@ -52,6 +52,11 @@ const schema=new mongoose.Schema({
     couponDiscount:{
         type:Number
     },
+    shippingCharge:{
+        type:Number,
+        default:0
+
+    },
 
     razorpayOrderId:{
         type:String,

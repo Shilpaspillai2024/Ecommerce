@@ -1,11 +1,11 @@
 <style>
-    body{
-    background:#070707;
-}
-.card {
+  body {
+    background: #070707;
+  }
+  .card {
     box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
-}
-.card {
+  }
+  .card {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -13,195 +13,206 @@
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
-    border: 0 solid rgba(0,0,0,.125);
+    border: 0 solid rgba(0, 0, 0, 0.125);
     border-radius: 1rem;
-}
-.text-reset {
+  }
+  .text-reset {
     --bs-text-opacity: 1;
-    color: inherit!important;
-}
-a {
+    color: inherit !important;
+  }
+  a {
     color: #5465ff;
     text-decoration: none;
-}
+  }
 </style>
 
+<%- include('navbar') %>
 
-
-<%-include('navbar')%>
 <div class="container-fluid">
-
-    <div class="container">
-      <!-- Title -->
-      <div class="d-flex justify-content-between align-items-center py-3">
-        <h2 class="h5 mb-0 text-white"><a href="#" "></a> Order #<%=order.orderID%></h2>
-
-        
-      </div>
-    
-      <!-- Main content -->
-      <div class="row">
-        <div class="col-lg-8">
-          <!-- Details -->
-          <div class="card mb-4">
-            <div class="card-body">
-              <div class="mb-3 d-flex justify-content-between">
-                <div>
-
-                 
-                  <span class="me-3"><%= order.createdAt.toDateString() %></span>
-               
-                </div>
-               
-              </div>
-              <table class="table table-borderless">
-                <tbody>
-                    <% order.products.forEach((product)=>{ %>
-                  <tr>
-                    <td>
-                      <div class="d-flex mb-2">
-                        <div class="flex-shrink-0">
-                          <img src="../../<%= product.productId.productImage[0]%>" alt="" width="35" class="img-fluid">
-                        </div>
-                        <div class="flex-lg-grow-1 ms-3">
-                          <h6 ><%= product.productId.productName%></h6>
-                          
-                        </div>
-                      </div>
-                    </td>
-                
-                    <td><%= product.quantity %></td>
-                    <td class="text-end"><%= Math.round(product.price )%></td>
-                  </tr>
-                  <% }) %>
-                  
-                </tbody>
-                <tfoot>
-                 
-                  <tr class="fw-bold">
-                    <td colspan="2">TOTAL</td>
-                   
-                    <td> <%= order.totalQuantity %></td>
-                    <td class="text-end"><%=order.totalPrice %></td>
-                  
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-          <!-- Payment -->
-          <div class="card mb-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-lg-6">
-                  <h3 class="h6">Payment Method</h3>
-                  <p><%= order.paymentMethod %><br>
-                 
-                </div>
-                <div class="col-lg-6">
-                  
-                  <h3 class="h6">Billing Information</h3>
-             
-              <h3 class="h6">Address</h3>
-              <address>
-                <strong><%= order.address.contactName %></strong><br>
-                <%= order.address.addressType %><br>
-                <%= order.address.doorNo %><br>
-                <%= order.address.Address %><br>
-                <%= order.address.areaAddress %><br>
-                <%= order.address.landmark %><br>
-                <%= order.address.pincode %><br>
-                
-               
-                <abbr title="Phone">P:</abbr> <%= order.address.phone %>
-              </address>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        
-       
-        <div class="col-lg-4">
-          
-         
-          <div class="card mb-4">
-
-           
-            <!-- Shipping information -->
-            <div class="card-body">
-              
-             
-              <h3 class="h6">shipping address</h3>
-              <address>
-                <strong><%= order.address.contactName %></strong><br>
-                <%= order.address.addressType %><br>
-                <%= order.address.doorNo %><br>
-                <%= order.address.Address %><br>
-                <%= order.address.areaAddress %><br>
-                <%= order.address.landmark %><br>
-                <%= order.address.pincode %><br>
-                
-                
-                <abbr title="Phone">P:</abbr>  <%= order.address.phone %>
-              </address>
-
-            </div>
-          </div>
-          <div class="card mb-4">
-            <form action="" method="post" id="edit-order-status-form">
-            <div class="card-body">
-               
-                <a href="/order" class="btn btn-secondary me-5 ms-2">Go Back</a>
-            </div>
-            </form>
-          </div>
-          <button class="btn btn-danger ms-2"
-          onclick="downloadInvoice('<%= order._id %>')">
-          Invoice <i class="fa-solid fa-download"></i>
-          </button>
-        </div>
-      </div>
-      
+  <div class="container">
+    <!-- Title -->
+    <div class="d-flex justify-content-between align-items-center py-3">
+      <h2 class="h5 mb-0 text-white">
+        <a href="#">Order #<%= order.orderID %></a>
+      </h2>
     </div>
-   
+
+    <!-- Main content -->
+    <div class="row">
+      <!-- Left Column -->
+      <div class="col-lg-8">
+        <!-- Order Details -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="mb-3 d-flex justify-content-between">
+              <div>
+                <span class="me-3"><%= order.createdAt.toDateString() %></span>
+              </div>
+            </div>
+
+            <table class="table table-borderless">
+              <tbody>
+                <% order.products.forEach((product) => { %>
+                <tr>
+                  <td>
+                    <div class="d-flex mb-2">
+                      <div class="flex-shrink-0">
+                        <img
+                          src="../../<%= product.productId.productImage[0] %>"
+                          alt=""
+                          width="35"
+                          class="img-fluid"
+                        />
+                      </div>
+                      <div class="flex-lg-grow-1 ms-3">
+                        <h6><%= product.productId.productName %></h6>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td><%= product.quantity %></td>
+
+                  <td>₹<%= product.productId.productPrice.toFixed(2) %></td>
+
+                  <!-- Product Discount -->
+                  <td>
+                    <% if (product.productId.productDiscount &&
+                    product.productId.productDiscount > 0) { const
+                    discountAmount = (product.productId.productPrice *
+                    product.productId.productDiscount) / 100; %>
+                    <small class="text-success">
+                      Discount: ₹<%= discountAmount.toFixed(2) %>
+                    </small>
+                    <% } else { %>
+                    <small class="text-muted">No discount</small>
+                    <% } %>
+                  </td>
+
+                  <td class="text-end">₹<%= (product.price * product.quantity).toFixed(2) %></td>
+                </tr>
+                <% }) %>
+              </tbody>
+
+              <tfoot>
+                <tr>
+                  <td colspan="3">Shipping Charge</td>
+                  <td class="text-end">
+                    ₹<%= order.shippingCharge.toFixed(2) %>
+                  </td>
+                </tr>
+
+                <% if (order.couponDiscount && order.couponDiscount > 0) { %>
+                <tr>
+                  <td colspan="3">Coupon Discount</td>
+                  <td class="text-end text-success">
+                    - ₹<%= order.couponDiscount.toFixed(2) %>
+                  </td>
+                </tr>
+                <% } %>
+
+                <tr class="fw-bold">
+                  <td colspan="3">TOTAL</td>
+                  <td class="text-end"><%= order.totalPrice %></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Payment & Billing -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-6">
+                <h3 class="h6">Payment Method</h3>
+                <p><%= order.paymentMethod %></p>
+              </div>
+
+              <div class="col-lg-6">
+                <h3 class="h6">Billing Information</h3>
+                <h3 class="h6">Address</h3>
+                <address>
+                  <strong><%= order.address.contactName %></strong><br />
+                  <%= order.address.addressType %><br />
+                  <%= order.address.doorNo %><br />
+                  <%= order.address.Address %><br />
+                  <%= order.address.areaAddress %><br />
+                  <%= order.address.landmark %><br />
+                  <%= order.address.pincode %><br />
+                  <abbr title="Phone">P:</abbr> <%= order.address.phone %>
+                </address>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <%-include('footer')%>
+      <!-- Right Column -->
+      <div class="col-lg-4">
+        <!-- Shipping Address -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h3 class="h6">Shipping Address</h3>
+            <address>
+              <strong><%= order.address.contactName %></strong><br />
+              <%= order.address.addressType %><br />
+              <%= order.address.doorNo %><br />
+              <%= order.address.Address %><br />
+              <%= order.address.areaAddress %><br />
+              <%= order.address.landmark %><br />
+              <%= order.address.pincode %><br />
+              <abbr title="Phone">P:</abbr> <%= order.address.phone %>
+            </address>
+          </div>
+        </div>
 
+        <!-- Actions -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <a href="/order" class="btn btn-secondary me-2">Go Back</a>
+          </div>
+        </div>
 
-      <script>
+        <button
+          class="btn btn-danger ms-2"
+          onclick="downloadInvoice('<%= order._id %>')"
+        >
+          Invoice <i class="fa-solid fa-download"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<%- include('footer') %>
 
-
-function downloadInvoice(orderId) {
-                const URL = `/invoice/${orderId}`
-                fetch(URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }).then((res) => {
-                    if (res.ok) {
-                        return res.blob();
-                    }
-                    throw new Error('Network response was not ok.');
-                })
-                    .then((blob) => {
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-                        a.download = `report-${Date.now()}.pdf`;
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                    }).catch((err) => {
-                        console.log(err);
-                    })
-
-            }
-       
-      </script>
+<script>
+  function downloadInvoice(orderId) {
+    const URL = `/invoice/${orderId}`;
+    fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.blob();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = `report-${Date.now()}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+</script>

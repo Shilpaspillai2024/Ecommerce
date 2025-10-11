@@ -51,10 +51,6 @@
 
 </style>
 
-
-
-
-
 <%-include('navbar') %>
 
 <div class="container">
@@ -72,12 +68,12 @@
         </div>
         <div class="form-group">
             <label for="edit-address-contactName">Contact Name:</label>
-            <input type="text" class="form-control" id="edit-address-contactName" name="contactName" value="<%= address.contactName %>" required>
+            <input type="text" class="form-control" id="edit-address-contactName" name="contactName" value="<%= address.contactName %>">
         </div>
 
         <div class="form-group">
             <label for="new-address-doorNo">Door No:</label>
-            <input type="text" class="form-control" id="new-address-doorNo" name="doorNo"value="<%= address.doorNo %>" required>
+            <input type="text" class="form-control" id="new-address-doorNo" name="doorNo"value="<%= address.doorNo %>">
         </div>
         <div class="form-group">
             <label for="new-address-homeAddress">Address:</label>
@@ -109,82 +105,67 @@
             <button type="submit" class="btn btn-primary save-changes-btn">Save Changes</button>
         </div>
 
-       
-
-        
-
-
     </form>
 </div>
 
 <%- include('footer') %>
 
+
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const editAddressForm = document.getElementById('edit-address-form');
 
+    const fields = {
+        contactName: document.getElementsByName('contactName')[0],
+        doorNo: document.getElementsByName('doorNo')[0],
+        homeAddress: document.getElementsByName('homeAddress')[0],
+        areaAddress: document.getElementsByName('areaAddress')[0],
+        landmark: document.getElementsByName('landmark')[0],
+        phone: document.getElementsByName('phone')[0],
+        pincode: document.getElementsByName('pincode')[0]
+    };
 
-const editAddressForm = document.getElementById('edit-address-form');
-const editContactName = document.getElementsByName('contactName')[0];
-const editPincode = document.getElementsByName('pincode')[0];
-const editHomeAddress = document.getElementsByName('homeAddress')[0];
-const editAreaAddress = document.getElementsByName('areaAddress')[0];
-const editLandmark = document.getElementsByName('landmark')[0];
-const editPhone = document.getElementsByName('phone')[0];
-const editDoorNo = document.getElementsByName('doorNo')[0];
+    editAddressForm.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-// Validation for editing address
-editAddressForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+        const contactNameValue = fields.contactName.value.trim();
+        const doorNoValue = fields.doorNo.value.trim();
+        const homeAddressValue = fields.homeAddress.value.trim();
+        const areaAddressValue = fields.areaAddress.value.trim();
+        const landmarkValue = fields.landmark.value.trim();
+        const phoneValue = fields.phone.value.trim();
+        const pincodeValue = fields.pincode.value.trim();
 
-    let isValid = true;
-    let validateMessage = "";
+        let message = "";
 
-    // Check if contact name is empty or contains only numbers
-    if (editContactName.value.trim() === "" || !isNaN(editContactName.value)) {
-        validateMessage = "Enter a valid name";
-        isValid = false;
-    }
-    // Check pincode
-    else if (editPincode.value.length !== 6 || !/^\d{6}$/.test(editPincode.value)) {
-        validateMessage = "Enter a valid 6-digit Pincode";
-        isValid = false;
-    }
-    // Validate home address
-    else if (editHomeAddress.value.length < 10 || editHomeAddress.value.length > 100 || !isNaN(editHomeAddress.value)) {
-        validateMessage = "Enter a valid home address between 20 and 100 characters";
-        isValid = false;
-    }
-    // Validate area address
-    else if (editAreaAddress.value.length < 3 || editAreaAddress.value.length > 100 || !isNaN(editAreaAddress.value)) {
-        validateMessage = "Enter a valid area address between 10 and 100 characters";
-        isValid = false;
-    }
-    // Validate landmark
-    else if (editLandmark.value.length > 50 || !isNaN(editLandmark.value)) {
-        validateMessage = "Enter a valid landmark with maximum 50 characters";
-        isValid = false;
-    }
-    // Validate phone number
-    else if (editPhone.value.length !== 10 || isNaN(editPhone.value)) {
-        validateMessage = "Enter a valid 10-digit phone number";
-        isValid = false;
-    }
-    // Validate door number
-    else if (editDoorNo.value.trim() === "") {
-        validateMessage = "Enter a door number";
-        isValid = false;
-    }
+        if (!contactNameValue) {
+            message = "Contact name cannot be empty";
+        } else if (!/^[a-zA-Z\s]+$/.test(contactNameValue)) {
+            message = "Enter a valid contact name (letters only)";
+        } else if (!doorNoValue) {
+            message = "Door number cannot be empty";
+        } else if (homeAddressValue.length < 10 || homeAddressValue.length > 100) {
+            message = "Home address must be between 10 and 100 characters";
+        } else if (areaAddressValue.length < 3 || areaAddressValue.length > 100) {
+            message = "Area address must be between 3 and 100 characters";
+        } else if (landmarkValue.length > 50) {
+            message = "Landmark cannot exceed 50 characters";
+        } else if (!/^\d{10}$/.test(phoneValue)) {
+            message = "Phone number must be exactly 10 digits";
+        } else if (!/^\d{6}$/.test(pincodeValue)) {
+            message = "Pincode must be exactly 6 digits";
+        }
 
-    // If any of the above is invalid, display an error message
-    if (!isValid) {
-        Swal.fire({
-            icon: "error",
-            title: "Invalid Information",
-            text: validateMessage
-        });
-    } else {
-        editAddressForm.submit();
-    }
+        if (message) {
+            Swal.fire({
+                icon: "error",
+                title: "Validation Error",
+                text: message
+            });
+        } else {
+            editAddressForm.submit();
+        }
+    });
 });
 
-  
 </script>

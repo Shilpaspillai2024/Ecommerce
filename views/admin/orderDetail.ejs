@@ -46,7 +46,7 @@ a {
     <div class="container">
       <!-- Title -->
       <div class="d-flex justify-content-between align-items-center py-3">
-        <h2 class="h5 mb-0 text-white"><a href="#" class="text-muted"></a> Order #<%=order._id%></h2>
+        <h2 class="h5 mb-0 text-white"><a href="#" class="text-muted"></a> Order #<%=order.orderID%></h2>
 
         
       </div>
@@ -62,54 +62,74 @@ a {
 
                  
                   <span class="me-3"><%= order.createdAt.toDateString() %></span>
-                  <!-- <span class="me-3">order._id</span>
-                  <span class="me-3">product.paymentMethod</span> -->
-                  <!-- <span class="badge rounded-pill bg-info">SHIPPING</span> -->
+               
                 </div>
-                <!-- <div class="d-flex">
-                  <button class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text"><i class="bi bi-download"></i> <span class="text">Invoice</span></button>
-                  <div class="dropdown">
-                    <button class="btn btn-link p-0 text-muted" type="button" data-bs-toggle="dropdown">
-                      <i class="bi bi-three-dots-vertical"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                      <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Edit</a></li>
-                      <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i> Print</a></li>
-                    </ul>
-                  </div>
-                </div> -->
+               
               </div>
+         
               <table class="table table-borderless">
-                <tbody>
-                    <% order.products.forEach((product)=>{ %>
-                  <tr>
-                    <td>
-                      <div class="d-flex mb-2">
-                        <div class="flex-shrink-0">
-                          <img src="../../<%= product.productId.productImage[0]%>" alt="" width="35" class="img-fluid">
-                        </div>
-                        <div class="flex-lg-grow-1 ms-3">
-                          <h6 ><%= product.productId.productName%></h6>
-                          
-                        </div>
-                      </div>
-                    </td>
-                    <td><%= product.quantity %></td>
-                    <td class="text-end"><%= product.price %></td>
-                  </tr>
-                  <% }) %>
-                  
-                </tbody>
-                <tfoot>
-                 
-                  <tr class="fw-bold">
-                    <td colspan="2">TOTAL</td>
-                    <td> <%= order.totalQuantity %></td>
-                    <td class="text-end"><%=order.totalPrice %></td>
-                  
-                  </tr>
-                </tfoot>
-              </table>
+  <tbody>
+    <% order.products.forEach((product) => { %>
+      <tr>
+        <td>
+          <div class="d-flex mb-2">
+            <div class="flex-shrink-0">
+              <img src="../../<%= product.productId.productImage[0] %>" alt="" width="35" class="img-fluid">
+            </div>
+            <div class="flex-lg-grow-1 ms-3">
+              <h6><%= product.productId.productName %></h6>
+            </div>
+          </div>
+        </td>
+
+        <!-- Quantity -->
+        <td><%= product.quantity %></td>
+
+        <!-- Original Price -->
+        <td>₹<%= product.productId.productPrice.toFixed(2) %></td>
+
+        <!-- Product Discount -->
+        <td>
+          <% if (product.productId.productDiscount && product.productId.productDiscount > 0) {
+               const discountAmount = (product.productId.productPrice * product.productId.productDiscount) / 100;
+          %>
+            <small class="text-success">
+              Discount: ₹<%= discountAmount.toFixed(2) %>
+            </small>
+          <% } else { %>
+            <small class="text-muted">No discount</small>
+          <% } %>
+        </td>
+
+        <!-- Final Price -->
+        <td class="text-end">
+          ₹<%= (product.price * product.quantity).toFixed(2) %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+
+  <tfoot>
+    <tr>
+      <td colspan="4">Shipping Charge</td>
+      <td class="text-end">₹<%= order.shippingCharge.toFixed(2) %></td>
+    </tr>
+
+    <% if (order.couponDiscount && order.couponDiscount > 0) { %>
+      <tr>
+        <td colspan="4">Coupon Discount</td>
+        <td class="text-end text-success">- ₹<%= order.couponDiscount.toFixed(2) %></td>
+      </tr>
+    <% } %>
+
+    <tr class="fw-bold">
+      <td colspan="3">TOTAL</td>
+      <td><%= order.totalQuantity %></td>
+      <td class="text-end">₹<%= order.totalPrice.toFixed(2) %></td>
+    </tr>
+  </tfoot>
+</table>
+
             </div>
           </div>
           <!-- Payment -->
@@ -119,7 +139,6 @@ a {
                 <div class="col-lg-6">
                   <h3 class="h6">Payment Method</h3>
                   <p><%= order.paymentMethod %><br>
-                  <!-- Total: $169,98 <span class="badge bg-success rounded-pill">PAID</span></p> -->
                 </div>
                 <div class="col-lg-6">
                   <h3 class="h6">shipping address</h3>
@@ -189,7 +208,7 @@ a {
                       <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
                       <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
                   </select>
-              </div>
+                </div>
               
                 <a href="/admin/order" class="btn btn-secondary me-2 ms-2">Go Back</a>
                 <button type="submit" class="btn btn-primary ms-2">Update Status</button>

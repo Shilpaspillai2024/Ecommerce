@@ -199,10 +199,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
         couponCode,
       } = req.body;
 
-      console.log("🔐 Trying to acquire lock for user:", userId);
-      console.log("Payment method:", paymentMethod);
-      console.log("Razorpay OrderId:", razorpayOrderId);
-      console.log("Razorpay PaymentId:", razorpayPaymentId);
+      
 
       let cart;
 
@@ -332,6 +329,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
       let totalPrice = 0;
       let couponDiscount = 0;
       let orderProducts = [];
+      let shippingCharge=0
 
       // Calculate order products only for new checkouts
       if (!razorpayOrderId || !razorpayPaymentId) {
@@ -368,7 +366,10 @@ const OrderPlaced = catchAsync(async (req, res) => {
         }
 
         // Calculate shipping based on subtotal after coupon
-        const shippingCharge = subtotalAfterCoupon < 500 ? 50 : 0;
+
+       // const shippingCharge = subtotalAfterCoupon < 500 ? 50 : 0;
+
+        shippingCharge = subtotalAfterCoupon < 500 ? 50 : 0
         totalPrice = subtotalAfterCoupon + shippingCharge;
 
      
@@ -432,6 +433,8 @@ const OrderPlaced = catchAsync(async (req, res) => {
 
       const orderID = generateRandomOrderId();
 
+      console.log("orderId",orderID)
+
       // Handle Razorpay Payment - First Call (Create Order)
       if (paymentMethod === "razorpay" && !razorpayOrderId) {
         console.log("🏦 Creating Razorpay order...");
@@ -462,6 +465,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
                   address: addressObj,
                   products: orderProducts,
                   totalPrice,
+                  shippingCharge,
                   couponDiscount,
                   paymentMethod,
                   razorpayOrderId: razorpayOrder.id,
@@ -628,6 +632,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
           address: pendingData.address,
           products: pendingData.products,
           totalPrice: pendingData.totalPrice,
+          shippingCharge:pendingData.shippingCharge,
           couponDiscount: pendingData.couponDiscount,
           paymentMethod: pendingData.paymentMethod,
           razorpayOrderId: razorpayOrderId,
@@ -682,6 +687,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
           address: addressObj,
           products: orderProducts,
           totalPrice,
+          shippingCharge,
           couponDiscount,
           paymentMethod: "cod",
           status: "processing",
@@ -751,6 +757,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
           address: addressObj,
           products: orderProducts,
           totalPrice,
+          shippingCharge,
           couponDiscount,
           paymentMethod: "wallet",
           status: "processing",
@@ -940,6 +947,7 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
         address: addressObj,
         products: orderProducts,
         totalPrice,
+        shippingCharge,
         couponDiscount,
         paymentMethod,
         razorpayOrderId,
@@ -947,7 +955,7 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
       };
     }
 
-    console.log("💔 Creating failed payment order:", orderData.orderID);
+    console.log(" Creating failed payment order:", orderData.orderID);
 
     // Create failed order with proper status
     const order = new orderSchema({
@@ -957,6 +965,7 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
       address: orderData.address,
       products: orderData.products,
       totalPrice: orderData.totalPrice,
+      shippingCharge:orderData.shippingCharge,
       couponDiscount: orderData.couponDiscount,
       paymentMethod: orderData.paymentMethod,
       razorpayOrderId: orderData.razorpayOrderId,
@@ -993,7 +1002,7 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
         { $unset: { isLocked: 1, lockedAt: 1, pendingOrderData: 1 } }
       );
     } catch (unlockError) {
-      console.error("❌ Error releasing lock:", unlockError);
+      console.error(" Error releasing lock:", unlockError);
     }
 
     return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
@@ -1006,10 +1015,19 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
 
 
 function generateRandomOrderId() {
-  const min = 100000; // Minimum 6-digit number
-  const max = 999999; // Maximum 6-digit number
-  const orderID = Math.floor(Math.random() * (max - min + 1)) + min;
-  return orderID.toString();
+   const prefix = "ord";
+
+  
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0"); 
+  const day = String(now.getDate()).padStart(2, "0");
+  const dateStr = `${year}${month}${day}`;
+
+  
+  const randomNum = String(Math.floor(Math.random() * 99) + 1).padStart(2, "0");
+
+  return `${prefix}${dateStr}-${randomNum}`;
 }
 
 

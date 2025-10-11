@@ -211,7 +211,7 @@
                         <div class="form-group">
                             <label for="new-address-contactName">Contact Name:</label>
                             <input type="text" class="form-control" id="new-address-contactName" name="contactName"
-                                required>
+                                >
                         </div>
                         <div class="form-group">
                             <label for="new-address-doorNo">Door No:</label>
@@ -237,7 +237,7 @@
 
                         <div class="form-group">
                             <label for="new-address-landmark">Phone:</label>
-                            <input type="text" class="form-control" id="new-address-phone" name="phone" required>
+                            <input type="text" class="form-control" id="new-address-phone" name="phone">
                         </div>
                         <div class="form-group">
                             <label for="new-address-pincode">Pincode:</label>
@@ -281,12 +281,7 @@
                 });
             });
 
-
-
-      
-          
-            
-    // JavaScript code for form validation
+     // JavaScript code for form validation
     const addressForm = document.getElementById('address-form');
     const contactName = document.getElementsByName('contactName')[0];
     const pincode = document.getElementsByName('pincode')[0];
@@ -315,7 +310,7 @@
 }
         // Validate home address
         else if (homeAddress.value.length < 10 || homeAddress.value.length > 100 || !isNaN(homeAddress.value)) {
-            validateMessage = "Enter a valid home address between 20 and 100 characters";
+            validateMessage = "Enter a valid home address between 10 and 100 characters";
             isValid = false;
         }
         // Validate area address
@@ -334,10 +329,7 @@
             isValid = false;
         }
 
-//         else if (!/^\d{10}$/.test(phone.value)) {
-//     validateMessage = "Enter a valid 10-digit phone number";
-//     isValid = false;
-// }
+
         // Validate door number
         else if (doorNo.value.trim() === "") {
             validateMessage = "Enter a door number";

@@ -48,16 +48,15 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
 app.use(
   session({
     secret: uuidv4(),
     resave: false,
     saveUninitialized:false,
      cookie: {
-      secure: true,
-      httpOnly: true,
-      sameSite: 'none',
-      maxAge: 24 * 60 * 60 * 1000
+      secure:false,
+      
     },
   })
 );

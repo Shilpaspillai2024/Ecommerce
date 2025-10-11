@@ -253,11 +253,6 @@
 
     }
 
-    /* .disabled-radio-label {
-    color: grey;
-    background-color: rgb(146, 144, 144);
-} */
-
     .disabled-radio-input {
         pointer-events: none;
         opacity: 0.6;
@@ -679,9 +674,9 @@
 
 
        
-       <!-- JavaScript to populate billing address -->
+     
 <script>
-    // Global variable to track if checkout is in progress
+    
     let isCheckoutInProgress = false;
 
     var codSpan = document.getElementById('cod-span');
@@ -943,7 +938,7 @@ async function checkoutSubmit(event) {
             return;
         }
 
-        console.log('🛒 Starting checkout process...');
+       
         isCheckoutInProgress = true;
         setCheckoutButtonState(true, 'Processing...');
 
@@ -969,7 +964,7 @@ async function checkoutSubmit(event) {
             body: JSON.stringify(data)
         });
 
-        console.log('📡 Checkout response status:', res.status);
+       
 
         // Handle concurrent checkout scenario
         if (res.status === 429) {
