@@ -97,7 +97,7 @@
                 <tr>
                   <td colspan="3">Shipping Charge</td>
                   <td class="text-end">
-                    ₹<%= order.shippingCharge.toFixed(2) %>
+                   ₹<%= order.shippingCharge ? order.shippingCharge.toFixed(2) : '0.00' %>
                   </td>
                 </tr>
 
