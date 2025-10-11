@@ -365,10 +365,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
           couponDiscount = 0;
         }
 
-        // Calculate shipping based on subtotal after coupon
-
-       // const shippingCharge = subtotalAfterCoupon < 500 ? 50 : 0;
-
+        
         shippingCharge = subtotalAfterCoupon < 500 ? 50 : 0
         totalPrice = subtotalAfterCoupon + shippingCharge;
 
@@ -627,7 +624,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
         // Create the order
         const order = new orderSchema({
           userId,
-          orderID: pendingData.orderID,
+          orderID: pendingData.orderID||orderID,
           contactInfo: pendingData.contactInfo,
           address: pendingData.address,
           products: pendingData.products,
