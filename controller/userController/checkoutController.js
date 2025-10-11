@@ -1012,20 +1012,19 @@ const paymentFailRazorpay = catchAsync(async (req, res) => {
 
 
 function generateRandomOrderId() {
-   const prefix = "ord";
+  const prefix = "ord";
 
-  
   const now = new Date();
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0"); 
+  const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
-  const dateStr = `${year}${month}${day}`;
+  const dateStr = year + month + day;
 
-  
   const randomNum = String(Math.floor(Math.random() * 99) + 1).padStart(2, "0");
 
-  return `${prefix}${dateStr}-${randomNum}`;
+  return prefix + dateStr + "-" + randomNum;
 }
+
 
 
 
