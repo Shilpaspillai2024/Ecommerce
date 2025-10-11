@@ -624,7 +624,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
         // Create the order
         const order = new orderSchema({
           userId,
-          orderID: pendingData.orderID||orderID,
+          orderID: pendingData.orderID||generateRandomOrderId(),
           contactInfo: pendingData.contactInfo,
           address: pendingData.address,
           products: pendingData.products,
