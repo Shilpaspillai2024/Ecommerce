@@ -39,7 +39,7 @@ const schema=new mongoose.Schema({
     totalPrice:{type:Number},
     address:{
         type: Object,
-        require: true
+        required: true
      },
      paymentMethod:{type:String,
         required:true
@@ -79,3 +79,4 @@ const schema=new mongoose.Schema({
 },{timestamps:true})
 
 module.exports=mongoose.model('order',schema)
+

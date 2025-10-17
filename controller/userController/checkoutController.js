@@ -169,6 +169,7 @@ const deletecheckoutAddress = catchAsync(async (req, res) => {
   res.redirect("/checkout");
 });
 
+
 const OrderPlaced = catchAsync(async (req, res) => {
   const userId = req.session.user;
 
@@ -199,8 +200,6 @@ const OrderPlaced = catchAsync(async (req, res) => {
         couponCode,
       } = req.body;
 
-      
-
       let cart;
 
       if (
@@ -208,7 +207,42 @@ const OrderPlaced = catchAsync(async (req, res) => {
         razorpayOrderId &&
         razorpayPaymentId
       ) {
-        // For Razorpay payment completion - find the cart with pending order data
+        // ✅ FIX 1: Check if order already exists for this Razorpay payment
+        const existingOrder = await orderSchema
+          .findOne({
+            userId,
+            razorpayOrderId: razorpayOrderId,
+          })
+          .session(session);
+
+        if (existingOrder) {
+          console.log("⚠️ Order already exists for this payment:", existingOrder.orderID);
+          
+          // Clear cart lock if order exists
+          await cartSchema.findOneAndUpdate(
+            { userId },
+            {
+              $set: { items: [] },
+              $unset: {
+                isLocked: 1,
+                lockedAt: 1,
+                pendingOrderData: 1,
+                payableAmount: 1,
+                totalPrice: 1,
+              },
+            },
+            { session }
+          );
+
+          return res.status(STATUS_CODES.OK).json({
+            success: true,
+            order: { orderID: existingOrder.orderID },
+            message: "Order already placed!",
+            alreadyExists: true,
+          });
+        }
+
+        // Find cart with pending order data
         console.log("🔍 Looking for cart with pending Razorpay order...");
         cart = await cartSchema
           .findOne({
@@ -251,8 +285,24 @@ const OrderPlaced = catchAsync(async (req, res) => {
 
         console.log("📋 Found cart for completion:", cart?._id);
       } else {
-        // For new checkout (first call) - acquire lock as before
+        // For new checkout - acquire lock with better concurrency control
         console.log("🆕 Acquiring new cart lock...");
+        
+        // ✅ FIX 2: Use findOne first to check lock status
+        const existingCart = await cartSchema
+          .findOne({ userId })
+          .session(session);
+
+        if (existingCart?.isLocked) {
+          const lockAge = Date.now() - new Date(existingCart.lockedAt).getTime();
+          if (lockAge < 10 * 60 * 1000) { // Lock is still valid
+            return res.status(STATUS_CODES.TOO_MANY_REQUESTS).json({
+              success: false,
+              message: "Another checkout is already in progress. Please wait and try again.",
+            });
+          }
+        }
+
         cart = await cartSchema
           .findOneAndUpdate(
             {
@@ -308,7 +358,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
         });
       }
 
-      // Check if cart is empty (only for new checkouts, not payment completion)
+      // Check if cart is empty
       if (
         (!razorpayOrderId || !razorpayPaymentId) &&
         (!cart.items || cart.items.length === 0)
@@ -329,7 +379,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
       let totalPrice = 0;
       let couponDiscount = 0;
       let orderProducts = [];
-      let shippingCharge=0
+      let shippingCharge = 0;
 
       // Calculate order products only for new checkouts
       if (!razorpayOrderId || !razorpayPaymentId) {
@@ -347,29 +397,22 @@ const OrderPlaced = catchAsync(async (req, res) => {
           };
         });
 
-        
         let subtotalAfterCoupon = originalSubtotal;
-     
 
-         // Only apply coupon if payableAmount is valid and represents a discount
         if (
-          typeof cart.payableAmount === "number" && 
-          cart.payableAmount > 0 && 
+          typeof cart.payableAmount === "number" &&
+          cart.payableAmount > 0 &&
           cart.payableAmount < originalSubtotal
         ) {
           subtotalAfterCoupon = cart.payableAmount;
           couponDiscount = originalSubtotal - subtotalAfterCoupon;
         } else {
-          // If no valid coupon, reset payableAmount to avoid issues
           subtotalAfterCoupon = originalSubtotal;
           couponDiscount = 0;
         }
 
-        
-        shippingCharge = subtotalAfterCoupon < 500 ? 50 : 0
+        shippingCharge = subtotalAfterCoupon < 500 ? 50 : 0;
         totalPrice = subtotalAfterCoupon + shippingCharge;
-
-     
 
         // Enhanced product availability validation
         for (let product of orderProducts) {
@@ -428,9 +471,28 @@ const OrderPlaced = catchAsync(async (req, res) => {
         }
       }
 
-      const orderID = generateRandomOrderId();
+      // ✅ FIX 3: Generate unique order ID with retry logic
+      let orderID;
+      let attempts = 0;
+      const maxAttempts = 5;
 
-      console.log("orderId",orderID)
+      while (attempts < maxAttempts) {
+        orderID = generateRandomOrderId();
+        const existingOrderWithId = await orderSchema
+          .findOne({ orderID })
+          .session(session);
+        
+        if (!existingOrderWithId) {
+          break; // Unique ID found
+        }
+        attempts++;
+      }
+
+      if (attempts === maxAttempts) {
+        throw new Error("Failed to generate unique order ID");
+      }
+
+      console.log("orderId", orderID);
 
       // Handle Razorpay Payment - First Call (Create Order)
       if (paymentMethod === "razorpay" && !razorpayOrderId) {
@@ -451,7 +513,7 @@ const OrderPlaced = catchAsync(async (req, res) => {
             receipt: `receipt_${orderID}`,
           });
 
-          // Store pending order data in cart for later completion
+          // Store pending order data in cart
           await cartSchema.findByIdAndUpdate(
             cart._id,
             {
@@ -472,8 +534,6 @@ const OrderPlaced = catchAsync(async (req, res) => {
             },
             { session }
           );
-
-        
 
           return res.status(STATUS_CODES.OK).json({
             success: true,
@@ -546,7 +606,6 @@ const OrderPlaced = catchAsync(async (req, res) => {
           let recalcSubtotalAfterCoupon = recalcOriginalTotal;
           let recalcCouponDiscount = 0;
 
-          // Use cart's payableAmount if available
           if (
             cart.payableAmount &&
             cart.payableAmount > 0 &&
@@ -560,12 +619,25 @@ const OrderPlaced = catchAsync(async (req, res) => {
           const recalcTotalPrice =
             recalcSubtotalAfterCoupon + recalcShippingCharge;
 
+          // ✅ Generate new unique orderID for reconstructed order
+          let reconstructedOrderID;
+          let reconstructAttempts = 0;
+          while (reconstructAttempts < 5) {
+            reconstructedOrderID = generateRandomOrderId();
+            const existingOrder = await orderSchema
+              .findOne({ orderID: reconstructedOrderID })
+              .session(session);
+            if (!existingOrder) break;
+            reconstructAttempts++;
+          }
+
           pendingData = {
-            orderID: generateRandomOrderId(),
+            orderID: reconstructedOrderID,
             contactInfo: { name, email, phone },
             address: addressObj,
             products: recalcOrderProducts,
             totalPrice: recalcTotalPrice,
+            shippingCharge: recalcShippingCharge,
             couponDiscount: recalcCouponDiscount,
             paymentMethod,
           };
@@ -624,12 +696,12 @@ const OrderPlaced = catchAsync(async (req, res) => {
         // Create the order
         const order = new orderSchema({
           userId,
-          orderID: pendingData.orderID||generateRandomOrderId(),
+          orderID: pendingData.orderID || generateRandomOrderId(),
           contactInfo: pendingData.contactInfo,
           address: pendingData.address,
           products: pendingData.products,
           totalPrice: pendingData.totalPrice,
-          shippingCharge:pendingData.shippingCharge,
+          shippingCharge: pendingData.shippingCharge,
           couponDiscount: pendingData.couponDiscount,
           paymentMethod: pendingData.paymentMethod,
           razorpayOrderId: razorpayOrderId,
@@ -692,7 +764,6 @@ const OrderPlaced = catchAsync(async (req, res) => {
 
         await order.save({ session });
         console.log("✅ COD Order created:", order.orderID);
-        console.log("order",order)
 
         // Update product quantities
         for (let product of orderProducts) {
@@ -730,7 +801,6 @@ const OrderPlaced = catchAsync(async (req, res) => {
       if (paymentMethod && paymentMethod.toLowerCase() === "wallet") {
         console.log("💳 Processing wallet payment...");
 
-        // Check wallet balance using wallet schema
         const wallet = await walletSchema.findOne({ userId }).session(session);
         if (!wallet || wallet.balance < totalPrice) {
           await cartSchema.findByIdAndUpdate(
@@ -761,9 +831,8 @@ const OrderPlaced = catchAsync(async (req, res) => {
         });
 
         await order.save({ session });
-      
 
-        // Deduct from wallet and add transaction record
+        // Deduct from wallet
         await walletSchema.findByIdAndUpdate(
           wallet._id,
           {
@@ -823,11 +892,10 @@ const OrderPlaced = catchAsync(async (req, res) => {
         success: false,
         message: "Invalid payment method",
       });
-    }); // End transaction
+    });
   } catch (error) {
     console.error("❌ Order placement error:", error);
 
-    // Emergency lock release
     try {
       await cartSchema.findOneAndUpdate(
         { userId },
