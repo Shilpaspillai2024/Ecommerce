@@ -921,7 +921,42 @@ const OrderPlaced = catchAsync(async (req, res) => {
 const paymentFailRazorpay = catchAsync(async (req, res) => {
   const userId = req.session.user;
 
+   const { razorpayOrderId } = req.body;
+
   try {
+     if (razorpayOrderId) {
+      const existingFailedOrder = await orderSchema.findOne({
+        userId,
+        razorpayOrderId: razorpayOrderId,
+        paymentStatus: "failed"
+      });
+
+      if (existingFailedOrder) {
+        console.log('⚠️ Failed order already exists:', existingFailedOrder.orderID);
+        
+        
+        await cartSchema.findOneAndUpdate(
+          { userId },
+          {
+            $unset: { 
+              pendingOrderData: 1,
+              isLocked: 1,
+              lockedAt: 1
+            }
+          }
+        );
+
+        return res.status(STATUS_CODES.OK).json({
+          success: true,
+          order: { orderID: existingFailedOrder.orderID },
+          message: "Payment failure already recorded.",
+          alreadyExists: true
+        });
+      }
+    }
+
+
+
     const cart = await cartSchema
       .findOne({ userId })
       .populate("items.productId");

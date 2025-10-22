@@ -776,6 +776,8 @@
 
     // Separate function to handle Razorpay initialization
 async function initializeRazorpay(result, originalData) {
+    let failureHandled = false;
+    
     const options = {
         key: "rzp_test_CgfUBYSTSF2QIh",
         amount: result.amount || (result.order && result.order.totalPrice * 100),
@@ -785,7 +787,7 @@ async function initializeRazorpay(result, originalData) {
         handler: async function (response) {
             try {
                 console.log('💳 Razorpay payment successful:', response);
-                
+                failureHandled = true;
                 const resData = {
                     razorpayOrderId: response.razorpay_order_id,
                     razorpayPaymentId: response.razorpay_payment_id,
@@ -838,6 +840,13 @@ async function initializeRazorpay(result, originalData) {
                ondismiss: async function () {
                 console.log('⚠️ Payment modal dismissed/cancelled by user');
                 
+
+                 if (failureHandled) {
+                    console.log('⏭️ Dismiss ignored - payment already handled');
+                    return;
+                }
+
+                failureHandled = true;
                 try {
                     // FIXED: Call payment failure handler when user cancels
                     const failureRes = await fetch('/paymentfailrazorpay', {
@@ -887,6 +896,14 @@ async function initializeRazorpay(result, originalData) {
     const rzp1 = new Razorpay(options);
 
     rzp1.on('payment.failed', async function (response) {
+       
+         if (failureHandled) {
+            console.log('⏭️ Payment failure ignored - already handled');
+            return;
+        }
+
+          failureHandled = true;
+       
         try {
             console.error('❌ Razorpay payment failed:', response.error);
             
